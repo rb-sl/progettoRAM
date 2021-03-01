@@ -1,0 +1,319 @@
+/* Parte tabella scroll */
+table {
+  table-layout: fixed !important;
+  margin: 0 auto !important; 
+}
+
+.col {
+  width: 110px;
+  min-width: 110px;
+  overflow-wrap: break-word;
+}
+
+.tdiv {
+  position: relative;
+  margin:0 auto;
+}
+
+.inner {	
+  overflow-x: scroll;
+  overflow-y: scroll;
+	max-height: 90vh;
+}
+
+.topleft{
+  width: 110px;
+  background-color: #f9f9f9;
+  z-index: 3 !important;
+}
+
+.topfix{
+  position: sticky; 
+  position: -webkit-sticky;
+  top: 0;
+  background-color: #f9f9f9;
+	z-index: 2;
+}
+
+.leftfix{
+  position: sticky; 
+  position: -webkit-sticky;
+  left: 0;
+  z-index: 2;
+}
+/* Fine scroll */
+
+main {
+  font-size: 20px !important;
+  max-width: 1440px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto
+}
+
+.marginunder {
+  margin-bottom: 10px !important;
+}
+
+.textright {
+  text-align: right;
+}
+
+.textcenter {
+  text-align: center;
+}
+
+.halfpage {
+  width: 50%;
+}
+
+.evenrow {
+  background-color: #eee;
+}
+
+.oddrow {
+  background-color: #f9f9f9;
+}
+
+.jQhidden {
+  display: none;
+}
+
+.testadd {
+  width:250px !important;
+}
+
+.input {
+  max-width: 70px;
+  text-align: center;
+}
+
+label{
+	margin:0 !important;
+}
+
+.nobul{
+    list-style-type: none;
+}
+
+.border{
+  border: 1px solid grey;
+  max-width: 500px;
+  padding: 10px;
+}
+
+.lftbor{
+border-left:1px solid black;
+}
+
+.wtot{
+	width:100%;
+	white-space: normal;
+}
+
+/* Gestione navbars: menu principale > menu statistico > tutto il resto */
+#nav1{
+z-index:5;
+}
+#nav2{
+z-index:4;
+}
+
+.point{
+	cursor:pointer;
+}
+
+.textwall{
+	text-align: left;
+	margin: auto;
+	padding: 0 10px 30px 0;
+	max-width: 90%;
+	font-size:17px;
+}
+
+.cl-warning{
+	color:#eea236;
+}
+
+
+
+.dat{height:40px}
+
+.dat2{height:110px}
+
+.btncl {
+  margin-bottom:10px;
+  min-width: 65px; 
+}
+
+td,th{
+vertical-align: middle !important;
+text-align:center;
+}
+
+.btnmenu{
+  min-width: 125px; 
+  margin-bottom:5px;
+}
+
+select{
+  width:auto !important;
+  display:inline-block !important
+}
+
+input:disabled{
+ background-color:rgb(235, 235, 228); 
+}
+
+/* Per fare gli header floating */
+:target::before {
+  content: "";
+  display: block;
+  height: 50px; /* fixed header height*/
+  margin: -50px 0 0; /* negative fixed header height */
+}
+
+
+.navbar {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.w10{
+	width:10%;
+}
+
+.w30{
+	width:30%;
+}
+
+.w50{
+	width:50%;
+}
+
+.btop{
+	border-top:1px solid black !important
+}
+
+.txt{
+  width: 80%; 
+  height: 120px;
+  padding: 1px 2px;
+  overflow-y:scroll;
+  resize: none;
+}
+/* Componenti per il footer */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  background-color: #eee;
+  margin-bottom: 50px; /* Margin bottom by footer height */
+}
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px; /* Set the fixed height of the footer here */
+  line-height: 50px; /* Vertically center the text there */
+  background-color: #343a40;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: left;
+}
+/* Fine footer */
+
+.navbar-inverse{
+  border: 0;
+}
+
+nav{ margin-bottom:0px !important}
+.overpad{padding:1px 6px !important}
+.anno{color:#000}
+.li-stat{
+   color: #9d9d9d;
+   margin: 5px 10px;
+}
+
+#turnkey-credit { display: none; }
+
+.form-signin {
+  max-width: 380px;
+  padding: 15px 35px 45px;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 1px solid rgba(0,0,0,0.1);  
+}
+.form-signin-heading,
+.checkbox {
+  margin-bottom: 30px;
+}
+#cl .btn-warning{
+  margin-bottom: 10px;
+  margin-right: 5px;
+}
+.checkbox {
+  font-weight: normal;
+}
+
+input[type="text"] {
+  /* margin-bottom: -1px; */
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+input[type="password"] {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+#login-dp{
+    border: 1px solid #333;
+    min-width: 250px;
+    padding: 14px 14px 0;
+    overflow:hidden;
+    background-color: #222;
+}
+#login-dp .form-group, .top-bot-margin {
+    margin-bottom: 10px;
+  	margin-top: 10px;
+}
+#login-dp span {
+  color: #fff;
+}
+#login-dp .btn-warning{
+  width: 100%;
+}
+.scrollable{
+    overflow-x: scroll;
+}
+.navbar-bottom{
+  margin-bottom: 0;
+  background-color: #222;
+  border: 0;
+}
+
+main > *{
+  text-align: center;
+}
+#graph-form table{
+  margin-bottom: 10px;
+}
+#graph-form input[type="submit"]{
+  margin-bottom: 10px;
+}
+
+input[type="text"] {
+  border: 1px solid #BBB;
+  border-radius: 2px;
+}
+@media (max-width:780px){
+    main{
+      margin-top:0px !important;
+    }
+    #myNavbar2{
+		text-align: center !important;
+	}
+}
