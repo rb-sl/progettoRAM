@@ -3,33 +3,91 @@ table {
   table-layout: fixed !important;
   margin: 0 auto !important; 
 }
-.col{
-  width:110px;
-  min-width:110px;
+
+.col {
+  width: 110px;
+  min-width: 110px;
+  overflow-wrap: break-word;
 }
+
 .tdiv {
   position: relative;
   margin:0 auto;
 }
+
 .inner {	
   overflow-x: scroll;
   overflow-y: scroll;
 	max-height: 90vh;
 }
-.topfix{
-position: sticky; 
-  position: -webkit-sticky;
-top: 0;
-background-color:#f9f9f9;
-	z-index:2;
+
+.topleft{
+  width: 110px;
+  background-color: #f9f9f9;
+  z-index: 3 !important;
 }
+
+.topfix{
+  position: sticky; 
+  position: -webkit-sticky;
+  top: 0;
+  background-color: #f9f9f9;
+	z-index: 2;
+}
+
 .leftfix{
-position: sticky; 
-position: -webkit-sticky;
-left: 0;
-z-index: 2;
+  position: sticky; 
+  position: -webkit-sticky;
+  left: 0;
+  z-index: 2;
 }
 /* Fine scroll */
+
+main {
+  font-size: 20px !important;
+  max-width: 1440px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto
+}
+
+.marginunder {
+  margin-bottom: 10px !important;
+}
+
+.textright {
+  text-align: right;
+}
+
+.textcenter {
+  text-align: center;
+}
+
+.halfpage {
+  width: 50%;
+}
+
+.evenrow {
+  background-color: #eee;
+}
+
+.oddrow {
+  background-color: #f9f9f9;
+}
+
+.jQhidden {
+  display: none;
+}
+
+.testadd {
+  width:250px !important;
+}
+
+.input {
+  max-width: 70px;
+  text-align: center;
+}
 
 label{
 	margin:0 !important;
@@ -78,11 +136,7 @@ z-index:4;
 	color:#eea236;
 }
 
-.topleft{
-width:110px;
-background-color:#f9f9f9;
-z-index: 3;
-}
+
 
 .dat{height:40px}
 
@@ -205,13 +259,12 @@ nav{ margin-bottom:0px !important}
 }
 
 input[type="text"] {
-  margin-bottom: -1px;
+  /* margin-bottom: -1px; */
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
 input[type="password"] {
-  margin-bottom: 20px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
@@ -251,26 +304,12 @@ main > *{
 #graph-form input[type="submit"]{
   margin-bottom: 10px;
 }
-/* #chartContainer{
- height: 400px;
-  width: 60%;
-} */
 
 input[type="text"] {
   border: 1px solid #BBB;
   border-radius: 2px;
 }
 @media (max-width:780px){
-    /* #login-dp{
-        background-color: inherit;
-        color: #fff;
-    }
-    #chartContainer{
-      width: 100%;
-    }
-    .scrollable{
-      overflow-x: scroll;
-    } */
     main{
       margin-top:0px !important;
     }
