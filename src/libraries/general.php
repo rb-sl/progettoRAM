@@ -30,7 +30,7 @@ if(isset($_GET['e']))
 function writelog($action)
 {
 	file_put_contents(LOG_PATH."log_".date("Y-m-d").'.txt', 
-		date('H:i:s',time())." [".$_SERVER['REMOTE_ADDR']."] - [".$_SESSION['user']."] $action\n\n", 
+		date("H:i:s", time())." [".$_SERVER['REMOTE_ADDR']."] - [".$_SESSION['user']."] $action\n\n", 
 		FILE_APPEND);
 }
 
@@ -93,13 +93,13 @@ function connect()
 // Function to request the confirmation of a client-side action
 function confirm($quest)
 {
-	echo "onclick=\"return confirm('".addslashes($quest).". Procedere?');\"";
+	echo "onclick=\"return confirm('".alert_escape($quest).". Procedere?');\"";
 }
 
 // Changes " in &quot; for visualization purposes
-function quoteHTML($str)
+function alert_escape($str)
 {
-	return str_replace("\"", "&quot;", $str);
+	return addslashes(str_replace("\"", "&quot;", $str));
 }
 
 // strtoupper enriched with accents for italian letters
@@ -342,7 +342,7 @@ function show_postmain()
 		echo "<script>
     		$(function(){
     			$(document).ready(function(){
-    				alert(\"".$_SESSION['alert']."\");
+    				alert(\"".alert_escape($_SESSION['alert'])."\");
   				});
   	  		});
 		</script>";

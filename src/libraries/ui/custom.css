@@ -43,6 +43,14 @@ table {
 }
 /* Fine scroll */
 
+/* Table row colors */
+.evenrow {
+  background-color: #eee;
+}
+.oddrow {
+  background-color: #f9f9f9;
+}
+
 main {
   font-size: 20px !important;
   max-width: 1440px;
@@ -68,14 +76,7 @@ main {
   width: 50%;
 }
 
-.evenrow {
-  background-color: #eee;
-}
-
-.oddrow {
-  background-color: #f9f9f9;
-}
-
+/* Special hidden to have jQuery modify it */
 .jQhidden {
   display: none;
 }
@@ -91,6 +92,40 @@ main {
 
 label{
 	margin:0 !important;
+}
+
+/* Colors for text (as in bootstrap) */
+.primarycolor {
+  color: #007bff;
+}
+.infocolor {
+  color: #17a2b8;
+}
+.successcolor {
+  color: #28a745;
+}
+.warningcolor {
+  color: #ffc107;
+}
+.dangercolor {
+  color: #c82333;
+}
+
+/* Colors for backgrounds (as in bootstrap) */
+.primarybg {
+  background-color: #007bff;
+}
+.infobg {
+  background-color: #17a2b8;
+}
+.successbg {
+  background-color: #0bfc03;
+}
+.warningbg {
+  background-color: #ffc107;
+}
+.dangerbg {
+  background-color: #dc3545;
 }
 
 .nobul{
@@ -131,12 +166,6 @@ z-index:4;
 	max-width: 90%;
 	font-size:17px;
 }
-
-.cl-warning{
-	color:#eea236;
-}
-
-
 
 .dat{height:40px}
 
