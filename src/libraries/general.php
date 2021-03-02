@@ -193,7 +193,7 @@ function show_premain($title = "", $stat = false)
         					<li><a href='/registro/registro.php'>Registro</a></li>
         					<li><a href='/test/test.php'>Test e valutazioni</a></li>
         					<li><a href='/statistica/statistica.php'>Statistica</a></li>
-        					<li><a href='/manuale.php'>Manuale</a></li>
+        					<li><a href='/guide/guide.php'>Manuale</a></li>
       					</ul>
       
       					<!-- Login -->

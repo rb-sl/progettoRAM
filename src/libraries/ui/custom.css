@@ -105,7 +105,7 @@ label{
   color: #28a745;
 }
 .warningcolor {
-  color: #ffc107;
+  color: #eea236;
 }
 .dangercolor {
   color: #c82333;
@@ -164,7 +164,11 @@ z-index:4;
 	margin: auto;
 	padding: 0 10px 30px 0;
 	max-width: 90%;
-	font-size:17px;
+	font-size: 18px;
+}
+
+.textwall a {
+  text-decoration: underline;
 }
 
 .dat{height:40px}
