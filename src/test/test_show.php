@@ -1,19 +1,36 @@
 <?php
-// Pagina per la visualizzazione dei dati sui test
-include $_SERVER['DOCUMENT_ROOT']."/librerie/general.php";
-chk_access(2);
+// Test parameters visualization
+include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
+chk_access(3);
 connect();
 
-$rettest=query("SELECT * FROM TEST,UNITA,TIPOTEST,CLTEST WHERE id_test=".$_GET['id']." AND fk_udm=id_udm AND fk_tipot=id_tipot AND fk_cltest=id_cltest");
-$test=$rettest->fetch_assoc();
+// If the test does not exist an error is shown to the user
+$test_st = prepare_stmt("SELECT * FROM TEST JOIN UNITA ON fk_udm=id_udm
+	JOIN TIPOTEST ON fk_tipot=id_tipot
+	JOIN CLTEST ON fk_cltest=id_cltest
+	WHERE id_test=?");
+$test_st->bind_param("i", $_GET['id']);
+
+$rettest = execute_stmt($test_st);
+$test_st->close();
+
+if($rettest->num_rows == 0)
+{
+	$_SESSION['alert'] = "Errore: Test inesistente";
+	header("Location: /test/test.php");
+	exit;
+}
+
+$test = $rettest->fetch_assoc();
+
 show_premain($test['nometest']);
 ?>
 <h2>Informazioni <?=$test['nometest']?></h2>
 
-<table class='table table-striped'>
+<table class="table table-striped marginunder">
 	<tr>
     	<td>Classe del test:</td>
-    	<td style='width:50%'><?=$test['nomec']?></td>
+    	<td class="halfpage"><?=$test['nomec']?></td>
 	</tr>
 	<tr>
     	<td>Unità di misura:</td>
@@ -33,7 +50,7 @@ show_premain($test['nometest']);
     	<td><?=$test['passo']." ".$test['simbolo']?></td>
 	</tr>
 	<tr>
-    	<th colspan='2' style='text-align:center'>Informazioni aggiuntive</th>
+    	<th colspan="2" class="textcenter">Informazioni aggiuntive</th>
 	</tr>
 	<tr>
     	<td>Posizione:</td>
@@ -57,12 +74,13 @@ show_premain($test['nometest']);
 	</tr>
 	<tr>
 	    <td>Valutazione:</td>
-	    <td><?=($test['valut'] ? $test['valut'] : "-")?></td>
+	    <td><?=$test['valut']?></td>
 	</tr>
 </table>
 
 <?php
-if($_SESSION[priv]==0)
-	echo "<div><a href='./mod_test.php?id=".$_GET['id']."' class='btn btn-warning'>Modifica test</a></div>";
+if($_SESSION['priv'] <= 1)
+	echo "<div class='marginunder'><a href='./test_modify.php?id=".$_GET['id']."' class='btn btn-warning'>Modifica test</a></div>";
+	
 show_postmain();
 ?>

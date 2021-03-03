@@ -36,7 +36,7 @@ function writelog($action)
 
 // Access and privilege control; the levels are
 // 0 -> Administrator
-// 1 -> Professor with ability to modify tests
+// 1 -> Professor with grants to modify tests
 // 2 -> Normal professor
 // 3 -> Statistical access
 function chk_access($priv = 5)
@@ -93,13 +93,13 @@ function connect()
 // Function to request the confirmation of a client-side action
 function confirm($quest)
 {
-	echo "onclick=\"return confirm('".alert_escape($quest).". Procedere?');\"";
+	echo "onclick=\"return confirm('".addslashes(quoteHTML($quest)).". Procedere?');\"";
 }
 
 // Changes " in &quot; for visualization purposes
-function alert_escape($str)
+function quoteHTML($str)
 {
-	return addslashes(str_replace("\"", "&quot;", $str));
+	return str_replace("\"", "&quot;", $str);
 }
 
 // strtoupper enriched with accents for italian letters
@@ -189,7 +189,7 @@ function show_premain($title = "", $stat = false)
     				</div>
     				<div class='collapse navbar-collapse' id='myNavbar'>
       					<ul class='nav navbar-nav'>
-        					<li><a href='/progetto.php'>Il progetto</a></li>
+        					<li><a href='/project.php'>Il progetto</a></li>
         					<li><a href='/registro/registro.php'>Registro</a></li>
         					<li><a href='/test/test.php'>Test e valutazioni</a></li>
         					<li><a href='/statistica/statistica.php'>Statistica</a></li>
@@ -342,7 +342,7 @@ function show_postmain()
 		echo "<script>
     		$(function(){
     			$(document).ready(function(){
-    				alert(\"".alert_escape($_SESSION['alert'])."\");
+    				alert(\"".addslashes($_SESSION['alert'])."\");
   				});
   	  		});
 		</script>";
