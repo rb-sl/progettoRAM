@@ -4,8 +4,6 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 chk_access(5);
 connect();
 show_premain("Manuale");
-
-
 ?>
 
 <div class="textwall">

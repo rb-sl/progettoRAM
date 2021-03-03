@@ -1,3 +1,8 @@
+<?php
+// Guide for professors, to be included in guide.php, if needed
+chk_access(2);
+?>
+
 <div id="regdiv">
     <h3 id="reg">Registro</h3>
         Questa sezione permette di:

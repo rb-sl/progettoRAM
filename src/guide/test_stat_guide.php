@@ -1,5 +1,6 @@
 <?php
-// Page to be included in guide.php
+// Guide for tests and statistics, to be included in guide.php
+chk_access(3);
 
 // Statements to retrieve from the database the lists of elements
 $tstty_st = prepare_stmt("SELECT nomet FROM TIPOTEST ORDER BY nomet");
