@@ -1,10 +1,17 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT']."/librerie/general.php";
+// Ajax script to return unit of measure's information given the test
+include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 chk_access(2);
 connect();
 
-$udm=query("SELECT simbolo,passo FROM UNITA,TEST,TIPOTEST WHERE fk_udm=id_udm AND fk_tipot=id_tipot AND id_test=".$_GET['test']);
-$data=$udm->fetch_assoc();
+$unit_st = prepare_stmt("SELECT simbolo, passo FROM UNITA JOIN TEST ON fk_udm=id_udm
+    JOIN TIPOTEST ON fk_tipot=id_tipot 
+    WHERE id_test=?");
+$unit_st->bind_param("i", $_GET['test']);
+
+$udm = execute_stmt($unit_st);
+$unit_st->close();
+$data = $udm->fetch_assoc();
 
 echo json_encode($data);
 ?>

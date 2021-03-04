@@ -68,3 +68,10 @@ $(function(){
         }
     });
 });
+
+function resizeText() {
+	fitty(".resizetext", {
+		minSize: 10,
+		maxSize: 20
+	});
+}

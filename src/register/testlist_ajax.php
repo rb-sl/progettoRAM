@@ -1,13 +1,20 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT']."/librerie/general.php";
+// Ajax script to retrieve the tests yet to do of a given class
+include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 chk_access(2);
 connect();
 
-$ret=query("SELECT id_test,nometest FROM TEST WHERE id_test NOT IN (
-  SELECT fk_test FROM PROVE,ISTANZE WHERE fk_ist=id_ist AND fk_cl=".$_GET['id']." 
-  ) ORDER BY nometest");
-while($row=$ret->fetch_assoc())
-  $data.="<option value='".$row['id_test']."'>".$row['nometest']."</option>";
+$test_st = prepare_stmt("SELECT id_test, nometest FROM TEST 
+	WHERE id_test NOT IN (
+		SELECT DISTINCT(fk_test) FROM PROVE JOIN ISTANZE ON fk_ist=id_ist WHERE fk_cl=?
+	) ORDER BY nometest");
+$test_st->bind_param("i", $_GET['id']);
+$ret = execute_stmt($test_st);
+$test_st->close();
+
+$data = "";
+while($row = $ret->fetch_assoc())
+ 	 $data .= "<option value='".$row['id_test']."'>".$row['nometest']."</option>";
           
 echo json_encode($data);
 ?>

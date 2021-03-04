@@ -1,27 +1,30 @@
 <?php
 // Funzione per il calcolo della media dato un array $vals
-function arr_avg($vals,$dec=0)
+function arr_avg($vals, $dec = 0)
 {
 	if(sizeof($vals))
     {
-		$s=array_sum($vals);
-		return number_format($s/sizeof($vals),$dec);
+		$s = array_sum($vals);
+		return number_format($s / sizeof($vals), $dec);
 	}
 	return "-";
 }
 
 // Funzione per il calcolo della mediana dato un array $vals
-function arr_med($vals,$dec)
+function arr_med($vals, $dec)
 {
-	if($sz=sizeof($vals))
-    {
-		sort($vals);
-		if($sz%2==0)
-    		return number_format(($vals[floor($sz/2)]+$vals[floor($sz/2)+1])/2,$dec);
-		else
-    		return number_format($vals[$sz/2],$dec);
-    }
-	return "-";
+	$size = sizeof($vals);
+
+	if($size == 0)
+		return "-";
+	if($size == 1);
+		return $vals[0];
+
+	sort($vals);
+	if($size % 2 == 0)
+    	return number_format(($vals[$size / 2] + $vals[$size / 2 + 1]) / 2, $dec);
+	else
+    	return number_format($vals[ceil($size / 2)], $dec);	
 }
 
 // Funzione per il calcolo della deviazione standard di un array

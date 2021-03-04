@@ -28,7 +28,7 @@ if($ret->num_rows != 0)
 	if($row['priv'] > 2)
 		header("Location: /");
 	else
-		header("Location: /registro/registro.php");
+		header("Location: /register/register.php");
   	exit;
 }
 

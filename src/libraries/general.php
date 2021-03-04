@@ -61,7 +61,7 @@ function chk_prof($fk_prof)
 	if($fk_prof and $fk_prof != $_SESSION['id'] and $_SESSION['priv'] != 0)
 	{
 		$_SESSION['alert'] = "Permessi insufficienti per visualizzare la classe";
-		header("Location: /registro/registro.php");
+		header("Location: /register/register.php");
 		exit;
 	}
 }
@@ -190,7 +190,7 @@ function show_premain($title = "", $stat = false)
     				<div class='collapse navbar-collapse' id='myNavbar'>
       					<ul class='nav navbar-nav'>
         					<li><a href='/project.php'>Il progetto</a></li>
-        					<li><a href='/registro/registro.php'>Registro</a></li>
+        					<li><a href='/register/register.php'>Registro</a></li>
         					<li><a href='/test/test.php'>Test e valutazioni</a></li>
         					<li><a href='/statistica/statistica.php'>Statistica</a></li>
         					<li><a href='/guide/guide.php'>Manuale</a></li>
