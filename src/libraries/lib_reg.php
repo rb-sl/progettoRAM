@@ -1,4 +1,22 @@
 <?php
+// Function to retrieve a class's data or show an error if it does not exist
+function get_class_info($id)
+{
+	$class_st = prepare_stmt("SELECT * FROM CLASSI WHERE id_cl=?");
+	$class_st->bind_param("i", $id);
+	$ret = execute_stmt($class_st);
+
+	if($ret->num_rows == 0)
+	{
+		$_SESSION['alert'] = "Errore: Classe inesistente";
+		header("Location: /register/register.php");
+		exit;
+	}
+
+	$class_st->close();
+	return $ret->fetch_assoc();
+}
+
 // Funzione per la costruzione della lista di studenti con checkbox per confermarne
 // la presenza in una classe
 function build_chk_table($classe, $prom = false)
@@ -74,7 +92,7 @@ function col_stud()
 }
 
 // Funzione per ottenere la lista di test unitamente al numero di test
-function get_test()
+function get_test($test)
 {
 	$stat_st = prepare_stmt("SELECT id_test, nometest, simbolo, pos,
 		MIN(data) AS data, ROUND(AVG(valore), 2) AS avg
@@ -84,7 +102,7 @@ function get_test()
 		WHERE fk_cl=?  
 		GROUP BY id_test
 		ORDER BY data, id_test ASC");
-	$stat_st->bind_param("i", $_GET['id']);
+	$stat_st->bind_param("i", $test);
 
 	$ret = execute_stmt($stat_st);
 	$stat_st->close();
@@ -106,31 +124,60 @@ function delete_inst($id_ist)
 	return;
 }
 
-// Calculates average and median rows and columns (percentiles)
-function get_avgmed_prc($idtest, $vals, $color)
+function color_from_val($val, $color, $isperc)
 {
+	if($val == "-")
+		return "";
+
+	if($isperc)
+	{
+		// Color in the percentile case
+		$color_index = floor($val);
+
+		while(!isset($color[$color_index]))
+			$color_index++;
+
+		return $color[$color_index];
+	}
+	else
+	{
+		// Color in the standard case
+		$color_index = floor($val * 10);
+		if($color_index == 0)
+			return "";
+
+		$color_index = max(min(floor($val * 10), 20), -20);
+		return $color[ceil($color_index / 5) + 4];
+	}
+}
+
+// Calculates average and median rows and columns.
+// $isperc indicates whether the values are from percentiles or standards
+function get_avgmed($class, $vals, $isperc)
+{
+	if($isperc)
+		$color = get_color_prc();
+	else
+		$color = get_color_std();
+
+	$testinfo = get_class_tests($class);
+	$idtest = $testinfo[0];
+
 	// Tests' averages and medians
 	$sum = 0;
 	foreach($idtest as $id)
 	{
 		// Test's average and color
 		$ret['avg'][$id]['val'] = arr_avg(array_column($vals, $id), 5);
-
-		$color_index = floor($ret['avg'][$id]['val']);
-		while(!isset($color[$color_index]))
-			$color_index++;
-		$ret['avg'][$id]['color'] = $color[$color_index];
+		$ret['avg'][$id]['color'] = color_from_val($ret['avg'][$id]['val'], $color, $isperc);
 
 		// Sum for the total average
-		$sum += $ret['avg'][$id]['val'];
-
+		if($ret['avg'][$id]['val'] != "-")
+			$sum += $ret['avg'][$id]['val'];
+	
 		// Test's median and color
 		$ret['med'][$id]['val'] = arr_med(array_column($vals, $id), 5);
-		
-		$color_index = floor($ret['med'][$id]['val']);
-		while(!isset($color[$color_index]))
-			$color_index++;
-		$ret['med'][$id]['color'] = $color[$color_index];
+		$ret['med'][$id]['color'] = color_from_val($ret['med'][$id]['val'], $color, $isperc);
 	}
 
 	// Students' averages and medians
@@ -138,109 +185,16 @@ function get_avgmed_prc($idtest, $vals, $color)
 	{
 		// Student's average and color
 		$ret['savg'][$ids]['val'] = arr_avg($arr, 5);
-
-		$color_index = floor($ret['savg'][$ids]['val']);
-		while(!isset($color[$color_index]))
-			$color_index++;
-		$ret['savg'][$ids]['color'] = $color[$color_index];
+		$ret['savg'][$ids]['color'] = color_from_val($ret['savg'][$ids]['val'], $color, $isperc);
 
 		// Student's median and color 
 		$ret['smed'][$ids]['val'] = arr_med($arr, 5);
-
-		$color_index = floor($ret['smed'][$ids]['val']);
-		while(!isset($color[$color_index]))
-			$color_index++;
-		$ret['smed'][$ids]['color'] = $color[$color_index];
+		$ret['smed'][$ids]['color'] = color_from_val($ret['smed'][$ids]['val'], $color, $isperc);
 	}
 	
 	// Total percentile average	and percentile
 	$ret['tavg']['val'] = number_format($sum / sizeof($idtest), 5);
-	$color_index = floor($ret['tavg']['val']);
-	while(!isset($color[$color_index]))
-		$color_index++;
-	$ret['tavg']['color'] = $color[$color_index];
-
-	return $ret;
-}
-
-function get_am_std($idtest,$vals,$color)
-{
-	// Medie e mediane dei test
-	$c=0;
-	foreach($idtest as $id)
-	{
-		$ret['avg'][$id]['val']=arr_avg(array_column($vals,$id),5);
-		$i=intval($ret['avg'][$id]['val']*10);
-		if($i==0)
-			$ret['avg'][$id]['color']="";
-		else
-		{
-			if($i<-20)
-				$i=-20;
-			while($i%5!=0 or $i>20)
-				$i--;
-			$ret['avg'][$id]['color']=$color[$i*0.2+4];
-		}
-
-		$ret['tavg']['val']=($ret['tavg']['val']*$c+$ret['avg'][$id]['val'])/++$c;
-
-		$ret['med'][$id]['val']=arr_med(array_column($vals,$id),5);
-		$i=intval($ret['med'][$id]['val']*10);
-		if($i==0)
-			$ret['avg'][$id]['color']="";
-		else
-		{
-			if($i<-20)
-				$i=-20;
-			while($i%5!=0 or $i>20)
-				$i--;
-			$ret['med'][$id]['color']=$color[$i*0.2+4];
-		}
-	}
-
-	// Medie e mediane degli studenti
-	foreach($vals as $ids => $arr)
-	{
-		$ret['savg'][$ids]['val']=arr_avg($arr,5);
-		$i=intval($ret['savg'][$ids]['val']*10);
-		if($i==0)
-			$ret['avg'][$id]['color']="";
-		else
-		{
-			if($i<-20)
-				$i=-20;
-			while($i%5!=0 or $i>20)
-				$i--;
-			$ret['savg'][$ids]['color']=$color[$i*0.2+4];
-		}
-
-		$ret['smed'][$ids]['val']=arr_med($arr,5);
-		$i=intval($ret['smed'][$ids]['val']*10);
-		if($i==0)
-			$ret['avg'][$id]['color']="";
-		else
-		{
-			if($i<-20)
-				$i=-20;
-			while($i%5!=0 or $i>20)
-				$i--;
-			$ret['smed'][$ids]['color']=$color[$i*0.2+4];
-		}
-	}
-	
-	// Media totale
-	$ret['tavg']['val']=number_format($ret['tavg']['val'],5);
-	$i=intval($ret['tavg']['val']*10);
-	if($i==0)
-		$ret['avg'][$id]['color']="";
-	else
-	{
-		if($i<-20)
-			$i=-20;
-		while($i%5!=0 or $i>20)
-			$i--;
-		$ret['tavg']['color']=$color[$i*0.2+4];
-	}
+	$ret['tavg']['color'] = color_from_val($ret['tavg']['val'], $color, $isperc);
 
 	return $ret;
 }
@@ -307,27 +261,32 @@ function get_am_vt($idtest,$rstud,$color)
 	return $ret;
 }
 
-// Funzione per leggere la tabella dei colori
+// Function to read colors for percentiles
 function get_color_prc()
 {
 	$color_st = prepare_stmt("SELECT * FROM VALUTAZIONI JOIN VOTI ON fk_voto=id_voto WHERE fk_prof=?");
 	$color_st->bind_param("i", $_SESSION['id']);
-
-	$retvoti = execute_stmt($color_st);
-	while($row = $retvoti->fetch_assoc())
+	$ret_gr = execute_stmt($color_st);
+	$color_st->close();
+	
+	while($row = $ret_gr->fetch_assoc())
 		$color[$row['perc']] = $row['color'];
 
-	$color_st->close();
 	return $color;
 }
 
+// Function to elaborate colors wrt standard values
 function get_color_std()
 {
-	$std=0;
-	$retvoti=query("SELECT * FROM VOTI WHERE voto NOT IN(6.5,8.5,9,9.5) ORDER BY voto");
-	while($row=$retvoti->fetch_assoc())
+	// Gets only 6 colors
+	$color_st = prepare_stmt("SELECT * FROM VOTI WHERE voto NOT IN(6.5, 8.5, 9, 9.5) ORDER BY voto");
+	$ret_gr = execute_stmt($color_st);
+	$color_st->close();
+
+	$std = 0;
+	while($row = $ret_gr->fetch_assoc())
 	{
-		$color[$std]=$row['color'];
+		$color[$std] = $row['color'];
 		$std++;
 	}
 
@@ -336,11 +295,36 @@ function get_color_std()
 
 function get_color_vt()
 {
-	$retvoti=query("SELECT * FROM VALUTAZIONI,VOTI WHERE fk_voto=id_voto AND fk_prof=".$_SESSION['id']);
-	while($row=$retvoti->fetch_assoc())
+	$ret_gr=query("SELECT * FROM VALUTAZIONI,VOTI WHERE fk_voto=id_voto AND fk_prof=".$_SESSION['id']);
+	while($row=$ret_gr->fetch_assoc())
 		$color[$row['voto']*10]=$row['color'];
 
 	return $color;
+}
+
+function get_class_tests($class)
+{
+	$ctst_st = prepare_stmt("SELECT id_test, pos FROM TEST 
+		WHERE id_test IN (
+			SELECT DISTINCT(fk_test) FROM PROVE JOIN ISTANZE ON fk_ist=id_ist 
+			WHERE fk_cl=?
+		)");
+	$ctst_st->bind_param("i", $class);
+	$ctst = execute_stmt($ctst_st);
+	$ctst_st->close();
+
+	if($ctst->num_rows == 0)
+		return null;
+
+	while($row = $ctst->fetch_assoc())
+	{
+		$testlist[] = $row['id_test'];
+		
+		// Set to true if greater values correspond to a better performance
+		$positive[$row['id_test']] = ($row['pos'] == "Maggiori");
+	}
+
+	return array($testlist, $positive);
 }
 
 // Function to obtain the percentiles of a class
@@ -354,47 +338,127 @@ function get_color_vt()
 //  FROM PROVE P
 //  WHERE fk_ist IN (SELECT id_ist FROM ISTANZE WHERE fk_cl=?)
 //  AND fk_test=?;
-function get_prc_all($class, $color)
+function get_perc($class, $cond = null)
 {
-	// TODO: IF STAT PREPARE DIFFERENT
+	$color = get_color_prc();
 
-	// Gets the class's tests and their positive values
-	$ctst_st = prepare_stmt("SELECT id_test, pos FROM TEST 
-		WHERE id_test IN (
-			SELECT DISTINCT(fk_test) FROM PROVE JOIN ISTANZE ON fk_ist=id_ist 
-			WHERE fk_cl=?
-		)");
-	$ctst_st->bind_param("i", $class);
-	$ctst = execute_stmt($ctst_st);
-	$ctst_st->close();
+	$testinfo = get_class_tests($class);
 
 	$testlist = "0";
-	while($row = $ctst->fetch_assoc())
-	{
-		$testlist .= ",".$row['id_test'];
-		
-		// Set to true if greater values correspond to a better performance
-		$positive[$row['id_test']] = ($row['pos'] == "Maggiori");
-	}
+	foreach($testinfo[0] as $id)
+		$testlist .= ", $id";
 
+	$positive = $testinfo[1];
+
+	if($cond)
+	{
+		$classlist = $cond['class'];
+		$genderlist = $cond['sex'];
+		$prof = $cond['prof'];
+
+		// Statement to get the count of tests only on results relevant to the user's selection
+		$count_st = prepare_stmt("SELECT fk_test, COUNT(*) AS n FROM PROVE 
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN STUDENTI ON fk_stud=id_stud 
+			JOIN CLASSI ON fk_cl = id_cl 
+			WHERE fk_test IN ($testlist)
+			AND anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof
+			GROUP BY fk_test");
+
+		// Statement to get only the results of a class relevant to the user's selection
+		$class_st = prepare_stmt("SELECT fk_ist, data, valore FROM PROVE 
+			JOIN ISTANZE ON fk_ist=id_ist 
+			JOIN STUDENTI ON fk_stud=id_stud 
+			JOIN CLASSI ON fk_cl=id_cl
+			WHERE fk_test=? AND fk_cl=?
+			AND anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof");
+
+		// Statement to get the percentiles for tests with greater better values
+		$greater_st = prepare_stmt("SELECT COUNT(*) AS perc FROM PROVE 
+			JOIN ISTANZE ON fk_ist=id_ist 
+			JOIN STUDENTI ON fk_stud=id_stud 
+			JOIN CLASSI ON fk_cl=id_cl
+			WHERE fk_test=? AND valore<=?
+			AND anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof");
+		
+		// Statement to get the percentiles for tests with lower better values
+		$lower_st = prepare_stmt("SELECT COUNT(*) AS perc FROM PROVE 
+			JOIN ISTANZE ON fk_ist=id_ist 
+			JOIN STUDENTI ON fk_stud=id_stud 
+			JOIN CLASSI ON fk_cl=id_cl
+			WHERE fk_test=? AND valore>=?
+			AND anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof");
+
+		// Binding is done based on the presence of the restriction of the professor
+		if($cond['prof'] != "")
+		{
+			$count_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
+			$class_st->bind_param("iiiii", $test, $class, $cond['year1'], $cond['year2'], $_SESSION['id']);
+			$greater_st->bind_param("idiii", $test, $curval, $cond['year1'], $cond['year2'], $_SESSION['id']);
+			$lower_st->bind_param("idiii", $test, $curval, $cond['year1'], $cond['year2'], $_SESSION['id']);
+		}
+		else
+		{	
+			$count_st->bind_param("ii", $cond['year1'], $cond['year2']);
+			$class_st->bind_param("iiii", $test, $class, $cond['year1'], $cond['year2']);
+			$greater_st->bind_param("idii", $test, $curval, $cond['year1'], $cond['year2']);
+			$lower_st->bind_param("idii", $test, $curval, $cond['year1'], $cond['year2']);
+		}
+	}
+	else
+	{
+		// Statement to get the number of results for each test done by the class
+		$count_st = prepare_stmt("SELECT fk_test, COUNT(*) AS n FROM PROVE 
+			WHERE fk_test IN ($testlist) GROUP BY fk_test");
+		
+		// Statement to get the values of a class
+		$class_st = prepare_stmt("SELECT fk_ist, data, valore FROM PROVE JOIN ISTANZE ON fk_ist=id_ist 
+			WHERE fk_test=? AND fk_cl=?");
+		$class_st->bind_param("ii", $test, $class);
+
+		// Statement to get the percentiles for tests with greater better values
+		$greater_st = prepare_stmt("SELECT COUNT(*) AS perc FROM PROVE 
+			WHERE fk_test=? AND valore<=?");
+		$greater_st->bind_param("id", $test, $curval);
+
+		// Statement to get the percentiles for tests with lower better values
+		$lower_st = prepare_stmt("SELECT COUNT(*) AS perc FROM PROVE 
+			WHERE fk_test=? AND valore>=?");
+		$lower_st->bind_param("id", $test, $curval);
+	}
+	
 	// Gets the total count of tests done by the class
-	$count_st = prepare_stmt("SELECT fk_test, COUNT(*) AS n FROM PROVE WHERE fk_test IN ($testlist) GROUP BY fk_test");
 	$cnt = execute_stmt($count_st);
 	$count_st->close();
-
+	
+	$empty = true;
 	while($row = $cnt->fetch_assoc())
+	{ 
+		$empty = $empty && ($row['n'] == 0);
 		$count[$row['fk_test']] = $row['n'];
+	}
 
-	// Statement to get the values of a class
-	$class_st = prepare_stmt("SELECT fk_ist, data, valore FROM PROVE JOIN ISTANZE ON fk_ist=id_ist WHERE fk_test=? AND fk_cl=?");
-	$class_st->bind_param("ii", $test, $class);
+	// If no rows are returned the function ends
+	if($empty)
+	{
+		$class_st->close();
+		$greater_st->close();
+		$lower_st->close();
 
-	// Statements to get the percentile 
-	$greater_st = prepare_stmt("SELECT COUNT(*) AS perc FROM PROVE WHERE fk_test=? AND valore<=?");
-	$greater_st->bind_param("id", $test, $curval);
-
-	$lower_st = prepare_stmt("SELECT COUNT(*) AS perc FROM PROVE WHERE fk_test=? AND valore>=?");
-	$lower_st->bind_param("id", $test, $curval);
+		return null;
+	}
 
 	foreach($positive as $test => $greater)
 	{
@@ -415,12 +479,7 @@ function get_prc_all($class, $color)
 
 			$rstud['val'][$instance][$test] = $perc;
 			$rstud['data'][$instance][$test] = $val['data'];
-
-			$i = floor($perc);
-			while(!isset($color[$i]))
-				$i++;
-
-			$rstud['color'][$instance][$test] = $color[$i];
+			$rstud['color'][$instance][$test] = color_from_val($perc, $color, true);
 		}
 	}
 
@@ -431,88 +490,96 @@ function get_prc_all($class, $color)
 	return $rstud;
 }
 
-
-
-
-
-
-
-function get_prc($color, $cond = "")
+// Function to get the standardized values for a class
+function get_std($class, $cond = null)
 {
-	$retcnt=query("SELECT fk_test, pos, COUNT(*) AS n FROM PROVE JOIN
-    (
-    	SELECT id_test, pos FROM PROVE,TEST,ISTANZE 
-        WHERE fk_test=id_test AND fk_ist=id_ist
-        AND fk_cl=".$_GET['id']." GROUP BY id_test
-    ) AS p2".$cond['tabs']." WHERE id_test=fk_test".$cond['rstr']." GROUP BY fk_test");
-	while($row=$retcnt->fetch_assoc())
-    {
-    	$count[$row['fk_test']]=$row['n'];
-    	$pos[$row['fk_test']]=$row['pos'];
-	}
-	
-	$cond2=str_replace(",ISTANZE", "", $cond['tabs']);
-	
-	$retprove=query("SELECT id_ist,p1.fk_test AS fk_test,p1.data AS data,COUNT(*) AS lte
-	FROM PROVE AS p1,TEST,ISTANZE,(SELECT valore,fk_test FROM PROVE".$cond['tabs']." WHERE 1=1".$cond['rstr'].") AS p2".$cond2."
-	WHERE p1.fk_test=id_test 
-	AND IF(pos='Maggiori',p2.valore<=p1.valore,p2.valore>=p1.valore) 
-	AND fk_ist=id_ist AND fk_cl=".$_GET['id']." 
-	AND p1.fk_test=p2.fk_test".$cond['rstr']."
-	GROUP BY fk_ist,fk_test");
+	$color = get_color_std();
 
-	while($row=$retprove->fetch_assoc())
-	{			
-		$prc=number_format(($row['lte']/$count[$row['fk_test']])*100,5);
-		$rstud['val'][$row['id_ist']][$row['fk_test']]=$prc;	
-		$rstud['data'][$row['id_ist']][$row['fk_test']]=$row['data'];
+	$testinfo = get_class_tests($class);
 
-    	$i=intval($prc);
-		while(!$color[$i])
-			$i++;		
-   		$rstud['color'][$row['id_ist']][$row['fk_test']]=$color[$i];
-    }
+	$testlist = "0";
+	foreach($testinfo[0] as $id)
+		$testlist .= ", $id";
 
-	return $rstud;
-}
+	$positive = $testinfo[1];	
 
-function get_std($test,$cond="")
-{
-	$color=get_color_std();
-
-	foreach($test['id'] as $id)
+	if($cond)
 	{
-		$ret=query("SELECT AVG(valore) AS avg,STD(valore) AS std FROM PROVE".$cond['tabs']." WHERE fk_test=$id".$cond['rstr']);
-		$row=$ret->fetch_assoc();
-		$avg[$id]=$row['avg'];
-		$std[$id]=$row['std'];
-	}
+		$classlist = $cond['class'];
+		$genderlist = $cond['sex'];
+		$prof = $cond['prof'];
 
-	$cond['tabs']=str_replace(",ISTANZE", "", $cond['tabs']);
-	
-	$retprove=query("SELECT id_ist,fk_test,valore FROM PROVE,ISTANZE".$cond['tabs']." WHERE fk_ist=id_ist AND fk_cl=".$_GET['id'].$cond['rstr']);
-	while($row=$retprove->fetch_assoc())
-	{
-		$z=($row['valore']-$avg[$row['fk_test']])/$std[$row['fk_test']];
-		if($test['pos'][$row['fk_test']]=="Minori")
-			$z*=-1;
+		// Statement to get the class's tests and their average and standard deviation, only for sets 
+		// defined by the user
+		$ctst_st = prepare_stmt("SELECT fk_test, AVG(valore) AS avg, STD(valore) AS std FROM PROVE 
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN STUDENTI ON fk_stud=id_stud 
+			JOIN CLASSI ON fk_cl=id_cl
+			WHERE fk_test IN ($testlist)
+			AND anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof
+			GROUP BY fk_test");
+
+		// Statement to get the class's results that fall in the categories selected by the user
+		$res_st = prepare_stmt("SELECT id_ist, fk_test, valore FROM PROVE 
+			JOIN ISTANZE ON fk_ist=id_ist 
+			JOIN STUDENTI ON fk_stud=id_stud 
+			JOIN CLASSI ON fk_cl=id_cl
+			WHERE fk_cl=?
+			AND anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof");
 		
-		$rstud['val'][$row['id_ist']][$row['fk_test']]=number_format($z,5);
-
-		if($z===0)
-			$rstud['color'][$row['id_ist']][$row['fk_test']]="";
+		if($cond['prof'] != "")
+		{
+			$ctst_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
+			$res_st->bind_param("iiii", $class, $cond['year1'], $cond['year2'], $_SESSION['id']);
+		}
 		else
 		{
-			$i=number_format($z,1)*10;
-			if($i>20)
-				$i=20;
-
-			while($i%5!=0 or $i<-15)
-				$i++;
-
-			$rstud['color'][$row['id_ist']][$row['fk_test']]=$color[$i*0.2+3]; 
-		}  		
+			$ctst_st->bind_param("ii", $cond['year1'], $cond['year2']);
+			$res_st->bind_param("iii", $class, $cond['year1'], $cond['year2']);
+		}
 	}
+	else
+	{
+		// Statement to get the class's tests and their average and standard deviation
+		$ctst_st = prepare_stmt("SELECT fk_test, AVG(valore) AS avg, STD(valore) AS std FROM PROVE 
+			WHERE fk_test IN ($testlist)
+			GROUP BY fk_test");
+
+		// Statement to get the class's results
+		$res_st = prepare_stmt("SELECT id_ist, fk_test, valore FROM PROVE JOIN ISTANZE ON fk_ist=id_ist WHERE fk_cl=?");
+		$res_st->bind_param("i", $class);
+	}
+	
+	$ctst = execute_stmt($ctst_st);
+	$ctst_st->close();
+
+	while($row = $ctst->fetch_assoc())
+	{
+		$avg[$row['fk_test']] = $row['avg'];
+		$std[$row['fk_test']] = $row['std'];
+	}
+
+	$ret_res = execute_stmt($res_st);
+	$res_st->close();
+
+	while($row = $ret_res->fetch_assoc())
+	{
+		$z = ($row['valore'] - $avg[$row['fk_test']]) / $std[$row['fk_test']];
+
+		// Inverts the sign if to a better perfomance corresponds a lower value
+		if($positive[$row['fk_test']] == "Minori")
+			$z *= -1;
+		
+		$rstud['val'][$row['id_ist']][$row['fk_test']] = number_format($z, 5);
+		$rstud['color'][$row['id_ist']][$row['fk_test']] = color_from_val($z, $color, false);
+	}
+
 	return $rstud;
 }
 
@@ -536,7 +603,7 @@ function get_vt($color,$cond="")
 	
 	$cond2=str_replace(",ISTANZE", "", $cond['tabs']);
 	
-	$retprove=query("SELECT id_ist,p1.fk_test AS fk_test,MONTH(p1.data) AS data,COUNT(*) AS lte
+	$ret_res=query("SELECT id_ist,p1.fk_test AS fk_test,MONTH(p1.data) AS data,COUNT(*) AS lte
 		FROM PROVE AS p1,TEST,ISTANZE,(SELECT valore,fk_test FROM PROVE".$cond['tabs']." WHERE 1=1".$cond['rstr'].") as p2".$cond2."
 		WHERE p1.fk_test=id_test 
 		AND IF(pos='Maggiori',p2.valore<=p1.valore,p2.valore>=p1.valore) 
@@ -544,7 +611,7 @@ function get_vt($color,$cond="")
 		AND p1.fk_test=p2.fk_test".$cond['rstr']."
 		GROUP BY fk_ist,fk_test");
 
-	while($row=$retprove->fetch_assoc())
+	while($row=$ret_res->fetch_assoc())
 	{			
 		$prc=number_format(($row['lte']/$count[$row['fk_test']])*100,5);
 		

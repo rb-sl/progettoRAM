@@ -1,17 +1,12 @@
 <?php 
+// Page to show the data of a class
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 chk_access(2);
 connect();
 
-$class_st = prepare_stmt("SELECT * FROM CLASSI WHERE id_cl=?");
-$class_st->bind_param("i", $_GET['id']);
-
-$ret = execute_stmt($class_st);
-$cl = $ret->fetch_assoc();
-$class_st->close();
-
+$cl = get_class_info($_GET['id']);
 chk_prof($cl['fk_prof']);
 
 show_premain("Registro ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno'] + 1));
@@ -58,7 +53,7 @@ while($row = $retprove->fetch_assoc())
 }
 $result_st->close();
 
-$ret = get_test();
+$ret = get_test($_GET['id']);
 
 // Output of rows for test, average and median
 $ravg = "";

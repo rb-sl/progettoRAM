@@ -17,14 +17,15 @@ function arr_med($vals, $dec)
 
 	if($size == 0)
 		return "-";
-	if($size == 1);
-		return $vals[0];
 
 	sort($vals);
+
+	// To align with array indices, in the even case 1 is subtracted from the found
+	// place, while in the odd case floor is used in place of ceil
 	if($size % 2 == 0)
-    	return number_format(($vals[$size / 2] + $vals[$size / 2 + 1]) / 2, $dec);
+    	return number_format(($vals[$size / 2 - 1] + $vals[$size / 2]) / 2, $dec);
 	else
-    	return number_format($vals[ceil($size / 2)], $dec);	
+    	return number_format($vals[floor($size / 2)], $dec);	
 }
 
 // Funzione per il calcolo della deviazione standard di un array
@@ -76,29 +77,31 @@ function calc_r($id1,$id2,$cond="")
 	return $r;
 }
 
-// Costruzione delle condizioni aggiuntive per la select dei dati; in 0 le tabelle
-// aggiuntive, in 1 le varie condizioni. Si può evitare la join su classi se è stata
-// già fatta nella query principale
-function cond_builder($nocl=false)
+// Construction of additional restrictions based on GET data
+function cond_builder()
 {
-	$cond['tabs']=",STUDENTI,ISTANZE";
-	if(!$nocl)
-    {
-    	$cond['tabs'].=",CLASSI";
-    	$cl=" AND fk_cl=id_cl";
-    }
-	$cond['rstr']=" AND fk_ist=id_ist AND fk_stud=id_stud $cl AND anno BETWEEN ".$_GET['anno1']." AND ".$_GET['anno2']." AND classe IN (0"; // Lo zero è per non tornare nulla se nessuna classe è selezionata
-	for($i=0;$i<=5;$i++)
-    	if($_GET['c'.$i])
-       		$cond['rstr'].=",$i";
-	$cond['rstr'].=") AND sesso IN('x'"; //Per qualche motivo 0 torna le m
-	if($_GET['m'])
-    	$cond['rstr'].=",'m'";
-	if($_GET['f'])
-    	$cond['rstr'].=",'f'";
-	$cond['rstr'].=")";
-	if($_GET['rstr'])
-    	$cond['rstr'].="AND fk_prof=".$_SESSION['id'];
+	// Constuction of the class list
+	$cond['class'] = "";
+	for($i = 1; $i <= 5; $i++)
+    	if(isset($_GET['c'.$i]))
+       		$cond['class'] .= ", $i";
+
+	// Construction of the gender list
+	$cond['sex'] = "";
+	if(isset($_GET['m']))
+    	$cond['sex'] .= ", 'm'";
+	if(isset($_GET['f']))
+    	$cond['sex'] .= ", 'f'";
+	
+	// Year-related restrictions
+	$cond['year1'] = $_GET['year1'];
+	$cond['year2'] = $_GET['year2'];
+
+	// Restriction on the teacher
+	if(isset($_GET['rstr']))
+    	$cond['prof'] = "AND fk_prof=?";
+	else
+		$cond['prof'] = "";
 
 	return $cond;
 }

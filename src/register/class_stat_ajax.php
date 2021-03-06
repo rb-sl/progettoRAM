@@ -1,24 +1,26 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT']."/librerie/general.php";
-include $_SERVER['DOCUMENT_ROOT']."/librerie/lib_reg.php";
-include $_SERVER['DOCUMENT_ROOT']."/librerie/lib_stat.php";
+// Script to send statistical data about a class on an ajax request
+include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 chk_access(2);
 connect();
 
-$cond=cond_builder();
-$test=get_test();
+$cond = cond_builder(); 
 
 switch($_GET['vis'])
 {
 	case "prc":
-		$color=get_color_prc();
-		$rstud=get_prc($color,$cond);
-		$am=get_am_prc($test['id'],$rstud['val'],$color);
+		if($rstud = get_perc($_GET['id'], $cond))
+			$am = get_avgmed($_GET['id'], $rstud['val'], true);
+		else
+			$am = null;
 		break;
 	case "std":
-		$color=get_color_std();
-		$rstud=get_std($test,$cond);	
-		$am=get_am_std($test['id'],$rstud['val'],$color);
+		if($rstud = get_std($_GET['id'], $cond))	
+			$am = get_avgmed($_GET['id'], $rstud['val'], false);
+		else
+			$am = null;
 		break;
 	case "vt":
 		$color=get_color_vt();
@@ -27,5 +29,5 @@ switch($_GET['vis'])
 		break;
 }
 
-echo json_encode(array($rstud,$am));
+echo json_encode(array($rstud, $am));
 ?>

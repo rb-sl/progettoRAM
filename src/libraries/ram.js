@@ -66,6 +66,7 @@ $(function(){
         	$(".r_stat").show();
         	$(this).addClass("btn-primary");
         }
+		resizeText();
     });
 });
 
