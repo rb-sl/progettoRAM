@@ -8,6 +8,7 @@ connect();
 
 $cond = cond_builder(); 
 
+// Builds the response based on the type of data requested
 switch($_GET['vis'])
 {
 	case "prc":
@@ -22,10 +23,11 @@ switch($_GET['vis'])
 		else
 			$am = null;
 		break;
-	case "vt":
-		$color=get_color_vt();
-		$rstud=get_vt($color,$cond);
-		$am=get_am_vt($test['id'],$rstud,$color);
+	case "gr":
+		if($rstud = get_grades($_GET['id'], $cond))
+			$am = get_avgmed_grades($_GET['id'], $rstud);
+		else
+			$am = null;
 		break;
 }
 

@@ -24,7 +24,7 @@ $color = get_color_prc();
 		<select id="vis" class="form-control">
         	<option value="prc">Valori percentili</option>
     		<option value="std">Valori standard</option>
-   	 		<option value="vt">Voti</option>
+   	 		<option value="gr">Voti</option>
 		</select>
 	</h3>
 </div>

@@ -151,6 +151,18 @@ function color_from_val($val, $color, $isperc)
 	}
 }
 
+function color_from_grade($val, $color)
+{
+	if($val == "-")
+		return "";
+
+	$color_index = ceil(floor($val * 10) / 5) * 5;
+	// while(!isset($color[$color_index]))
+	// 	$color_index++;
+
+	return $color[$color_index];
+}
+
 // Calculates average and median rows and columns.
 // $isperc indicates whether the values are from percentiles or standards
 function get_avgmed($class, $vals, $isperc)
@@ -199,64 +211,83 @@ function get_avgmed($class, $vals, $isperc)
 	return $ret;
 }
 
-function get_am_vt($idtest,$rstud,$color)
+function get_avgmed_grades($class, $rstud)
 {
-	// Medie e mediane dei test
-	$c=0;
+	$color = get_color_gr();
+
+	$testinfo = get_class_tests($class);
+	$idtest = $testinfo[0];
+
+	$vals = $rstud['val'];
+	$dates = $rstud['data'];
+
+	// Tests' averages and medians
+	$sum = 0;
 	foreach($idtest as $id)
 	{
-		$ret['avg'][$id]['val']=arr_avg(array_column($rstud['val'],$id),2);
-		$i=intval($ret['avg'][$id]['val']*10);
-		while(!$color[$i])
-			$i++;
-		$ret['avg'][$id]['color']=$color[$i];
+		// Test's average and color
+		$ret['avg'][$id]['val'] = arr_avg(array_column($vals, $id), 2);
+		$ret['avg'][$id]['color'] = color_from_grade($ret['avg'][$id]['val'], $color);
 
-		$ret['tavg']['val']=($ret['tavg']['val']*$c+$ret['avg'][$id]['val'])/++$c;
-
-		$ret['med'][$id]['val']=arr_med(array_column($rstud['val'],$id),2);
-		$i=intval($ret['med'][$id]['val']*10);
-		while(!$color[$i])
-			$i++;
-		$ret['med'][$id]['color']=$color[$i];
+		// Sum for the total average
+		if($ret['avg'][$id]['val'] != "-")
+			$sum += $ret['avg'][$id]['val'];
+	
+		// Test's median and color
+		$ret['med'][$id]['val'] = arr_med(array_column($vals, $id), 2);
+		$ret['med'][$id]['color'] = color_from_grade($ret['med'][$id]['val'], $color);
 	}
 
-	// Medie I e II quadrimestre, vengono impostate in savg e smed
-	foreach($rstud['val'] as $ids => $arr)
+	// Students' averages divided for first and second quarter
+	// savg and smed are used respectively
+	foreach($vals as $ids => $arr)
 	{
-		$q1=0;
-		$q2=0;
+		$c1 = 0;
+		$c2 = 0;
+		$q1 = 0;
+		$q2 = 0;
 		foreach($arr as $idt => $val)
 		{
-			if($rstud['data'][$ids][$idt]>8)
-				$ret['savg'][$ids]['val']=($ret['savg'][$ids]['val']*$q1+$val)/++$q1;	
+			if($dates[$ids][$idt] > 8)
+			{	
+				$c1++;
+				$q1 += $val;
+			}
 			else
-				$ret['smed'][$ids]['val']=($ret['smed'][$ids]['val']*$q2+$val)/++$q2;
-		}	
-	}
-	foreach($ret['savg'] as $ids => $avg)
-	{
-		$ret['savg'][$ids]['val']=number_format($ret['savg'][$ids]['val'],2);
-		$i=intval($ret['savg'][$ids]['val']*10);
-		while(!$color[$i])
-			$i++;
-		$ret['savg'][$ids]['color']=$color[$i];
+			{
+				$c2++;
+				$q2 += $val;
+			}	
+		}
+
+		// First quarter average
+		if($c1 != 0)
+		{
+			$ret['savg'][$ids]['val'] = number_format($q1 / $c1, 2);
+			$ret['savg'][$ids]['color'] = color_from_grade($ret['savg'][$ids]['val'], $color);
+		}
+		else
+		{
+			$ret['savg'][$ids]['val'] = "";
+			$ret['savg'][$ids]['color'] = "";
+		}
+
+		// Second quarter average
+		if($c2 != 0)
+		{
+			$ret['smed'][$ids]['val'] = number_format($q2 / $c2, 2);
+			$ret['smed'][$ids]['color'] = color_from_grade($ret['smed'][$ids]['val'], $color);
+		}
+		else
+		{
+			$ret['smed'][$ids]['val'] = "";
+			$ret['smed'][$ids]['color'] = "";
+		}
 	}
 	
-	foreach($ret['smed'] as $ids => $avg)
-	{
-		$ret['smed'][$ids]['val']=number_format($ret['smed'][$ids]['val'],2);
-		$i=intval($ret['smed'][$ids]['val']*10);
-		while(!$color[$i])
-			$i++;
-		$ret['smed'][$ids]['color']=$color[$i];
-	}
-	
-	// Media totale
-	$ret['tavg']['val']=number_format($ret['tavg']['val'],2);
-	$i=intval($ret['tavg']['val']*10);
-	while(!$color[$i])
-		$i++;
-	$ret['tavg']['color']=$color[$i];
+	// Total average
+	$ret['tavg']['val'] = number_format($sum / sizeof($idtest), 2);
+	$ret['tavg']['color'] = color_from_grade($ret['tavg']['val'], $color,);
 
 	return $ret;
 }
@@ -293,15 +324,20 @@ function get_color_std()
 	return $color;
 }
 
-function get_color_vt()
+// Function to obtain color based on grades
+function get_color_gr()
 {
-	$ret_gr=query("SELECT * FROM VALUTAZIONI,VOTI WHERE fk_voto=id_voto AND fk_prof=".$_SESSION['id']);
-	while($row=$ret_gr->fetch_assoc())
-		$color[$row['voto']*10]=$row['color'];
+	$grade_st = prepare_stmt("SELECT * FROM VOTI");
+	$ret_gr = execute_stmt($grade_st);
+	$grade_st->close();
+
+	while($row = $ret_gr->fetch_assoc())
+		$color[$row['voto'] * 10] = $row['color'];
 
 	return $color;
 }
 
+// Returns the list of test ids done by the class, and their positive values
 function get_class_tests($class)
 {
 	$ctst_st = prepare_stmt("SELECT id_test, pos FROM TEST 
@@ -445,7 +481,7 @@ function get_perc($class, $cond = null)
 	
 	$empty = true;
 	while($row = $cnt->fetch_assoc())
-	{ 
+	{
 		$empty = $empty && ($row['n'] == 0);
 		$count[$row['fk_test']] = $row['n'];
 	}
@@ -460,6 +496,7 @@ function get_perc($class, $cond = null)
 		return null;
 	}
 
+	$rstud = null;
 	foreach($positive as $test => $greater)
 	{
 		$vals = execute_stmt($class_st);
@@ -583,46 +620,33 @@ function get_std($class, $cond = null)
 	return $rstud;
 }
 
-function get_vt($color,$cond="")
+// Function to get grades data and their color
+function get_grades($class, $cond = null)
 {
-	$ret=query("SELECT * FROM VOTI,VALUTAZIONI WHERE fk_voto=id_voto AND fk_prof=".$_SESSION['id']);
-	while($row=$ret->fetch_assoc())
-		$voti[$row['perc']]=$row['voto'];
+	$gr_st = prepare_stmt("SELECT * FROM VOTI JOIN VALUTAZIONI ON fk_voto=id_voto WHERE fk_prof=?");
+	$gr_st->bind_param("i", $_SESSION['id']);
+	$ret = execute_stmt($gr_st);
+	$gr_st->close();
 
-	$retcnt=query("SELECT fk_test,pos,COUNT(*) AS n FROM PROVE,
-		(
-			SELECT id_test,pos FROM PROVE,TEST,ISTANZE 
-			WHERE fk_test=id_test AND fk_ist=id_ist
-			AND fk_cl=".$_GET['id']." GROUP BY id_test
-		) AS p2".$cond['tabs']." WHERE id_test=fk_test".$cond['rstr']." GROUP BY fk_test");
-	while($row=$retcnt->fetch_assoc())
-    {
-    	$count[$row['fk_test']]=$row['n'];
-    	$pos[$row['fk_test']]=$row['pos'];
-	}
-	
-	$cond2=str_replace(",ISTANZE", "", $cond['tabs']);
-	
-	$ret_res=query("SELECT id_ist,p1.fk_test AS fk_test,MONTH(p1.data) AS data,COUNT(*) AS lte
-		FROM PROVE AS p1,TEST,ISTANZE,(SELECT valore,fk_test FROM PROVE".$cond['tabs']." WHERE 1=1".$cond['rstr'].") as p2".$cond2."
-		WHERE p1.fk_test=id_test 
-		AND IF(pos='Maggiori',p2.valore<=p1.valore,p2.valore>=p1.valore) 
-		AND fk_ist=id_ist AND fk_cl=".$_GET['id']." 
-		AND p1.fk_test=p2.fk_test".$cond['rstr']."
-		GROUP BY fk_ist,fk_test");
+	while($row = $ret->fetch_assoc())
+		$grades[$row['perc']] = $row['voto'];
 
-	while($row=$ret_res->fetch_assoc())
-	{			
-		$prc=number_format(($row['lte']/$count[$row['fk_test']])*100,5);
-		
-		$base=intval($prc);
-		while(!$voti[$base])
-			$base++;
-		$rstud['val'][$row['id_ist']][$row['fk_test']]=$voti[$base];
+	$rstud_perc = get_perc($class, $cond);
 
-   		$rstud['color'][$row['id_ist']][$row['fk_test']]=$color[$voti[$base]*10];
-		$rstud['data'][$row['id_ist']][$row['fk_test']]=$row['data'];
-	}
+	if($rstud_perc == null)
+		return null;
+
+	$rstud['data'] = $rstud_perc['data'];
+	$rstud['color'] = $rstud_perc['color'];
+
+	foreach($rstud_perc['val'] as $instance => $arr)
+		foreach($arr as $test => $val)
+		{
+			$base = floor($val);
+			while(!isset($grades[$base]))
+				$base++;
+			$rstud['val'][$instance][$test] = $grades[$base];  
+		}
 
 	return $rstud;
 }
