@@ -252,7 +252,7 @@ function show_premain($title = "", $stat = false)
     	$ret = execute_stmt($stmt);
     	$years = $ret->fetch_assoc();
 
-        echo " <nav id='nav2' class='pg-head navbar-inverse navbar-fixed-top' style='margin-top: 50px'>
+        echo " <nav id='nav2' class='pg-head navbar-inverse navbar-fixed-top'>
 		<div class='container-fluid'>
 			<div class='navbar-header'>
 				<button type='button' class='navbar-toggle' data-toggle='collapse' data-target='#myNavbar2'>
@@ -264,11 +264,11 @@ function show_premain($title = "", $stat = false)
 			<div class='collapse navbar-collapse' id='myNavbar2'>
 				<ul class='nav navbar-nav'>
 					<li class='li-stat'>Anni da 
-                    	<input type='text' id='a1' class='anno' name='anno1' value='".$years['anno1']."' style='text-align:right;width:40px' required>
+                    	<input type='text' id='a1' class='anno menuyear' name='anno1' value='".$years['anno1']."' required>
                         /
                         <span id='flwa1'>".($years['anno1'] + 1)."</span>
 						a 
-                        <input type='text' id='a2' class='anno' name='anno2' value='".$years['anno2']."' size='4' style='text-align:right;width:40px' required>
+                        <input type='text' id='a2' class='anno menuyear' name='anno2' value='".$years['anno2']."' size='4' required>
                         /
                         <span id='flwa2'>".($years['anno2'] + 1)."</span>
                     </li>
@@ -297,14 +297,14 @@ function show_premain($title = "", $stat = false)
     </nav>";
     }
 	else
-		$px="60px";
+		$px = "60px";
 
-	echo "<main style='margin-top:$px'>";
+	echo "<main style='margin-top: $px'>";
 	
 	// Prints errors and stops the loading of the page
 	if(isset($_SESSION['err']) and $_SESSION['err'] != "")
 	{
-  		echo "<h3 style='color:red'>Accesso negato</h3>";
+  		echo "<h3 class='dangercolor'>Accesso negato</h3>";
   		switch($_SESSION['err'])
   		{
     		case 1:
@@ -329,7 +329,7 @@ function show_premain($title = "", $stat = false)
 	}
 
 	if(isset($_SESSION['scad']) and $_SESSION['scad'])
-  		echo "<h3 style='color:red'>Password in scadenza!</h3>
+  		echo "<h3 class='dangercolor'>Password in scadenza!</h3>
   		<h4>Accedere alla <a href='/user/profile.php'>pagina di profilo</a> per modificarla</h4>";
 }
 

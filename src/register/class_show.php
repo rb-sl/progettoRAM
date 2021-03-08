@@ -64,7 +64,7 @@ while($row = $ret->fetch_assoc())
 	$idtest[] = $row['id_test'];
 
 	$ravg .= "<td id='r".$row['id_test']."'>".$row['avg']." ".$row['simbolo']."</td>";	
-	$rmed .= "<td id='r".$row['id_test']."' style='border-bottom:1px solid black'>"
+	$rmed .= "<td id='r".$row['id_test']."' class='borderunder'>"
 		.arr_med($vals[$row['id_test']], 2)." ".$row['simbolo']."</td>";
 }
 echo "</tr>

@@ -17,6 +17,10 @@ table {
 	overflow-y: scroll;
 	max-height: 90vh;
 }
+.innerx {
+	overflow-x: scroll;
+}
+
 .topleft{
 	width: 110px;
 	background-color: #f9f9f9;
@@ -57,9 +61,19 @@ main {
 .marginunder {
   	margin-bottom: 10px !important;
 }
+.borderunder {
+	border-bottom: 1px solid black;
+}
+.borderover {
+	border-top: 1px solid black;
+}
 
 .textright {
   	text-align: right;
+}
+
+.textleft {
+	text-align: left im !important;
 }
 
 .textcenter {
@@ -122,6 +136,24 @@ label{
   	background-color: #dc3545;
 }
 
+.studtable {
+	max-width: 800px;
+	min-width: 600px;
+}
+
+.setform {
+	width: 80px;
+}
+
+.numinput {
+	width: 50px;
+}
+
+.menuyear {
+	text-align: right;
+	width:40px;
+}
+
 .nobul{
     list-style-type: none;
 }
@@ -143,10 +175,11 @@ label{
 
 /* Gestione navbars: menu principale > menu statistico > tutto il resto */
 #nav1 {
-  z-index: 5;
+  	z-index: 5;
 }
 #nav2 {
-  z-index: 4;
+	margin-top: 50px;
+  	z-index: 4;
 }
 
 .point {

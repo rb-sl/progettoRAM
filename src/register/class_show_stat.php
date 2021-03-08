@@ -63,12 +63,12 @@ foreach($am['avg'] as $idt => $avg)
 
 $rowmed = "";
 foreach($am['med'] as $idt => $med)
-	$rowmed .= "<td id='mt$idt' class='jcol jtmed' vcolor='#".$med['color']."' style='border-bottom:1px solid black'>".$med['val']."</td>";
+	$rowmed .= "<td id='mt$idt' class='jcol jtmed borderunder' vcolor='#".$med['color']."'>".$med['val']."</td>";
 
 // Prints the table header and information on average and median values
 echo $test['row']."
 		<td class='col topfix r_stat evenrow jQhidden'>Media totale</td>
-        <td id='tavg' class='col topfix r_stat jcol oddrow jQhidden' vcolor='#".$am['tavg']['color']."'>"
+        <td id='tavg' class='col topfix r_stat jcol evenrow jQhidden' vcolor='#".$am['tavg']['color']."'>"
 			.number_format($am['tavg']['val'], 5)."</td>
 	</tr>
 	<tr class='dat r_stat jQhidden'>
@@ -100,11 +100,24 @@ foreach($cstud as $idist => $stud)
         	echo ">-</td>";
     }
 
-	echo "<td id='a_$idist' class='r_$idist jsavg jcol lftbor r_stat jQhidden' vcolor='#".$am['savg'][$idist]['color']."'>"
-		.$am['savg'][$idist]['val']
-		."</td>
-		  <td id='m_$idist' class='r_$idist jsmed jcol r_stat jQhidden' vcolor='#".$am['smed'][$idist]['color']."'>"
-		.$am['smed'][$idist]['val']."</td></tr>\n";
+	if(isset($am['savg'][$idist]))
+	{
+		$avgcolor = $am['savg'][$idist]['color'];
+		$avg = $am['savg'][$idist]['val'];
+		$medcolor = $am['smed'][$idist]['color'];
+		$med = $am['smed'][$idist]['val'];
+	}
+	else
+	{
+		$avgcolor = "";
+		$avg = "-";
+		$medcolor = "";
+		$med = "-";
+	}
+
+	echo "<td id='a_$idist' class='r_$idist jsavg jcol lftbor r_stat jQhidden' vcolor='#$avgcolor'>$avg</td>
+		  <td id='m_$idist' class='r_$idist jsmed jcol r_stat jQhidden' vcolor='#$medcolor'>$med</td>
+		</tr>\n";
 }
 ?>
 		</table>

@@ -83,6 +83,8 @@ $(function(){
 					var savg = data[1]['savg'];
 					var smed = data[1]['smed'];
 					var tavg = data[1]['tavg'];
+					
+					var text;
 				
 					$(".jdat").each(function(){
 						idr = parseInt($(this).attr("id").substring(0, $(this).attr("id").lastIndexOf("_")));
@@ -104,7 +106,11 @@ $(function(){
 					$(".jtavg").each(function(){
 						idt = parseInt($(this).attr("id").substring(2));
 
-						$(this).text(avg[idt]['val']);
+						text = avg[idt]['val'];
+						if(text == "")
+							text = "-";
+
+						$(this).text(text);
 						$(this).attr("vcolor", "#" + avg[idt]['color']);
 					});
 
@@ -112,7 +118,11 @@ $(function(){
 					$(".jtmed").each(function(){
 						idt = parseInt($(this).attr("id").substring(2));
 
-						$(this).text(med[idt]['val']);
+						text = med[idt]['val'];
+						if(text == "")
+							text = "-";
+
+						$(this).text(text);
 						$(this).attr("vcolor","#" + med[idt]['color']);
 					});
 
@@ -121,7 +131,11 @@ $(function(){
 						ids = parseInt($(this).attr("id").substring(2));
 
 						if(savg && savg[ids]){
-							$(this).text(savg[ids]['val']);
+							text = savg[ids]['val'];
+							if(text == "")
+								text = "-";
+
+							$(this).text(text);
 							$(this).attr("vcolor", "#" + savg[ids]['color']);
 						}
 						else{
@@ -134,7 +148,11 @@ $(function(){
 						ids = parseInt($(this).attr("id").substring(2));
 
 						if(smed && smed[ids]){
-							$(this).text(smed[ids]['val']);
+							text = smed[ids]['val'];
+							if(text == "")
+								text = "-";
+
+							$(this).text(text);
 							$(this).attr("vcolor", "#" + smed[ids]['color']);
 						}
 						else
@@ -142,7 +160,11 @@ $(function(){
 					});
 
                     // Updates the total average
-					$("#tavg").text(tavg['val']);
+					text = tavg['val'];
+					if(text == "")
+						text = "-";
+						
+					$("#tavg").text(text);
 					$("#tavg").attr("vcolor", "#" + tavg['color']);
 
                     // Restores colors, if needed

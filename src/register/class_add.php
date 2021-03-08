@@ -1,65 +1,85 @@
 <?php 
-include $_SERVER['DOCUMENT_ROOT']."/librerie/general.php";
-include $_SERVER['DOCUMENT_ROOT']."/librerie/lib_reg.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
 chk_access(2);
 connect();
 show_premain("Aggiunta classe");
 
-// Calcolo dell'a.s. precedente; se ci si trova nel I semestre consiste nell'anno - 1, se nel secondo nell'anno - 2
-// Agosto è preso come spartiacque
-$y=date('Y');
-if(date("m")<8)
-	$y--;
+// Calculation of the previous school year; for the first quadrimester it is the year - 1,
+// for the second year - 2. The division is done for august
+$year = date("Y");
+if(date("m") < 8)
+	$year--;
 ?>
+
 <h2>Aggiungi Classe</h2>
 
 <div>
-	<button id="prom" class="btn btn-primary">Promuovi classe precedente</button>
-	<div class="dpro" style="display:none">
-    	Classe da promuovere: 
-    	<select id="clpr" class="form-control">
-			<option selected disabled></option>
+	<div class="marginunder">
+		<button id="prom" class="btn btn-primary">Promuovi classe precedente</button>
+	
+		<div class="dpro jQhidden">
+			Classe da promuovere: 
+			<select id="clpr" class="form-control">
+				<option selected disabled></option>
 <?php
-if($_SESSION['priv']>0)
-	$nad="fk_prof=".$_SESSION['id']." AND";
+if($_SESSION['priv'] > 0)
+	$nad = "fk_prof=? AND";
+else
+	$nad = "";
 
-// Selezione di tutte le classi dell'anno precedente dello user (o tutte in caso di amministratore)
-// che ancora non hanno avuto una classe successiva        
-$ret=query("SELECT C1.id_cl,C1.classe,C1.sez FROM 
-	(SELECT id_cl,classe,sez,anno FROM CLASSI WHERE $nad anno=".($y-1)." AND fk_scuola=".$_SESSION['scuola']." AND classe<>5) AS C1
+// Gets all user's classes of the previous year that do not have a following class yet
+// An administrator can promote every class
+$lastyear = $year - 1; 
+$prom_st = prepare_stmt("SELECT C1.id_cl, C1.classe, C1.sez FROM 
+	(SELECT id_cl, classe, sez, anno FROM CLASSI WHERE $nad anno=? AND fk_scuola=? AND classe<>5) AS C1
 	LEFT JOIN
-	(SELECT id_cl,classe-1 AS classe,sez,anno-1 AS anno FROM CLASSI WHERE anno=$y AND fk_scuola=".$_SESSION['scuola'].") AS C2
-	USING (classe,sez,anno) 
-    WHERE C2.id_cl IS NULL 
-    ORDER BY classe,sez");
-while($row=$ret->fetch_assoc())
+	(SELECT id_cl, classe-1 AS classe, sez, anno-1 AS anno FROM CLASSI WHERE anno=? AND fk_scuola=?) AS C2
+	USING (classe, sez, anno) 
+	WHERE C2.id_cl IS NULL 
+	ORDER BY classe, sez");
+
+if($_SESSION['priv'] == 0)
+	$prom_st->bind_param("iiii", $lastyear, $_SESSION['scuola'], $year, $_SESSION['scuola']);
+else
+	$prom_st->bind_param("iiiii", $_SESSION['id'], $lastyear, $_SESSION['scuola'], $year, $_SESSION['scuola']);
+
+$ret = execute_stmt($prom_st);
+$prom_st->close();
+
+while($row = $ret->fetch_assoc())
 	echo "<option value='".$row['id_cl']."'>".$row['classe'].$row['sez']."</option>";
 ?>
-		</select>
+			</select>
+		</div>
 	</div>
 </div>
 
-<form id="frm" method="POST" action="/registro/in_classe.php">
+<form id="frm" method="POST" action="/register/class_insert.php">
 <?php show_cl_form(); ?>
-	<h3 class="dpro" style="display:none">Studenti promossi nella nuova classe:</h3>
-	<div id="divpro" class="dpro" style="display:none">-</div>
+	<h3 class="dpro jQhidden">Studenti promossi nella nuova classe:</h3>
+	<div id="divpro" class="dpro jQhidden">-</div>
 
 	<h3>Nuovi studenti:</h3>
-	<table id="tabadd" class="table table-striped" style='width:500px'>
-    	<tr id="r0">
-        	<td><input type="text" id="c0" name="lcst[0]" class="last n0" placeholder="Cognome"></td>
-        	<td><input type="text" id="nm0" class="n0" name="nst[0]" placeholder="Nome"></td>
-        	<td>
-            	<label><input id="m0" class="n0" type="radio" name="sesso[0]" value="m">M</label>
-            	<label><input id="f0" class="n0" type="radio" name="sesso[0]" value="f">F</label>
-        	</td>
-        </tr>
-  	</table>
+	<div class="tdiv">
+  		<div id="tos" class="innerx">
+			<table id="tabadd" class="table table-striped studtable">
+				<tr id="r0">
+					<td><input type="text" id="c0" name="lcst[0]" class="last n0" placeholder="Cognome"></td>
+					<td><input type="text" id="nm0" class="n0" name="nst[0]" placeholder="Nome"></td>
+					<td>
+						<label><input id="m0" class="n0" type="radio" name="sesso[0]" value="m">M</label>
+						<label><input id="f0" class="n0" type="radio" name="sesso[0]" value="f">F</label>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
 	
-	<div id="ext" style="display:none">
+	<div id="ext" class="jQhidden">
 		<h3>Possibili studenti già registrati:</h3>
-    	<table class='table table-striped' style='width:500px'>
-        	<tbody id='tabext'>
+    	<table class="table table-striped studtable">
+        	<tbody id="tabext">
             </tbody>
         </table>
 	</div>
@@ -67,37 +87,6 @@ while($row=$ret->fetch_assoc())
 	<input type="submit" value="Inserisci classe" class="btn btn-warning top-bot-margin">
 </form>
 
-
-<script>
-$(function(){
-	$("#prom").click(function(){
-    	$(this).hide();
-    	$(".dpro").show();
-    });
-	
-	$("#clpr").change(function(){
-    	$.ajax({                                      
-        	url: "aj_prom.php",
-        	data: "toprom="+$("#clpr").val(),
-        	dataType: "json",
-        	async: false,
-        	success: function(data){
-            	$("#cl").val(data['cl']);
-            	$("#sez").val(data['sez']);
-            	$("#a1").val(data['anno']);
-            	$("#flwa1").text(parseInt(data['anno'])+1);
-            	
-          		$("#divpro").html(data['list']);
-        	},
-        	error: function(){
-        		alert("Errore ajax");
-      		},
-        	timeout: 5000
-      	});
-    });
-});
-</script>
-
-<script src="/librerie/script_reg.js"></script>
+<script src="./js/class_input.js"></script>
 
 <?php show_postmain(); ?>

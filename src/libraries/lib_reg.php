@@ -17,11 +17,12 @@ function get_class_info($id)
 	return $ret->fetch_assoc();
 }
 
-// Funzione per la costruzione della lista di studenti con checkbox per confermarne
-// la presenza in una classe
+// Construction of the list of students to confirm their presence in a class
 function build_chk_table($classe, $prom = false)
 {
-	$table = "<table id='tabchk' class='table table-striped' style='width:500px'>";
+	$table = "<div class='tdiv'>
+			<div class='innerx'>
+				<table id='tabchk' class='table table-striped studtable'>";
 	
 	// If this is the modification due to promotion, students already promoted to other classes
 	// will not be shown
@@ -34,7 +35,7 @@ function build_chk_table($classe, $prom = false)
 		$chkp 
 		ORDER BY cogs, noms");
 
-	$ret = execute_stmt();
+	$ret = execute_stmt($stud_st);
 	while($row = $ret->fetch_assoc())
 	{
 		$table .= "<tr>
@@ -53,7 +54,9 @@ function build_chk_table($classe, $prom = false)
 			<td>".strtoupper($row['sesso'])."</td>
 		</tr>";
 	}
-	$table .= "</table>";
+	$table .= "</table>
+			</div>
+		</div>";
 
 	return $table;
 }
@@ -157,8 +160,6 @@ function color_from_grade($val, $color)
 		return "";
 
 	$color_index = ceil(floor($val * 10) / 5) * 5;
-	// while(!isset($color[$color_index]))
-	// 	$color_index++;
 
 	return $color[$color_index];
 }
@@ -211,6 +212,7 @@ function get_avgmed($class, $vals, $isperc)
 	return $ret;
 }
 
+// Calculates averages for grades based on the quarter
 function get_avgmed_grades($class, $rstud)
 {
 	$color = get_color_gr();
@@ -710,50 +712,56 @@ function is_accettable($test, $val)
 }
 
 // Funzione per mostrare il form di modifica della classe
-function show_cl_form($cl=0,$sez="",$anno="")
+function show_cl_form($cl = 0, $sez = "", $year = null)
 {
+	// Selection of the current class
+	$nc = "";
+	$c1 = "";
+	$c2 = "";
+	$c3 = "";
+	$c4 = "";
+	$c5 = "";
 	switch($cl)
     {
 		case 0:
-			$n="<option selected disabled></option>";
+			$nc = "<option selected disabled></option>";
 			break;
 		case 1:
-			$c1=" selected";
+			$c1 = " selected";
 			break;
 		case 2:
-			$c2=" selected";
+			$c2 = " selected";
 			break;
 		case 3:
-			$c3=" selected";
+			$c3 = " selected";
 			break;
 		case 4:
-			$c4=" selected";
+			$c4 = " selected";
 			break;
 		case 5:
-			$c5=" selected";
+			$c5 = " selected";
 			break;		
 	}
 
-	if($anno)
-    	$y=$anno;
-	else
+	// Construction of the year if not given
+	if($year === null)
     {
-    	$y=date('Y');
-		if(date("m")<8)
-			$y--;
+    	$year = date('Y');
+		if(date("m") < 8)
+			$year--;
     }
 
 	echo "Classe: 
-		<select class='form-control' id='cl' name='cl' style='width:80px' required>
-    		$n
+		<select id='cl' class='form-control setform' name='cl' required>
+    		$nc
     		<option value='1'$c1>Prima</option>
     		<option value='2'$c2>Seconda</option>
     		<option value='3'$c3>Terza</option>
     		<option value='4'$c4>Quarta</option>
     		<option value='5'$c5>Quinta</option>
   		</select> 
-  	Sezione: <input type='text' id='sez' name='sez'  style='width:80px' value='$sez' required>
-  	Anno: <input class='anno' type='text' name='anno' id='a1' style='width:50px;text-align:right' value='$y' required>/<span id='flwa1'>".($y+1)."</span>";
+  	Sezione: <input type='text' id='sez' class='setform' name='sez' value='".quoteHTML($sez)."' required>
+  	Anno: <input  type='text' id='a1' class='anno textright numinput' name='anno' value='$year' required>/<span id='flwa1'>".($year + 1)."</span>";
 	
 	return;
 }
