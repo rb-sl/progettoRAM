@@ -342,7 +342,7 @@ function get_color_gr()
 // Returns the list of test ids done by the class, and their positive values
 function get_class_tests($class)
 {
-	$ctst_st = prepare_stmt("SELECT id_test, pos FROM TEST 
+	$ctst_st = prepare_stmt("SELECT id_test, passo, pos FROM TEST JOIN TIPOTEST ON fk_tipot=id_tipot
 		WHERE id_test IN (
 			SELECT DISTINCT(fk_test) FROM PROVE JOIN ISTANZE ON fk_ist=id_ist 
 			WHERE fk_cl=?
@@ -360,13 +360,15 @@ function get_class_tests($class)
 		
 		// Set to true if greater values correspond to a better performance
 		$positive[$row['id_test']] = ($row['pos'] == "Maggiori");
+
+		$step[$row['id_test']] = $row['passo'];
 	}
 
-	return array($testlist, $positive);
+	return array($testlist, $positive, $step);
 }
 
 // Function to obtain the percentiles of a class
-// The structure with multiple queries is chosen as it improves greatly the
+// The structure with multiple queries was chosen as it improves greatly the
 // Execution time (~0.2s) wrt bigger nested queries (~0.6s) such as
 //  SELECT fk_ist, data, (
 //      SELECT COUNT(*) FROM PROVE
@@ -376,6 +378,9 @@ function get_class_tests($class)
 //  FROM PROVE P
 //  WHERE fk_ist IN (SELECT id_ist FROM ISTANZE WHERE fk_cl=?)
 //  AND fk_test=?;
+// Moreover, structure with only one query to the database for each test instead
+// of one for each value (using a parallel scan of the result) permits to lower
+// execution time to ~0.02s
 function get_perc($class, $cond = null)
 {
 	$color = get_color_prc();
@@ -386,6 +391,7 @@ function get_perc($class, $cond = null)
 	foreach($testinfo[0] as $id)
 		$testlist .= ", $id";
 
+	$step = $testinfo[2];
 	$positive = $testinfo[1];
 
 	if($cond)
@@ -415,44 +421,34 @@ function get_perc($class, $cond = null)
 			AND anno BETWEEN ? AND ?
 			AND classe IN (0 $classlist)
 			AND sesso IN ('x' $genderlist)
-			$prof");
+			$prof
+			ORDER BY fk_test ASC, valore ASC");
 
 		// Statement to get the percentiles for tests with greater better values
-		$greater_st = prepare_stmt("SELECT COUNT(*) AS perc FROM PROVE 
+		$values_st = prepare_stmt("SELECT valore, COUNT(*) AS perc FROM PROVE 
 			JOIN ISTANZE ON fk_ist=id_ist 
 			JOIN STUDENTI ON fk_stud=id_stud 
 			JOIN CLASSI ON fk_cl=id_cl
-			WHERE fk_test=? AND valore<=?
+			WHERE fk_test=?
 			AND anno BETWEEN ? AND ?
 			AND classe IN (0 $classlist)
 			AND sesso IN ('x' $genderlist)
-			$prof");
-		
-		// Statement to get the percentiles for tests with lower better values
-		$lower_st = prepare_stmt("SELECT COUNT(*) AS perc FROM PROVE 
-			JOIN ISTANZE ON fk_ist=id_ist 
-			JOIN STUDENTI ON fk_stud=id_stud 
-			JOIN CLASSI ON fk_cl=id_cl
-			WHERE fk_test=? AND valore>=?
-			AND anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof");
+			$prof
+			GROUP BY valore 
+			ORDER BY valore ASC");
 
 		// Binding is done based on the presence of the restriction of the professor
 		if($cond['prof'] != "")
 		{
 			$count_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
 			$class_st->bind_param("iiiii", $test, $class, $cond['year1'], $cond['year2'], $_SESSION['id']);
-			$greater_st->bind_param("idiii", $test, $curval, $cond['year1'], $cond['year2'], $_SESSION['id']);
-			$lower_st->bind_param("idiii", $test, $curval, $cond['year1'], $cond['year2'], $_SESSION['id']);
+			$values_st->bind_param("iiii", $test, $cond['year1'], $cond['year2'], $_SESSION['id']);
 		}
 		else
 		{	
 			$count_st->bind_param("ii", $cond['year1'], $cond['year2']);
 			$class_st->bind_param("iiii", $test, $class, $cond['year1'], $cond['year2']);
-			$greater_st->bind_param("idii", $test, $curval, $cond['year1'], $cond['year2']);
-			$lower_st->bind_param("idii", $test, $curval, $cond['year1'], $cond['year2']);
+			$values_st->bind_param("iii", $test, $cond['year1'], $cond['year2']);
 		}
 	}
 	else
@@ -463,18 +459,13 @@ function get_perc($class, $cond = null)
 		
 		// Statement to get the values of a class
 		$class_st = prepare_stmt("SELECT fk_ist, data, valore FROM PROVE JOIN ISTANZE ON fk_ist=id_ist 
-			WHERE fk_test=? AND fk_cl=?");
+			WHERE fk_test=? AND fk_cl=? ORDER BY fk_test ASC, valore ASC");
 		$class_st->bind_param("ii", $test, $class);
 
 		// Statement to get the percentiles for tests with greater better values
-		$greater_st = prepare_stmt("SELECT COUNT(*) AS perc FROM PROVE 
-			WHERE fk_test=? AND valore<=?");
-		$greater_st->bind_param("id", $test, $curval);
-
-		// Statement to get the percentiles for tests with lower better values
-		$lower_st = prepare_stmt("SELECT COUNT(*) AS perc FROM PROVE 
-			WHERE fk_test=? AND valore>=?");
-		$lower_st->bind_param("id", $test, $curval);
+		$values_st = prepare_stmt("SELECT valore, COUNT(*) AS perc FROM PROVE 
+			WHERE fk_test=? GROUP BY valore ORDER BY valore ASC");
+		$values_st->bind_param("i", $test);
 	}
 	
 	// Gets the total count of tests done by the class
@@ -492,7 +483,7 @@ function get_perc($class, $cond = null)
 	if($empty)
 	{
 		$class_st->close();
-		$greater_st->close();
+		$values_st->close();
 		$lower_st->close();
 
 		return null;
@@ -502,20 +493,51 @@ function get_perc($class, $cond = null)
 	foreach($positive as $test => $greater)
 	{
 		$vals = execute_stmt($class_st);
+		$tests = execute_stmt($values_st);
+
+		$cur_count = 0;
+		$prevval = null;
+		
+		// Initialization for the test scan
+		$t = $tests->fetch_assoc();
+
+		// Outer scan for student results
 		while($val = $vals->fetch_assoc())
 		{
 			$curval = $val['valore'];
 			$instance = $val['fk_ist'];
 
-			// The right statement is chosen based on the better values of the test
+			// When the student value changes, the test data is scanned
+			// until the new value is reached, while counting the total
+			// number of results
+			if($curval !== $prevval)
+			{
+				// The difference for greater and lower values is done
+				// so that in both cases the percentile calculation takes
+				// in account up to the student's value
+				if($greater)
+					while($t['valore'] <= $curval)
+					{
+						$cur_count += $t['perc'];
+						$t = $tests->fetch_assoc();
+					}
+				else
+					while($t['valore'] < ($curval))
+					{
+						$cur_count += $t['perc'];
+						$t = $tests->fetch_assoc();
+					}
+
+				$prevval = $curval;
+			}				
+
+			// Percentile calculation
 			if($greater)
-				$prc_ret = execute_stmt($greater_st);
+				$p = $cur_count;
 			else
-				$prc_ret = execute_stmt($lower_st);
-
-			$p = $prc_ret->fetch_assoc();
-			$perc = number_format(($p['perc']  / $count[$test]) * 100, 5);
-
+				$p = $count[$test] - $cur_count;
+				
+			$perc = number_format(($p / $count[$test]) * 100, 5);
 			$rstud['val'][$instance][$test] = $perc;
 			$rstud['data'][$instance][$test] = $val['data'];
 			$rstud['color'][$instance][$test] = color_from_val($perc, $color, true);
@@ -523,8 +545,7 @@ function get_perc($class, $cond = null)
 	}
 
 	$class_st->close();
-	$greater_st->close();
-	$lower_st->close();
+	$values_st->close();
 
 	return $rstud;
 }
