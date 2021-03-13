@@ -27,7 +27,10 @@ function build_chk_table($classe, $prom = false)
 	// If this is the modification due to promotion, students already promoted to other classes
 	// will not be shown
 	if($prom)
-		$chkp = " AND id_stud NOT IN (SELECT DISTINCT(fk_stud) FROM ISTANZE JOIN CLASSI ON fk_cl=id_cl WHERE anno=YEAR(CURDATE())) ";
+		$chkp = " AND id_stud NOT IN 
+			(SELECT DISTINCT(fk_stud) FROM ISTANZE JOIN CLASSI ON fk_cl=id_cl WHERE anno=YEAR(CURDATE())) ";
+	else
+		$chkp = "";
 	
 	$stud_st = prepare_stmt("SELECT id_stud, noms, cogs, sesso 
 		FROM STUDENTI JOIN ISTANZE ON id_stud=fk_stud
@@ -43,14 +46,7 @@ function build_chk_table($classe, $prom = false)
 				<input type='checkbox' id='c".$row['id_stud']."' name='pr[]' value='".$row['id_stud']."' class='chkpro' checked='true'>
 			</td>
 			<td>".$row['cogs']."</td>
-			<td>";
-		
-		if($row['noms'])
-			$table .= $row['noms'];
-		else
-			$table .= "<input id='n".$row['id_stud']."' type='text' name='nold[".$row['id_stud']."]' placeholder='Nome' required>";
-		
-		$table .= "</td>
+			<td>".$row['noms']."</td>
 			<td>".strtoupper($row['sesso'])."</td>
 		</tr>";
 	}
@@ -74,6 +70,7 @@ function col_stud()
 	
 	// Counter for the rows' color
 	$i = 0;
+	$rstud = [];
 	while($row = $retstud->fetch_assoc())
 	{
 		if($i % 2 == 0)
@@ -113,18 +110,77 @@ function get_test($test)
 	return $ret;	
 }
 
-// Funzione per cancellare un'istanza e, se uno studente non ha più istanze, eliminarlo
-function delete_inst($id_ist)
+// Function to insert or update students of a class, on insert or update
+function class_students($isupdate, $class, $precedent, $newln, $newfn, $gnd, $external)
 {
-	$ret=query("SELECT COUNT(*) AS n,fk_stud 
-		FROM ISTANZE 
-		WHERE fk_stud=(SELECT fk_stud FROM ISTANZE WHERE id_ist=$id_ist)");
-	$c=$ret->fetch_assoc();
-	query("DELETE FROM ISTANZE WHERE id_ist=$id_ist");
-	if($c['n']==1)
-		query("DELETE FROM STUDENTI WHERE id_stud=".$c['fk_stud']);
+	global $mysqli;
+
+	$inst_st = prepare_stmt("INSERT INTO ISTANZE(fk_stud, fk_cl) VALUES(?, ?)");
+	$inst_st->bind_param("ii", $ids, $class);
+
+	$newstud_st = prepare_stmt("INSERT INTO STUDENTI(cogs, noms, sesso) VALUES(?, ?, ?)");
+	$newstud_st->bind_param("sss", $lastname, $firstname, $gender);
+
+	// Inserts the promoted students (on insert)
+	// or builds the list of students still in the class (on update)
+	$idlist = "-1";
+	if(isset($precedent))
+		if($isupdate)
+			foreach($precedent as $ids)
+				$idlist .= ",".$ids;
+		else
+			foreach($precedent as $ids)
+			{
+				execute_stmt($inst_st);
+				writelog("Promosso: $ids");
+			}
 	
-	return;
+	// Inserts new students
+	if(isset($newln))
+		foreach($newln as $i => $ln)
+		{
+			$lastname = maiuscolo($ln);
+			$firstname = maiuscolo($newfn[$i]);
+			$gender = $gnd[$i];
+			
+			execute_stmt($newstud_st);
+			$ids = $mysqli->insert_id;
+			$idlist .= ",".$ids;
+
+			execute_stmt($inst_st);
+			writelog("Nuovo: $ids");
+		}
+
+	// Creation or update of students possibly already registered
+	if(isset($external))
+		foreach($external as $dat => $ids)
+		{
+			$info = explode($dat, "_"); 
+			if($ids == "new")
+			{
+				$lastname = maiuscolo($info[0]);
+				$firstname = maiuscolo($info[1]);
+				$gender = $info[2];
+				
+				execute_stmt($newstud_st);
+				$ids = $mysqli->insert_id;
+				
+				execute_stmt($inst_st);
+				writelog("Nuovo: $ids");
+			}
+			else
+			{
+				execute_stmt($inst_st);
+				writelog("Promosso: $ids");
+			}
+
+			$idlist .= ",".$ids;
+		}
+
+	$inst_st->close();
+	$newstud_st->close();
+
+	return $idlist;
 }
 
 function color_from_val($val, $color, $isperc)
@@ -168,12 +224,22 @@ function color_from_grade($val, $color)
 // $isperc indicates whether the values are from percentiles or standards
 function get_avgmed($class, $vals, $isperc)
 {
+	$ret['avg'] = [];
+	$ret['med'] = [];
+	$ret['savg'] = [];
+	$ret['smed'] = [];
+	$ret['tavg'] = [];
+
 	if($isperc)
 		$color = get_color_prc();
 	else
 		$color = get_color_std();
 
 	$testinfo = get_class_tests($class);
+
+	if($testinfo === null)
+		return $ret;
+
 	$idtest = $testinfo[0];
 
 	// Tests' averages and medians
@@ -215,9 +281,19 @@ function get_avgmed($class, $vals, $isperc)
 // Calculates averages for grades based on the quarter
 function get_avgmed_grades($class, $rstud)
 {
+	$ret['avg'] = [];
+	$ret['med'] = [];
+	$ret['savg'] = [];
+	$ret['smed'] = [];
+	$ret['tavg'] = [];
+
 	$color = get_color_gr();
 
 	$testinfo = get_class_tests($class);
+
+	if($testinfo === null)
+		return $ret;
+
 	$idtest = $testinfo[0];
 
 	$vals = $rstud['val'];
@@ -383,9 +459,16 @@ function get_class_tests($class)
 // execution time to ~0.02s
 function get_perc($class, $cond = null)
 {
+	$rstud['val'] = [];
+	$rstud['data'] = [];
+	$rstud['color'] = [];
+
 	$color = get_color_prc();
 
 	$testinfo = get_class_tests($class);
+
+	if($testinfo === null)
+		return $rstud;
 
 	$testlist = "0";
 	foreach($testinfo[0] as $id)
@@ -516,13 +599,13 @@ function get_perc($class, $cond = null)
 				// so that in both cases the percentile calculation takes
 				// in account up to the student's value
 				if($greater)
-					while($t['valore'] <= $curval)
+					while($t !== null and $t['valore'] <= $curval)
 					{
 						$cur_count += $t['perc'];
 						$t = $tests->fetch_assoc();
 					}
 				else
-					while($t['valore'] < ($curval))
+					while($t !== null and $t['valore'] < $curval)
 					{
 						$cur_count += $t['perc'];
 						$t = $tests->fetch_assoc();
@@ -553,9 +636,16 @@ function get_perc($class, $cond = null)
 // Function to get the standardized values for a class
 function get_std($class, $cond = null)
 {
+	$rstud['val'] = [];
+	$rstud['data'] = [];
+	$rstud['color'] = [];
+
 	$color = get_color_std();
 
 	$testinfo = get_class_tests($class);
+
+	if($testinfo === null)
+		return $rstud;
 
 	$testlist = "0";
 	foreach($testinfo[0] as $id)
@@ -630,7 +720,10 @@ function get_std($class, $cond = null)
 
 	while($row = $ret_res->fetch_assoc())
 	{
-		$z = ($row['valore'] - $avg[$row['fk_test']]) / $std[$row['fk_test']];
+		if($std[$row['fk_test']] != 0)
+			$z = ($row['valore'] - $avg[$row['fk_test']]) / $std[$row['fk_test']];
+		else
+			$z = 0;
 
 		// Inverts the sign if to a better perfomance corresponds a lower value
 		if($positive[$row['fk_test']] == "Minori")
@@ -672,36 +765,6 @@ function get_grades($class, $cond = null)
 		}
 
 	return $rstud;
-}
-
-// Funzione per l'inserimento di uno studente già registrato in una classe
-function insert_stud_ex($idcl,$ids,$noms="")
-{
-	if($noms)
-    {
-    	$nom=maiuscolo($noms);
-    	query("UPDATE STUDENTI SET noms='$nom' WHERE id_stud=$ids");
-    }
-
-	query("INSERT INTO ISTANZE(fk_stud,fk_cl) VALUES($ids,$idcl)");
-	writelog("[p] $ids");
-
-	return;
-}
-
-// Funzione per l'inserimento di un nuovo studente in una classe, dati l'id della classe e le informazioni
-function insert_stud_new($idcl,$c,$n,$s)
-{
-	$cog=maiuscolo($c);
-    $nom=maiuscolo($n);
-    
-    $ret=query("INSERT INTO STUDENTI(cogs,noms,sesso) VALUES('$cog','$nom','$s')");
-	$ids=$_SESSION['sql']->insert_id;
-    query("INSERT INTO ISTANZE(fk_stud,fk_cl) VALUES($ids,$idcl)");
-
-	writelog("[+st] $ids");
-
-	return;
 }
 
 // Function to check whether a value belongs to the acceptance interval of a test.

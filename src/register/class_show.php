@@ -58,6 +58,7 @@ $ret = get_test($_GET['id']);
 // Output of rows for test, average and median
 $ravg = "";
 $rmed = "";
+$idtest = [];
 while($row = $ret->fetch_assoc())
 {
   	echo "<td id='c".$row['id_test']."' class='col topfix'>".$row['nometest']."</td>";

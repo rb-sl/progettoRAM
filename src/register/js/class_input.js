@@ -7,7 +7,7 @@ $(function(){
     	$(".dpro").show();
     });
 	
-	// Handles the ajax request to get the promote class's student
+	// Handles the ajax request to get the promoted class's student
 	$("#clpr").change(function(){
     	$.ajax({                                      
         	url: "class_promote_ajax.php",
@@ -128,7 +128,7 @@ $(function(){
 
                         	toprint+="<label><input type='radio' name='ext[" + data[i]['cogs'] + "_" 
 								+ data[i]['noms'] + "_" + data[i]['sesso'] + "]' value='new'> Nuovo</label></td></tr>";
-                        // Va fatto escape !!!
+
                         	$("#r" + i).remove();
                     	});
                     

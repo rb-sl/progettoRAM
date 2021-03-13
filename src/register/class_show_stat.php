@@ -43,6 +43,7 @@ $color = get_color_prc();
 $ret = get_test($_GET['id']);
 
 $test['row'] = "";
+$test['id'] = [];
 while($row = $ret->fetch_assoc())
 {
 	$test['id'][] = $row['id_test'];
@@ -68,8 +69,8 @@ foreach($am['med'] as $idt => $med)
 // Prints the table header and information on average and median values
 echo $test['row']."
 		<td class='col topfix r_stat evenrow jQhidden'>Media totale</td>
-        <td id='tavg' class='col topfix r_stat jcol evenrow jQhidden' vcolor='#".$am['tavg']['color']."'>"
-			.number_format($am['tavg']['val'], 5)."</td>
+        <td id='tavg' class='col topfix r_stat jcol evenrow jQhidden' vcolor='#".(isset($am['tavg']['color']) ? $am['tavg']['color'] : "")."'>"
+			.(isset($am['tavg']['val']) ? number_format($am['tavg']['val'], 5) : "-")."</td>
 	</tr>
 	<tr class='dat r_stat jQhidden'>
     	<td class='leftfix evenrow'>Medie</td>$rowavg

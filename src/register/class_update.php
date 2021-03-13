@@ -1,33 +1,49 @@
 <?php 
-include $_SERVER['DOCUMENT_ROOT']."/librerie/general.php";
-include $_SERVER['DOCUMENT_ROOT']."/librerie/lib_reg.php";
+// Backend script to update a modified class
+include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
 chk_access(2);
 connect();
 
-$ret=query("UPDATE CLASSI SET classe=".$_POST['cl'].",sez='".strtoupper($_POST['sez'])."',anno=".$_POST['anno']." WHERE id_cl=".$_GET['id']);
-writelog("[modcl] ".$_GET['id']);
+$section = strtoupper($_POST['sez']);
 
-$idlist="-1";
-foreach($_POST['pr'] as $ids)
-	$idlist.=",".$ids;
+// Check of class uniqueness per year and school
+$chk_st = prepare_stmt("SELECT * FROM CLASSI JOIN SCUOLE ON fk_scuola=id_scuola 
+	WHERE classe=? AND sez=? AND anno=? AND fk_scuola=? AND id_cl<>?");
+$chk_st->bind_param("isiii", $_POST['cl'], $section, $_POST['anno'], $_SESSION['scuola'], $_GET['id']);
+$chk = execute_stmt($chk_st);
+$chk_st->close();
 
-$rs=query("SELECT id_ist FROM ISTANZE WHERE fk_cl=".$_GET['id']." AND fk_stud NOT IN ($idlist)");
-while($row=$rs->fetch_assoc())
-	delete_inst($row['id_ist']);
-
-foreach($_POST['cst'] as $i => $cg)
-  	insert_stud_new($_GET['id'],$cg,$_POST['nst'][$i],$_POST['sesso'][$i]);
-
-foreach($_POST['ext'] as $dat => $ids)
+if($chk->num_rows > 0)
 {
-	$info=explode("_",$dat);
-	if($ids=="new")
-		insert_stud_new($_GET['id'],$info[0],$info[1],$info[2]);
-	else
-    	insert_stud_ex($_GET['id'],$ids,$info[1]);
+	$row = $chk->fetch_assoc();
+	$_SESSION['alert'] = "Errore: un'altra classe ".$_POST['cl'].$section." ".$_POST['anno']
+		." / ".($_POST['anno'] + 1)." è già registrata (".$row['nomescuola'].").";
+	header("Location: /register/class_modify.php?id=".$_GET['id']);
+	exit;
 }
 
-$_SESSION['alert']="Aggiornamento effettuato con successo";
+$up_st = prepare_stmt("UPDATE CLASSI SET classe=?, sez=?, anno=? WHERE id_cl=?");
+$up_st->bind_param("isii", $_POST['cl'], $section, $_POST['anno'], $_GET['id']);
+$ret = execute_stmt($up_st);
+$up_st->close();
 
-header("Location: /registro/mod_classe.php?id=".$_GET['id']);
+writelog("[Modifica classe] ".$_GET['id']);
+
+$idlist = class_students(true, $_GET['id'], 
+	isset($_POST['pr']) ? $_POST['pr'] : null,
+	isset($_POST['cst']) ? $_POST['cst'] : null,
+	isset($_POST['nst']) ? $_POST['nst'] : null,
+	isset($_POST['sesso']) ? $_POST['sesso'] : null,
+	isset($_POST['ext']) ? $_POST['ext'] : null);
+
+// Deletion of instances not in the class anymore. The deletion of students without
+// instances is handled with a trigger
+$del_st = prepare_stmt("DELETE FROM ISTANZE WHERE fk_cl=? AND fk_stud NOT IN ($idlist)");
+$del_st->bind_param("i", $_GET['id']);
+execute_stmt($del_st);
+
+$_SESSION['alert'] = "Aggiornamento effettuato con successo";
+
+header("Location: /register/class_show.php?id=".$_GET['id']);
 ?>
