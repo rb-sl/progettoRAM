@@ -46,7 +46,7 @@ $unit_st->close();
 		<tr>
     		<td>Tipo di test:</td>
     		<td class="halfpage">
-        		<select name="class" required>
+        		<select name="class" class="form-control" required>
 <?php
 while($row = $ctest->fetch_assoc())
 {
@@ -62,7 +62,7 @@ while($row = $ctest->fetch_assoc())
 		<tr>
     		<td>Unità di misura:</td>
     		<td>
-    			<select name="unit" required>
+    			<select name="unit" class="form-control" required>
 <?php
 while($row = $retunit->fetch_assoc())
 {
@@ -89,7 +89,7 @@ else
 		<tr>
 	    	<td>Valori migliori:</td>
     		<td>
-        		<select name="positive" required>
+        		<select name="positive" class="form-control" required>
             		<option value="Maggiori" <?=$g?>>Maggiori</option>
             		<option value="Minori" <?=$m?>>Minori</option>
         		</select>
@@ -98,7 +98,7 @@ else
 		<tr>
 	    	<td>Tipo di valori:</td>
     		<td>
-        		<select name="type" required>
+        		<select name="type" class="form-control" required>
 <?php
 while($row=$ttest->fetch_assoc())
 {

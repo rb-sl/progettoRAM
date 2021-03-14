@@ -61,9 +61,9 @@ function build_chk_table($classe, $prom = false)
 function col_stud()
 {
 	$stud_st = prepare_stmt("SELECT id_ist, id_stud, noms, cogs, sesso 
-	FROM STUDENTI JOIN ISTANZE ON fk_stud=id_stud
-	WHERE fk_cl=? 
-	ORDER BY cogs, noms ASC");
+		FROM STUDENTI JOIN ISTANZE ON fk_stud=id_stud
+		WHERE fk_cl=? 
+		ORDER BY cogs, noms ASC");
 	$stud_st->bind_param("i", $_GET['id']);
 
 	$retstud = execute_stmt($stud_st);
@@ -79,8 +79,8 @@ function col_stud()
     		$cl = "oddrow";
 
 		$rstud[$row['id_ist']]['strow'] = "<tr id='tr".$row['id_ist']."' class='dat tdr'>
-    		<td id='st".$row['id_ist']."' class='leftfix $cl '>
-        		<div ><a href='show_stud.php?id=".$row['id_stud']."&cl=".$_GET['id']
+    		<td id='st".$row['id_ist']."' class='leftfix $cl'>
+        		<div><a href='student_show.php?id=".$row['id_stud']
 					."' class='resizetext' title=\"".addslashes($row['cogs']." ".$row['noms'])
 					." (".strtoupper($row['sesso']).")\" tabindex='-1'>".$row['cogs']." "
 					.(isset($row['noms'][0]) ? $row['noms'][0]."." : "")."</a></div>
@@ -91,19 +91,79 @@ function col_stud()
 	return $rstud;
 }
 
-// Funzione per ottenere la lista di test unitamente al numero di test
-function get_test($test)
+// Function to get classes associated to a student. If the user does not own
+// at least one class containing the student no data is returned 
+function col_class($stud)
 {
-	$stat_st = prepare_stmt("SELECT id_test, nometest, simbolo, pos,
-		MIN(data) AS data, ROUND(AVG(valore), 2) AS avg
-		FROM TEST JOIN PROVE ON fk_test=id_test
-		JOIN ISTANZE ON fk_ist=id_ist
-		JOIN UNITA ON fk_udm=id_udm
-		WHERE fk_cl=?  
-		GROUP BY id_test
-		ORDER BY data, id_test ASC");
-	$stat_st->bind_param("i", $test);
+	$cl_st = prepare_stmt("SELECT id_cl, classe, sez, anno, fk_prof
+		FROM PROVE RIGHT JOIN ISTANZE ON fk_ist=id_ist
+		JOIN CLASSI ON fk_cl=id_cl
+		WHERE fk_stud=?
+		GROUP BY id_cl 
+		ORDER BY anno");
+	$cl_st->bind_param("i", $stud);
+	$ret = execute_stmt($cl_st);
+	$cl_st->close();
 
+	$auth = false;
+	$rclass = [];
+	$i = 0;
+	while($row = $ret->fetch_assoc())
+	{
+		if($i % 2 == 0)
+  			$cl = "evenrow";
+  		else
+    		$cl = "oddrow";
+
+		if($row['fk_prof'] == $_SESSION['id'] or $_SESSION['id'] == 0)
+		{
+			$slnk = "<a href='./class_show.php?id=".$row['id_cl']."'>";
+			$elnk = "</a>";
+			$auth = true;
+		}
+		else
+		{
+			$slnk = "";
+			$elnk = "";
+		}
+		
+		$rclass[$row['id_cl']]['name'] = $row['classe'].$row['sez']." ".$row['anno']."/".($row['anno'] + 1);
+		
+		$rclass[$row['id_cl']]['clrow']  = "<tr id='tr".$row['id_cl']."' class='dat tdr'>
+			<td id='st".$row['id_cl']."' class='leftfix $cl'>"
+			.$slnk.$row['classe'].$row['sez']." ".$row['anno']."/".($row['anno'] + 1).$elnk."</td>";
+		$i++;
+	}
+
+	if(!$auth)
+		return null;
+	return $rclass;
+}
+
+// Gets the test list and their number
+function get_test($id, $forstud = false)
+{
+	// The query is built slightly different if for students
+	if(!$forstud)
+		$stat_st = prepare_stmt("SELECT id_test, nometest, simbolo, pos,
+			MIN(data) AS data, ROUND(AVG(valore), 2) AS avg
+			FROM TEST JOIN PROVE ON fk_test=id_test
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN UNITA ON fk_udm=id_udm
+			WHERE fk_cl=?  
+			GROUP BY id_test
+			ORDER BY data, id_test ASC");
+	else
+		$stat_st = prepare_stmt("SELECT id_test, nometest, simbolo, pos,
+			data, ROUND(AVG(valore), 2) AS avg
+			FROM TEST JOIN PROVE ON fk_test=id_test
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN UNITA ON fk_udm=id_udm
+			WHERE fk_stud=?  
+			GROUP BY id_test
+			ORDER BY nometest ASC");
+
+	$stat_st->bind_param("i", $id);
 	$ret = execute_stmt($stat_st);
 	$stat_st->close();
 
@@ -183,6 +243,7 @@ function class_students($isupdate, $class, $precedent, $newln, $newfn, $gnd, $ex
 	return $idlist;
 }
 
+// Returns the correct color based on percentiles or z-values
 function color_from_val($val, $color, $isperc)
 {
 	if($val == "-")
@@ -210,6 +271,7 @@ function color_from_val($val, $color, $isperc)
 	}
 }
 
+// Returns the correct color based on the grade
 function color_from_grade($val, $color)
 {
 	if($val == "-")
@@ -222,7 +284,7 @@ function color_from_grade($val, $color)
 
 // Calculates average and median rows and columns.
 // $isperc indicates whether the values are from percentiles or standards
-function get_avgmed($class, $vals, $isperc)
+function get_avgmed($class, $vals, $isperc, $forstud = false)
 {
 	$ret['avg'] = [];
 	$ret['med'] = [];
@@ -235,7 +297,7 @@ function get_avgmed($class, $vals, $isperc)
 	else
 		$color = get_color_std();
 
-	$testinfo = get_class_tests($class);
+	$testinfo = get_class_tests($class, $forstud);
 
 	if($testinfo === null)
 		return $ret;
@@ -416,13 +478,24 @@ function get_color_gr()
 }
 
 // Returns the list of test ids done by the class, and their positive values
-function get_class_tests($class)
+function get_class_tests($class, $forstud = false)
 {
+	if($forstud)
+	{
+		$restr = "fk_stud";
+		$order = "ORDER BY nometest";
+	}
+	else
+	{
+		$restr = "fk_cl";
+		$order = "";
+	}
 	$ctst_st = prepare_stmt("SELECT id_test, passo, pos FROM TEST JOIN TIPOTEST ON fk_tipot=id_tipot
 		WHERE id_test IN (
 			SELECT DISTINCT(fk_test) FROM PROVE JOIN ISTANZE ON fk_ist=id_ist 
-			WHERE fk_cl=?
-		)");
+			WHERE $restr=?
+		)
+		$order");
 	$ctst_st->bind_param("i", $class);
 	$ctst = execute_stmt($ctst_st);
 	$ctst_st->close();
@@ -457,7 +530,7 @@ function get_class_tests($class)
 // Moreover, structure with only one query to the database for each test instead
 // of one for each value (using a parallel scan of the result) permits to lower
 // execution time to ~0.02s
-function get_perc($class, $cond = null)
+function get_perc($class, $cond = null, $forstud = false)
 {
 	$rstud['val'] = [];
 	$rstud['data'] = [];
@@ -465,10 +538,21 @@ function get_perc($class, $cond = null)
 
 	$color = get_color_prc();
 
-	$testinfo = get_class_tests($class);
+	$testinfo = get_class_tests($class, $forstud);
 
 	if($testinfo === null)
 		return $rstud;
+
+	if($forstud)
+	{
+		$select = "fk_cl";
+		$where = "fk_stud";
+	}
+	else
+	{
+		$select = "fk_ist";
+		$where = "fk_cl";
+	}
 
 	$testlist = "0";
 	foreach($testinfo[0] as $id)
@@ -496,18 +580,18 @@ function get_perc($class, $cond = null)
 			GROUP BY fk_test");
 
 		// Statement to get only the results of a class relevant to the user's selection
-		$class_st = prepare_stmt("SELECT fk_ist, data, valore FROM PROVE 
+		$class_st = prepare_stmt("SELECT $select AS header, data, valore FROM PROVE 
 			JOIN ISTANZE ON fk_ist=id_ist 
 			JOIN STUDENTI ON fk_stud=id_stud 
 			JOIN CLASSI ON fk_cl=id_cl
-			WHERE fk_test=? AND fk_cl=?
+			WHERE fk_test=? AND $where=?
 			AND anno BETWEEN ? AND ?
 			AND classe IN (0 $classlist)
 			AND sesso IN ('x' $genderlist)
 			$prof
 			ORDER BY fk_test ASC, valore ASC");
 
-		// Statement to get the percentiles for tests with greater better values
+		// Statement to get the count for each value
 		$values_st = prepare_stmt("SELECT valore, COUNT(*) AS perc FROM PROVE 
 			JOIN ISTANZE ON fk_ist=id_ist 
 			JOIN STUDENTI ON fk_stud=id_stud 
@@ -541,11 +625,11 @@ function get_perc($class, $cond = null)
 			WHERE fk_test IN ($testlist) GROUP BY fk_test");
 		
 		// Statement to get the values of a class
-		$class_st = prepare_stmt("SELECT fk_ist, data, valore FROM PROVE JOIN ISTANZE ON fk_ist=id_ist 
-			WHERE fk_test=? AND fk_cl=? ORDER BY fk_test ASC, valore ASC");
+		$class_st = prepare_stmt("SELECT $select AS header, data, valore FROM PROVE JOIN ISTANZE ON fk_ist=id_ist 
+			WHERE fk_test=? AND $where=? ORDER BY fk_test ASC, valore ASC");
 		$class_st->bind_param("ii", $test, $class);
 
-		// Statement to get the percentiles for tests with greater better values
+		// Statement to get the count for each test
 		$values_st = prepare_stmt("SELECT valore, COUNT(*) AS perc FROM PROVE 
 			WHERE fk_test=? GROUP BY valore ORDER BY valore ASC");
 		$values_st->bind_param("i", $test);
@@ -568,11 +652,10 @@ function get_perc($class, $cond = null)
 		$class_st->close();
 		$values_st->close();
 		$lower_st->close();
-
+		
 		return null;
 	}
-
-	$rstud = null;
+	
 	foreach($positive as $test => $greater)
 	{
 		$vals = execute_stmt($class_st);
@@ -588,7 +671,7 @@ function get_perc($class, $cond = null)
 		while($val = $vals->fetch_assoc())
 		{
 			$curval = $val['valore'];
-			$instance = $val['fk_ist'];
+			$instance = $val['header'];
 
 			// When the student value changes, the test data is scanned
 			// until the new value is reached, while counting the total
@@ -795,7 +878,7 @@ function is_accettable($test, $val)
   	return 1;
 }
 
-// Funzione per mostrare il form di modifica della classe
+// Shows the modification form for a class
 function show_cl_form($cl = 0, $sez = "", $year = null)
 {
 	// Selection of the current class
