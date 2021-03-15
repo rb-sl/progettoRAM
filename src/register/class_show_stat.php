@@ -127,6 +127,7 @@ foreach($cstud as $idist => $stud)
 
 <script>
 	var id = <?=$_GET['id']?>;
+	var forstud = false;
 </script>
 <script src="./js/class_show_stat.js"></script>
 

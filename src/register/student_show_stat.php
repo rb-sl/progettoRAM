@@ -171,32 +171,12 @@ foreach($rclass as $idcl => $class)
 	</div>
 </div>
 <script>
-$(function(){
+	var id = <?=$_GET['id']?>;
+	var forstud = true;
 	var data = [];
   	<?=$plotinfo?>
-
-	function getLayout() {
-		return {
-				polar: {
-					radialaxis: {
-						visible: true,
-						range: [0, 100]
-					}	
-				},
-				title: "Prove di " + $("#student").text() + " - " + $("#class option:selected").text()
-			}
-	}
-
-	function drawGraph() {
-		Plotly.newPlot("myDiv", data[$("#class").val()], getLayout(), {responsive: true});
-	}
-
-	$("#class").on("change", function(){
-		drawGraph();
-	});
-	
-	drawGraph();
-});
 </script>
+<script src="./js/student_show_stat.js"></script>
+<script src="./js/class_show_stat.js"></script>
 
 <?php show_postmain(); ?>

@@ -50,7 +50,7 @@ $(function(){
        		});
 
         // If grades are requested, averages are broken into first or second quadrimester		
-		if($("#vis").val()=="vt"){
+		if($("#vis").val() == "gr"){
 			$("#med1").html("Medie I<br>quadrimestre");
 			$("#med2").html("Medie II<br>quadrimestre");
 		}
@@ -69,7 +69,7 @@ $(function(){
         // Performs the ajax request
 		$.ajax({  
     		url: "./class_stat_ajax.php",
-      		data: "id=" + id + "&year1=" + $("#a1").val() + "&year2=" + $("#a2").val() + "&vis=" + $("#vis").val() + cond,
+      		data: "id=" + id + "&year1=" + $("#a1").val() + "&year2=" + $("#a2").val() + "&vis=" + $("#vis").val() + cond + "&forstud=" + forstud,
       		dataType: "json",   
       		async: false, // Synchronous to allow the update inside the function
       		success: function(data){
@@ -123,7 +123,7 @@ $(function(){
 							text = "-";
 
 						$(this).text(text);
-						$(this).attr("vcolor","#" + med[idt]['color']);
+						$(this).attr("vcolor", "#" + med[idt]['color']);
 					});
 
                     // Updates the averages of students

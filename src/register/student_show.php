@@ -29,7 +29,7 @@ show_premain("Dati di ".$stud['cogs']." ".$stud['noms']." (".$stud['sesso'].")")
 <h2>Prove di <?=$stud['cogs']?> <?=$stud['noms']?> (<?=$stud['sesso']?>)</h2>
 
 <div>
-	<a href="/registro/student_modify.php?id=<?=$stud['id_stud']?>" class="btn btn-warning btnmenu marginunder">Modifica</a>
+	<a href="/register/student_modify.php?id=<?=$stud['id_stud']?>" class="btn btn-warning btnmenu marginunder">Modifica</a>
 	<br>
 	<a href="student_show_stat.php?id=<?=$_GET['id']?>" class="btn btn-primary btnmenu">Elaborazione dati</a> 
 </div>

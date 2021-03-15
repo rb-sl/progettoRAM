@@ -262,7 +262,7 @@ function color_from_val($val, $color, $isperc)
 	else
 	{
 		// Color in the standard case
-		$color_index = floor($val * 10);
+		$color_index = floor(abs($val) * 10);
 		if($color_index == 0)
 			return "";
 
@@ -341,7 +341,7 @@ function get_avgmed($class, $vals, $isperc, $forstud = false)
 }
 
 // Calculates averages for grades based on the quarter
-function get_avgmed_grades($class, $rstud)
+function get_avgmed_grades($class, $rstud, $forstud = false)
 {
 	$ret['avg'] = [];
 	$ret['med'] = [];
@@ -351,7 +351,7 @@ function get_avgmed_grades($class, $rstud)
 
 	$color = get_color_gr();
 
-	$testinfo = get_class_tests($class);
+	$testinfo = get_class_tests($class, $forstud);
 
 	if($testinfo === null)
 		return $ret;
@@ -388,7 +388,7 @@ function get_avgmed_grades($class, $rstud)
 		$q2 = 0;
 		foreach($arr as $idt => $val)
 		{
-			if($dates[$ids][$idt] > 8)
+			if(date("m", strtotime($dates[$ids][$idt])) > 8)
 			{	
 				$c1++;
 				$q1 += $val;
@@ -426,7 +426,11 @@ function get_avgmed_grades($class, $rstud)
 	}
 	
 	// Total average
-	$ret['tavg']['val'] = number_format($sum / sizeof($idtest), 2);
+	if($sum != 0)
+		$ret['tavg']['val'] = number_format($sum / sizeof($idtest), 2);
+	else
+		$ret['tavg']['val'] = "-";
+
 	$ret['tavg']['color'] = color_from_grade($ret['tavg']['val'], $color,);
 
 	return $ret;
@@ -651,7 +655,6 @@ function get_perc($class, $cond = null, $forstud = false)
 	{
 		$class_st->close();
 		$values_st->close();
-		$lower_st->close();
 		
 		return null;
 	}
@@ -717,7 +720,7 @@ function get_perc($class, $cond = null, $forstud = false)
 }
 
 // Function to get the standardized values for a class
-function get_std($class, $cond = null)
+function get_std($class, $cond = null, $forstud = false)
 {
 	$rstud['val'] = [];
 	$rstud['data'] = [];
@@ -725,10 +728,21 @@ function get_std($class, $cond = null)
 
 	$color = get_color_std();
 
-	$testinfo = get_class_tests($class);
+	$testinfo = get_class_tests($class, $forstud);
 
 	if($testinfo === null)
 		return $rstud;
+
+	if($forstud)
+	{
+		$select = "fk_cl";
+		$where = "fk_stud";
+	}
+	else
+	{
+		$select = "fk_ist";
+		$where = "fk_cl";
+	}
 
 	$testlist = "0";
 	foreach($testinfo[0] as $id)
@@ -756,11 +770,11 @@ function get_std($class, $cond = null)
 			GROUP BY fk_test");
 
 		// Statement to get the class's results that fall in the categories selected by the user
-		$res_st = prepare_stmt("SELECT id_ist, fk_test, valore FROM PROVE 
+		$res_st = prepare_stmt("SELECT $select AS header, fk_test, valore FROM PROVE 
 			JOIN ISTANZE ON fk_ist=id_ist 
 			JOIN STUDENTI ON fk_stud=id_stud 
 			JOIN CLASSI ON fk_cl=id_cl
-			WHERE fk_cl=?
+			WHERE $where=?
 			AND anno BETWEEN ? AND ?
 			AND classe IN (0 $classlist)
 			AND sesso IN ('x' $genderlist)
@@ -785,7 +799,7 @@ function get_std($class, $cond = null)
 			GROUP BY fk_test");
 
 		// Statement to get the class's results
-		$res_st = prepare_stmt("SELECT id_ist, fk_test, valore FROM PROVE JOIN ISTANZE ON fk_ist=id_ist WHERE fk_cl=?");
+		$res_st = prepare_stmt("SELECT $select AS header, fk_test, valore FROM PROVE JOIN ISTANZE ON fk_ist=id_ist WHERE $where=?");
 		$res_st->bind_param("i", $class);
 	}
 	
@@ -809,18 +823,18 @@ function get_std($class, $cond = null)
 			$z = 0;
 
 		// Inverts the sign if to a better perfomance corresponds a lower value
-		if($positive[$row['fk_test']] == "Minori")
+		if(!$positive[$row['fk_test']])
 			$z *= -1;
 		
-		$rstud['val'][$row['id_ist']][$row['fk_test']] = number_format($z, 5);
-		$rstud['color'][$row['id_ist']][$row['fk_test']] = color_from_val($z, $color, false);
+		$rstud['val'][$row['header']][$row['fk_test']] = number_format($z, 5);
+		$rstud['color'][$row['header']][$row['fk_test']] = color_from_val($z, $color, false);
 	}
 
 	return $rstud;
 }
 
 // Function to get grades data and their color
-function get_grades($class, $cond = null)
+function get_grades($class, $cond = null, $forstud = false)
 {
 	$gr_st = prepare_stmt("SELECT * FROM VOTI JOIN VALUTAZIONI ON fk_voto=id_voto WHERE fk_prof=?");
 	$gr_st->bind_param("i", $_SESSION['id']);
@@ -830,13 +844,14 @@ function get_grades($class, $cond = null)
 	while($row = $ret->fetch_assoc())
 		$grades[$row['perc']] = $row['voto'];
 
-	$rstud_perc = get_perc($class, $cond);
+	$rstud_perc = get_perc($class, $cond, $forstud);
 
 	if($rstud_perc == null)
 		return null;
 
 	$rstud['data'] = $rstud_perc['data'];
 	$rstud['color'] = $rstud_perc['color'];
+	$rstud['val'] = [];
 
 	foreach($rstud_perc['val'] as $instance => $arr)
 		foreach($arr as $test => $val)
