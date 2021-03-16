@@ -275,6 +275,37 @@ input:disabled{
 	resize: none;
 }
 
+/* Log-related styles */
+.logtxt {
+	width: 80%;
+	height: 70vh;
+}
+.delbutton {
+	display: inline-block;
+	width: 80%;
+}
+.logcontainer {
+	vertical-align: top;
+	width: 70%;
+	display:inline-block;
+	height: 80vh;
+}
+.loglist {
+	padding-right: 5px;
+	text-align: right;
+	width: 20%;
+	min-width: 130px;
+	margin: auto;
+	top: 0;
+	display: inline-block;
+	height: 80vh;
+	overflow-y: scroll;
+}
+.logdiv {
+	min-width: 150px;
+	overflow-x: scroll;
+}
+
 /* Componenti per il footer */
 html {
 	position: relative;

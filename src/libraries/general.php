@@ -225,7 +225,7 @@ function show_premain($title = "", $stat = false)
 
   		if($_SESSION['priv'] == 0)
     		echo "<div class='form-group'>
-      			<a href='/adm/amministrazione.php' class='btn btn-primary btn-warning'>Amministrazione</a>
+      			<a href='/admin/admin.php' class='btn btn-primary btn-warning'>Amministrazione</a>
     		</div>";
 
   		echo "<div class='form-group'>
@@ -346,13 +346,13 @@ function show_postmain()
   				});
   	  		});
 		</script>";
-    	$_SESSION['alert']="";
+    	$_SESSION['alert'] = "";
 	}
 
 	if(isset($_SESSION['msg']) and $_SESSION['msg'] != "")
 	{
     	echo "<h3>".$_SESSION['msg']."</h3>";
-    	$_SESSION['msg']="";
+    	$_SESSION['msg'] = "";
 	}
 	
 	echo "			<div id='dialog'></div>
