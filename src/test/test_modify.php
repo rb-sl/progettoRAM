@@ -39,8 +39,10 @@ $unit_st->close();
 	<h2>
 		Modifica <input type="text" value="<?=quoteHTML($test['nometest'])?>" name="testname" required> 
 		<a href="./test_show.php?id=<?=$_GET['id']?>" class="btn btn-warning">Annulla</a> 
-		<a href="./test_delete.php?id=<?=$_GET['id']?>"
-			<?=confirm("Il test '".$test['nometest']."' sarà eliminato")?> class="btn btn-danger">Elimina test</a>
+<?php
+echo "<a href='./test_delete.php?id=".$_GET['id']."' ".confirm("Il test ".$test['nometest']." sarà eliminato")
+	." class='btn btn-danger'>Elimina test</a>";
+?>
 	</h2>
 	<table class="table table-striped">
 		<tr>

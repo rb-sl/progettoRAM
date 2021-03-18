@@ -1,25 +1,24 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT']."/librerie/general.php";
+// Backend script to add a new user
+include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 chk_access(0);
 connect();
 
-$query="INSERT INTO PROFESSORI(user,psw,nomp,cogp,email,fk_scuola) VALUES('$_POST[usr]',MD5('".$_POST['psw']."'),'$_POST[nom]','$_POST[cog]','$_POST[mail]',$_POST[sc])";
-$ret=query($query);
-$idprof=$ret->insert_id;
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(4,5,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(4.5,10,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(5,15,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(5.5,25,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(6,35,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(6.5,45,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(7,55,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(7.5,65,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(8,75,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(8.5,85,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(9,90,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(9.5,95,$idprof)");
-query("INSERT INTO VOTI(voto,perc,fk_prof) VALUES(100,100,$idprof)");
+$in_st = prepare_stmt("INSERT INTO PROFESSORI(user, psw, priv, nomp, cogp, email, fk_scuola) VALUES (?, MD5(?), ?, ?, ?, ?, ?)");
+$in_st->bind_param("ssisssi", $_POST['usr'], $_POST['psw'], $_POST['priv'], $_POST['nom'], $_POST['cog'], $_POST['mail'], $_POST['sc']);
+execute_stmt($in_st);
+$in_st->close();
+$id = $mysqli->insert_id;
 
-echo "Inserito!";
-show_postmain(); 
+// The default grades of the new user are equal to the ones of the administrator
+$val_st = prepare_stmt("INSERT INTO VALUTAZIONI(fk_prof, fk_voto, perc) 
+    SELECT ? AS fk_prof, fk_voto, perc
+    FROM VALUTAZIONI
+    WHERE fk_prof=?");
+$val_st->bind_param("ii", $id, $_SESSION['id']);
+
+execute_stmt($val_st);
+
+$_SESSION['alert'] = "Utente inserito correttamente";
+header("Location: /admin/users.php");
 ?>

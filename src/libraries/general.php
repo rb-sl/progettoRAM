@@ -93,7 +93,7 @@ function connect()
 // Function to request the confirmation of a client-side action
 function confirm($quest)
 {
-	echo "onclick=\"return confirm('".addslashes(quoteHTML($quest)).". Procedere?');\"";
+	return "onclick=\"return confirm('".addslashes(quoteHTML($quest)).". Procedere?');\"";
 }
 
 // Changes " in &quot; for visualization purposes

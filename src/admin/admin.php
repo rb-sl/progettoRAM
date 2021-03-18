@@ -8,7 +8,7 @@ show_premain();
 <h2>Strumenti amministrativi</h2>
 
 <p>
-	<a href="/admin/user_add.php" class="btn btn-primary btn-primary marginunder">Aggiungi utente</a><br>
+	<a href="/admin/users.php" class="btn btn-primary btn-primary marginunder">Gestione utenti</a><br>
 	<a href="/admin/log.php" class="btn btn-primary btn-warning marginunder">Log di utilizzo</a><br>
 	<a href="/admin/student_correction.php" class="btn btn-primary btn-warning marginunder">Correggi istanze di studenti</a>
 </p>

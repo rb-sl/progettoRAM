@@ -1,7 +1,7 @@
 <?php
 // Script to delete a test
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(1);
+chk_access(0);
 connect();
 
 $del_st = prepare_stmt("DELETE FROM TEST WHERE id_test=?");
