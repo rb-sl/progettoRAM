@@ -1,4 +1,7 @@
 <?php
+// This file contains a collection of functions used in the register section of
+// the application
+
 // Function to retrieve a class's data or show an error if it does not exist
 function get_class_info($id)
 {
@@ -170,7 +173,7 @@ function get_test($id, $forstud = false)
 	return $ret;	
 }
 
-// Function to insert or update students of a class, on insert or update
+// Function to insert or update students of a class
 function class_students($isupdate, $class, $precedent, $newln, $newfn, $gnd, $external)
 {
 	global $mysqli;
@@ -947,5 +950,4 @@ function show_cl_form($cl = 0, $sez = "", $year = null)
 	
 	return;
 }
-
 ?>

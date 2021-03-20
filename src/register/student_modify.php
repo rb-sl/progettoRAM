@@ -1,8 +1,6 @@
 <?php 
 // Form page to change a student's information
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
-include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 chk_access(2);
 connect();
 show_premain("Modifica Studente");

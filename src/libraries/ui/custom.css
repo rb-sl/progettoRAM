@@ -84,6 +84,18 @@ main {
   	width: 50%;
 }
 
+/* Privileges in user table */
+.privdiv {
+	display: inline-block; 
+	width: -webkit-calc(100% - 25px);
+    width: -moz-calc(100% - 25px);
+    width: calc(100% - 25px);
+}
+.boxdiv {
+	display: inline-block; 
+	vertical-align: top;
+}
+
 /* Special .hidden to have jQuery modify it */
 .jQhidden {
   	display: none;
@@ -305,6 +317,14 @@ input:disabled{
 	min-width: 150px;
 	overflow-x: scroll;
 }
+
+.colorbox {
+	width: 15px;
+	height: 15px;
+	display: inline-block;
+	left: 5px;
+	top: 5px;
+  }
 
 /* Componenti per il footer */
 html {

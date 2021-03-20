@@ -8,9 +8,6 @@ connect();
 $st = json_decode($_GET['st']);
 $cl = json_decode($_GET['cl']);
 
-// $anno = $_SESSION['sql']->real_escape_string($cl->anno)-1;
-// $classe = $_SESSION['sql']->real_escape_string($cl->classe);
-
 $year = $cl->anno - 1;
 $class = $cl->classe;
 
@@ -23,8 +20,6 @@ $dup_st = prepare_stmt("SELECT id_stud, cogs, noms, id_ist, classe, sez, anno FR
 	GROUP BY id_stud 
 	HAVING(anno=MAX(anno))");
 $dup_st->bind_param("sssiii", $lastname, $firstname, $gender, $year, $class, $_SESSION['scuola']);
-
-
 
 $data = null;
 foreach($st as $k => $stud)
