@@ -18,12 +18,22 @@ if($chk->num_rows > 0)
 	exit;
 }
 
+$_SESSION['alert'] = "Aggiornamento avvenuto con successo";
+$location = "/user/profile.php";
+
 // The query is built considering if the user wishes to update their password
 if(!empty($_POST['psw']))
 {
 	$up_st = prepare_stmt("UPDATE PROFESSORI SET user=?, nomp=?, cogp=?, email=?, fk_scuola=?, psw=MD5(?), lastpsw=CURDATE() WHERE id_prof=?");
 	$up_st->bind_param("ssssssi", $_POST['usr'], $_POST['nomp'], $_POST['cogp'], $_POST['email'], $_POST['school'], $_POST['psw'], $_SESSION['id']);
-  	$_SESSION['scad'] = false;
+  	
+	if($_SESSION['err'] == 5)
+	{
+		$_SESSION['err'] = "";
+		$_SESSION['alert'] = "Primo accesso completato: ora l'applicazione è attivata";
+		$location = "/guide/guide.php";
+	}
+	$_SESSION['scad'] = false;
 }
 else
 {
@@ -37,7 +47,5 @@ $up_st->close();
 $_SESSION['user'] = $_POST['usr'];  
            
 writelog("[Modifica profilo] ".$_SESSION['id']);
-$_SESSION['alert'] = "Aggiornamento avvenuto con successo";
-
-header("Location: /user/profile.php");
+header("Location: $location");
 ?>

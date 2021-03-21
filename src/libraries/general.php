@@ -41,18 +41,21 @@ function writelog($action)
 // 3 -> Statistical access
 function chk_access($priv = 5)
 {
-	if(!isset($_SESSION['user']))
-    {
-    	$_SESSION['err'] = 1;
-    	header('Location: /');
-    	exit;
-    }
-	if(!isset($_SESSION['priv']) or $_SESSION['priv'] > $priv)
-    {
-    	$_SESSION['err'] = 3;
-    	header('Location: /');
-    	exit;
-    }
+	if(!isset($_SESSION['err']) or $_SESSION['err'] == "")
+	{
+		if(!isset($_SESSION['user']))
+		{
+			$_SESSION['err'] = 1;
+			header('Location: /');
+			exit;
+		}
+		if(!isset($_SESSION['priv']) or $_SESSION['priv'] > $priv)
+		{
+			$_SESSION['err'] = 3;
+			header('Location: /');
+			exit;
+		}
+	}
 }
 
 // Checks if the user can access the class's register page 
@@ -303,30 +306,36 @@ function show_premain($title = "", $stat = false)
 	
 	// Prints errors and stops the loading of the page
 	if(isset($_SESSION['err']) and $_SESSION['err'] != "")
-	{
-  		echo "<h3 class='dangercolor'>Accesso negato</h3>";
-  		switch($_SESSION['err'])
-  		{
-    		case 1:
-      			echo "<h4>Effettuare il login</h4>";
-      			break;
-    		case 2:
-      			echo "<h4>Login errato</h4>";
-      			break;
-    		case 3:
-      			echo "<h4>Utente non autorizzato</h4>";
-     			break;
-        	case 4:
-      			echo "<h4>Login disabilitato</h4>";
-     			break;
-    		default:
-      			break;
-  		}
-		
-    	$_SESSION['err'] = "";
-    	show_postmain();
-    	exit;
-	}
+		if($_SESSION['err'] != 5 or basename($_SERVER['PHP_SELF']) != "profile.php")
+		{
+  			echo "<h3 class='dangercolor'>Accesso negato</h3>";
+			switch($_SESSION['err'])
+			{
+				case 1:
+					echo "<h4>Effettuare il login</h4>";
+					$_SESSION['err'] = "";
+					break;
+				case 2:
+					echo "<h4>Login errato</h4>";
+					$_SESSION['err'] = "";
+					break;
+				case 3:
+					echo "<h4>Utente non autorizzato</h4>";
+					$_SESSION['err'] = "";
+					break;
+				case 4:
+					echo "<h4>Login disabilitato</h4>";
+					$_SESSION['err'] = "";
+					break;
+				case 5:
+					echo "<h4>Primo accesso: <a href='/user/profile.php'>modificare la password</a></h4>";
+					break;	
+				default:
+					break;
+			}
+			show_postmain();
+			exit;
+		}
 
 	if(isset($_SESSION['scad']) and $_SESSION['scad'])
   		echo "<h3 class='dangercolor'>Password in scadenza!</h3>

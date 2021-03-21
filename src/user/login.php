@@ -23,6 +23,9 @@ if($ret->num_rows != 0)
 	$up_st->close();
 	
 	writelog("Accesso");
+
+	if($row['lastpsw'] === null)
+		$_SESSION['err'] = 5;
 	
 	// Redirects based on the user's status
 	if($row['priv'] > 2)
