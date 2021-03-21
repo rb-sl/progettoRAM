@@ -4,8 +4,10 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 chk_access(0);
 connect();
 
-$in_st = prepare_stmt("INSERT INTO PROFESSORI(user, psw, priv, nomp, cogp, email, fk_scuola) VALUES (?, MD5(?), ?, ?, ?, ?, ?)");
-$in_st->bind_param("ssisssi", $_POST['usr'], $_POST['psw'], $_POST['priv'], $_POST['nom'], $_POST['cog'], $_POST['mail'], $_POST['sc']);
+$in_st = prepare_stmt("INSERT INTO PROFESSORI(user, psw, priv, granted_by, nomp, cogp, email, fk_scuola) 
+    VALUES (?, MD5(?), ?, ?, ?, ?, ?, ?)");
+$in_st->bind_param("ssiisssi", $_POST['usr'], $_POST['psw'], $_POST['priv'], $_SESSION['id'], 
+    $_POST['nom'], $_POST['cog'], $_POST['mail'], $_POST['sc']);
 execute_stmt($in_st);
 $in_st->close();
 $id = $mysqli->insert_id;

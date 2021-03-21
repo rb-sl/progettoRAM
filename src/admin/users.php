@@ -1,6 +1,7 @@
 <?php
 // Page to display and manage users
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_admin.php";
 chk_access(0);
 connect();
 
@@ -33,29 +34,7 @@ $user_st->close();
 
 while($row = $ret->fetch_assoc())
 {
-    switch($row['priv'])
-    {
-        case 0: 
-            $privilege = "Amministratore";
-            $color = "primarybg";
-            break;
-        case 1: 
-            $privilege = "Professore (modifica test)";
-            $color = "infobg";
-            break;
-        case 2: 
-            $privilege = "Professore";
-            $color = "successbg";
-            break;
-        case 3: 
-            $privilege = "Ricerca";
-            $color = "warningbg";
-            break;
-        default:
-            $privilege = "Nessuno";
-            $color = "dangerbg";
-            break;
-    }
+    $priv = get_privilege($row['priv']);
 
     echo "<tr>
             <td class='col'>".$row['user']."</td>
@@ -63,8 +42,8 @@ while($row = $ret->fetch_assoc())
             <td class='col'>".$row['nomescuola']."</td>
             <td class='col'>".$row['last_login']."</td>
             <td class='col'>
-                <div class='boxdiv'><div class='colorbox $color'></div></div>
-                <div class='privdiv'>$privilege</div>
+                <div class='boxdiv'><div class='colorbox ".$priv['color']."'></div></div>
+                <div class='privdiv'>".$priv['text']."</div>
             </td>
             <td class='col'>";
 

@@ -1,6 +1,7 @@
 <?php
 // Frontend page to show a user's details and change their permission
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_admin.php";
 chk_access(0);
 connect();
 
@@ -13,29 +14,7 @@ $user_st->close();
 
 $user = $ret->fetch_assoc();
 
-$l0 = "";
-$l1 = "";
-$l2 = "";
-$l3 = "";
-$l5 = "";
-switch($user['priv'])
-{
-    case 0:
-        $l0 = " selected";
-        break;
-    case 1:
-        $l1 = " selected";
-        break;
-    case 2:
-        $l2 = " selected";
-        break;
-    case 3:
-        $l3 = " selected";
-        break;
-    default:
-        $l5 = " selected";
-        break;    
-}
+$dg = can_downgrade($user['id_prof']);
 
 show_premain("Profilo di ".$user['user']);
 ?>
@@ -68,11 +47,22 @@ show_premain("Profilo di ".$user['user']);
                 <td class="col">Privilegi</td>
                 <td class="col">
                     <select class="form-control" name="priv">
-                        <option value="0"<?=$l0?>>Amministratore</option>
-                        <option value="1"<?=$l1?>>Professore (Con modifica test)</option>
-                        <option value="2"<?=$l2?>>Professore</option>
-                        <option value="3"<?=$l3?>>Ricerca</option>
-                        <option value="5"<?=$l5?>>Nessuno</option>
+<?php
+// Options to change the privilege level are shown only in 
+// upgrade if the user is not the original granter
+$end = $dg ? 5 : $user['priv'];
+for($i = 0; $i <= $end; $i++)
+{
+    $priv = get_privilege($i);
+    if($priv != null)
+    {
+        echo "<option value='$i'";
+        if($user['priv'] == $i)
+            echo " selected";
+        echo ">".$priv['text']."</option>";
+    }
+}
+?>
                     </select>
                 </td>
             </tr>
