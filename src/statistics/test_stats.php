@@ -1,33 +1,36 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT']."/librerie/general.php";
-include $_SERVER['DOCUMENT_ROOT']."/librerie/lib_stat.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 chk_access(3);
 connect();
 
-$ret=query("SELECT * FROM TEST,UNITA WHERE fk_udm=id_udm AND id_test=".$_GET['id']);
-$test=$ret->fetch_assoc();
+$test_st = prepare_stmt("SELECT * FROM TEST JOIN UNITA ON fk_udm=id_udm WHERE id_test=?");
+$test_st->bind_param("i", $_GET['id']);
+$ret = execute_stmt($test_st);
+$test_st->close();
 
-show_premain("Statistiche ".$test['nometest'],true);
+$test = $ret->fetch_assoc();
+show_premain("Statistiche ".$test['nometest'], true);
 
-$dati=get_stats($_GET['id']);
-$rcr=get_records();
-$graph=graph_vals();
+$data = get_stats($_GET['id']);
+$records = get_records();
+// $graph = graph_vals();
 ?>
 
 <h2>Statistiche <span id="nomet"><?=$test['nometest']?></span></h2>
 
 <table class='table table-striped'>
-   	<tr><td>Numero totale di prove: <span id="n"><?=$dati['n']?></span></td>
-   	<tr><td>Media: <span id="avg"><?=number_format($dati['avg'],2)?></span> <?=$test['simbolo']?></td></tr>
-	<tr><td>Mediana: <span id="med"><?=number_format($dati['med'],2)?></span> <?=$test['simbolo']?></td></tr>
-   	<tr><td>Deviazione Standard: <span id="std"><?=number_format($dati['std'],2)?></span> <?=$test['simbolo']?></td></tr>	
+   	<tr><td>Numero totale di prove: <span id="n"><?=$data['n']?></span></td>
+   	<tr><td>Media: <span id="avg"><?=number_format($data['avg'],2)?></span> <?=$test['simbolo']?></td></tr>
+	<tr><td>Mediana: <span id="med"><?=number_format($data['med'],2)?></span> <?=$test['simbolo']?></td></tr>
+   	<tr><td>Deviazione Standard: <span id="std"><?=number_format($data['std'],2)?></span> <?=$test['simbolo']?></td></tr>	
 </table>
 
-<h3 style="margin-bottom:0px">Record positivo: <span id="best"><?=$rcr['best']?></span> <?=$test['simbolo']?></h3>
+<h3 style="margin-bottom:0px">Record positivo: <span id="best"><?=$records['best']?></span> <?=$test['simbolo']?></h3>
 
-<?=$rcr['list']?>
+<?=$records['list']?>
 
-<h3>Record negativo: <span id="worst"><?=$rcr['worst']?></span> <?=$test['simbolo']?></h3>
+<h3>Record negativo: <span id="worst"><?=$records['worst']?></span> <?=$test['simbolo']?></h3>
 
 <h3>
 	Grafico: 

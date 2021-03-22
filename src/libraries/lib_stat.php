@@ -106,72 +106,183 @@ function cond_builder()
 	return $cond;
 }
 
-// Funzione per ottenere i record e la lista di studenti che hanno realizzato il record positivo
-function get_records($cond="")
+// Function to obtain record values and schools 
+function get_records($cond = null)
 {
-	$ret=query("SELECT nomet,passo,pos,MAX(valore) AS max,MIN(valore) AS min FROM PROVE,TEST,TIPOTEST".$cond['tabs']." WHERE fk_test=id_test AND fk_tipot=id_tipot AND id_test=".$_GET['id'].$cond['rstr']);
-	$row=$ret->fetch_assoc();
-
-	if($row['pos']=="Maggiori")
+	if($cond)
 	{
-		$rcr['best']=$row['max'];
-		$rcr['worst']=$row['min'];
+
 	}
 	else
 	{
-		$rcr['best']=$row['min'];
-		$rcr['worst']=$row['max'];
+		$rec_st = prepare_stmt("SELECT passo, pos, MAX(valore) AS max, MIN(valore) AS min 
+		FROM PROVE JOIN TEST ON fk_test=id_test
+		JOIN TIPOTEST ON fk_tipot=id_tipot
+		WHERE id_test=?");
+		$rec_st->bind_param("i", $_GET['id']);
+
+		$class_st = prepare_stmt("SELECT nomescuola, id_cl, classe, sez, anno, fk_prof 
+			FROM PROVE JOIN ISTANZE ON fk_ist=id_ist
+			JOIN CLASSI ON fk_cl=id_cl
+			JOIN SCUOLE ON fk_scuola=id_scuola
+			WHERE fk_test=? 
+			AND valore=? 
+			ORDER BY anno ASC");
+		$class_st->bind_param("id", $_GET['id'], $best);
 	}
 
-	// Controllo se sono stati selezionati dei dati, altrimenti la query crasha
-	if($rcr['best']) 
-    {
-    	// Rimozione della doppia join su classi
-    	$cond['tabs']=str_replace(",ISTANZE,CLASSI", "", $cond['tabs']);
-		// Questa query viene fatta prima di modificare $rcr, valori utilizzati in seguito per la tabella
-		$ret=query("SELECT nomescuola,id_cl,classe,sez,anno,fk_prof FROM PROVE,ISTANZE,CLASSI,SCUOLE".$cond['tabs']." WHERE fk_ist=id_ist AND fk_cl=id_cl AND fk_scuola=id_scuola AND fk_test=".$_GET['id'].$cond['rstr']." AND valore=".$rcr['best']." ORDER BY anno ASC");
-    }
-	if($rcr['best'] and $row['passo']<1)
+	$ret = execute_stmt($rec_st);
+	$rec_st->close();
+
+	$record = $ret->fetch_assoc();
+	if($record['pos'] == "Maggiori")
 	{
-		$rcr['best']=number_format($rcr['best'],2);
-		$rcr['worst']=number_format($rcr['worst'],2);
+		$rcr['best'] = $record['max'];
+		$rcr['worst'] = $record['min'];
+	}
+	else
+	{
+		$rcr['best'] = $record['min'];
+		$rcr['worst'] = $record['max'];
 	}
 
-	$rcr['list']="<table id='tbest' class='table table-striped'>";
-	while($rcp=$ret->fetch_assoc())
+	$best = $rcr['best'];
+	// Gets classes information
+	// if($rcr['best'])
+	$ret = execute_stmt($class_st);	
+	
+	// Float results are formatted
+	if($rcr['best'] and $record['passo'] < 1)
 	{
-		$rcr['list'].="<tr><td>".$rcp['nomescuola']."</td><td>";
-		if($rcp['fk_prof']==$_SESSION['id'])
+		$rcr['best'] = number_format($rcr['best'], 2);
+		$rcr['worst'] = number_format($rcr['worst'], 2);
+	}
+	
+	$rcr['list'] = "<table id='tbest' class='table table-striped'>";
+	while($rcp = $ret->fetch_assoc())
+	{
+		$rcr['list'] .= "<tr><td>".$rcp['nomescuola']."</td><td>";
+
+		if($rcp['fk_prof'] == $_SESSION['id'] or $_SESSION['priv'] == 0)
   		{
-    		$rcr['list'].="<a href='/registro/show_classe.php?id=".$rcp['id_cl']."'>";
-    		$fl="</a>";
+    		$rcr['list'] .= "<a href='/register/class_show.php?id=".$rcp['id_cl']."'>";
+    		$fl = "</a>";
   		}
   		else
-    		$fl="";
-		$rcr['list'].=$rcp['classe'].$rcp['sez']." ".$rcp['anno']."/".($rcp['anno']+1)."$fl</td></tr>";
+    		$fl = "";
+
+		$rcr['list'] .= $rcp['classe'].$rcp['sez']." ".$rcp['anno']."/".($rcp['anno'] + 1)."$fl</td></tr>";
 	}
-	$rcr['list'].="</table>";
+	$rcr['list'] .= "</table>";
 
 	return $rcr;
 }
 
 // Ottiene le statistiche aggiornate con la condizione
-function get_stats($idtest,$cond="")
+function get_stats($idtest, $cond = null)
 {
-	$r=query("SELECT COUNT(valore) as n, ROUND(AVG(valore),2) AS avg, ROUND(STD(valore),2) AS std
-	FROM PROVE".$cond['tabs']."
-	WHERE fk_test=$idtest".$cond['rstr']);
-	$ret=$r->fetch_assoc();
+	if($cond)
+	{
+		$classlist = $cond['class'];
+		$genderlist = $cond['sex'];
+		$prof = $cond['prof'];
 
-	$med=query("SELECT ROUND(AVG(T.valore),2) as med
-		FROM (
-			SELECT PROVE.valore, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum
-  			FROM PROVE".$cond['tabs'].", (SELECT @rownum:=0) r
-  			WHERE fk_test=$idtest".$cond['rstr']."
-  			ORDER BY valore
-		) as T
-		WHERE T.row_number IN ( FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2))");
-	return array_merge($ret,$med->fetch_assoc());
+		$stat_st = prepare_stmt("SELECT COUNT(valore) as n, ROUND(AVG(valore), 2) AS avg, ROUND(STD(valore), 2) AS std
+			FROM PROVE
+			WHERE fk_test=?
+			AND anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof");
+		
+		$even_st = prepare_stmt("SELECT ROUND(AVG(valore), 2) AS med FROM (
+				SELECT valore FROM (
+					SELECT valore 
+					FROM PROVE 
+					WHERE fk_test=? 
+					AND anno BETWEEN ? AND ?
+					AND classe IN (0 $classlist)
+					AND sesso IN ('x' $genderlist)
+					$prof
+					ORDER BY valore ASC 
+					LIMIT ?
+				) AS ASCENDING
+				ORDER BY valore DESC 
+				LIMIT 2
+			) AS DESCENDING");
+		
+		// Query to get the median if the number of results is odd
+		$odd_st = prepare_stmt("SELECT valore AS med FROM (
+				SELECT valore 
+				FROM PROVE 
+				WHERE fk_test=? 
+				AND anno BETWEEN ? AND ?
+				AND classe IN (0 $classlist)
+				AND sesso IN ('x' $genderlist)
+				$prof
+				ORDER BY valore ASC 
+				LIMIT ?
+			) AS ASCENDING
+			ORDER BY valore DESC 
+			LIMIT 1");		
+
+		if($prof != "")
+		{
+			$stat_st->bind_param("iiii", $idtest, $cond['year1'], $cond['year2'], $_SESSION['id']);
+			$even_st->bind_param("iiiii", $idtest, $offset, $cond['year1'], $cond['year2'], $_SESSION['id']);
+			$odd_st->bind_param("iiiii", $idtest, $offset, $cond['year1'], $cond['year2'], $_SESSION['id']);
+		}
+		else
+		{
+			$stat_st->bind_param("iii", $idtest, $cond['year1'], $cond['year2']);
+			$even_st->bind_param("iiii", $idtest, $offset, $cond['year1'], $cond['year2']);
+			$odd_st->bind_param("iiii", $idtest, $offset, $cond['year1'], $cond['year2']);
+		}		
+	}
+	else
+	{
+		$stat_st = prepare_stmt("SELECT COUNT(valore) as n, ROUND(AVG(valore), 2) AS avg, ROUND(STD(valore), 2) AS std
+			FROM PROVE
+			WHERE fk_test=?");
+		$stat_st->bind_param("i", $idtest);
+
+		// Query to get the median if the number of results is even
+		$even_st = prepare_stmt("SELECT ROUND(AVG(valore), 2) AS med FROM (
+				SELECT valore 
+				FROM PROVE 
+				WHERE fk_test=? 
+				ORDER BY valore ASC 
+				LIMIT ?, 2
+			) AS P");
+		$even_st->bind_param("ii", $idtest, $offset);
+
+		// Query to get the median if the number of results is odd
+		$odd_st = prepare_stmt("SELECT valore as med
+			FROM PROVE 
+			WHERE fk_test=? 
+			ORDER BY valore ASC 
+			LIMIT ?, 1");
+		$odd_st->bind_param("ii", $idtest, $offset);
+	}
+
+	$ret = execute_stmt($stat_st);
+	$stat = $ret->fetch_assoc();
+	$stat_st->close();
+
+	if($stat['n'] % 2 == 0)
+	{
+    	$offset =  $stat['n'] / 2;
+		$ret = execute_stmt($even_st);
+	}
+	else
+    {
+		$offset = $stat['n'] / 2 + 1;
+		$ret = execute_stmt($odd_st);
+	}
+	$odd_st->close();
+	$med = $ret->fetch_assoc();
+	
+	return array_merge($stat, $med);
 }
 
 function graph_multibox($group,$cond="")
@@ -235,5 +346,4 @@ function r_vals($id1,$id2,$cond="")
 		(SELECT valore AS v2,anno,fk_stud from PROVE,ISTANZE,CLASSI".$cond['tabs']." WHERE fk_ist=id_ist AND fk_cl=id_cl AND fk_test=$id2".$cond['rstr']." ) AS P2 
 		USING (fk_stud,anno)");
 }
-
 ?>

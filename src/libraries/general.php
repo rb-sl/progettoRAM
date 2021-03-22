@@ -195,7 +195,7 @@ function show_premain($title = "", $stat = false)
         					<li><a href='/project.php'>Il progetto</a></li>
         					<li><a href='/register/register.php'>Registro</a></li>
         					<li><a href='/test/test.php'>Test e valutazioni</a></li>
-        					<li><a href='/statistica/statistica.php'>Statistica</a></li>
+        					<li><a href='/statistics/statistics.php'>Statistica</a></li>
         					<li><a href='/guide/guide.php'>Manuale</a></li>
       					</ul>
       

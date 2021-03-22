@@ -84,7 +84,7 @@ function col_stud()
 		$rstud[$row['id_ist']]['strow'] = "<tr id='tr".$row['id_ist']."' class='dat tdr'>
     		<td id='st".$row['id_ist']."' class='leftfix $cl'>
         		<div><a href='student_show.php?id=".$row['id_stud']
-					."' class='resizetext' title=\"".addslashes($row['cogs']." ".$row['noms'])
+					."' class='resizetext' title=\"".quoteHTML($row['cogs']." ".$row['noms'])
 					." (".strtoupper($row['sesso']).")\" tabindex='-1'>".$row['cogs']." "
 					.(isset($row['noms'][0]) ? $row['noms'][0]."." : "")."</a></div>
         	</td>";
