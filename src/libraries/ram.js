@@ -1,33 +1,4 @@
-// Funzione per aggiornare il dato dell'anno scolastico sul nav
 // Collection of functions used in all pages
-
-$(function(){    
-	$(".anno").change(function(){
-    	$("#update").removeClass("btn-success");
-    	$("#update").addClass("btn-warning");
-    
-    	$("#flw"+$(this).attr("id")).html(parseInt($(this).val())+1);
-   	});
-	
-});
-
-$(function(){
-	$(".stat").click(function(){
-    	$("#update").removeClass("btn-success");
-    	$("#update").addClass("btn-warning");
-    
-    	if($(this).val()=="on")
-        {
-        	$(this).removeClass("btn-primary");
-        	$(this).val("off");
-        }
-    	else
-        {
-        	$(this).addClass("btn-primary");
-        	$(this).val("on");
-        }
-    });
-});
 
 // Makes the menus not fixed if the window is too narrow,
 // so that they don't cover content, and manages the main's

@@ -174,8 +174,8 @@ function show_premain($title = "", $stat = false)
 		<!-- Graph and custom scripts -->
         <script src='".PLOTLY_PATH."'></script>
         <script src='/libraries/ram.js'></script>
-        
-    	<title>$title Progetto RAM</title>
+		".($stat ? "<script src='/libraries/stat_menu.js'></script>" : "")."
+		<title>$title Progetto RAM</title>
 	</head> 
   	
     <body> 
