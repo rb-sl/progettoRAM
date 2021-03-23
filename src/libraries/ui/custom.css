@@ -58,6 +58,14 @@ main {
 	margin-left: auto
 }
 
+/* Main margin options */
+.nostatwide {
+	margin-top: 60px;
+}
+.statwide {
+	margin-top: 94px;
+}
+
 .marginunder {
   	margin-bottom: 10px !important;
 }
@@ -436,11 +444,14 @@ input[type="password"] {
 	font-size: inherit !important;
 }
 
-@media (max-width:780px){
-    main{
-      	margin-top:0px !important;
-    }
-    #myNavbar2{
+@media (max-width: 750px){
+    #myNavbar2 {
 		text-align: center !important;
+	}
+}
+
+@media (max-width: 850px) {
+	.li-stat {
+		margin-left: 0px;
 	}
 }

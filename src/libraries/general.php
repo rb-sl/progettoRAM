@@ -249,7 +249,7 @@ function show_premain($title = "", $stat = false)
 	
 	if($stat)
     {
-    	$px = "94px";
+    	$margin = "statwide";
 		$stmt = prepare_stmt("SELECT MIN(anno) AS anno1, MAX(anno) AS anno2 FROM PROVE, ISTANZE, CLASSI 
 			WHERE id_ist=fk_ist AND fk_cl=id_cl");
     	$ret = execute_stmt($stmt);
@@ -291,7 +291,7 @@ function show_premain($title = "", $stat = false)
 					<li class='li-stat'>
                     	<button id='rstr' class='btn overpad stat' value='off'>Solo personali</button>
                     </li>
-                    <li class='li-stat'>
+                    <li class='li-stat lastmenu'>
                     	<button id='update' class='btn btn-primary overpad'>Aggiorna</button>
                     </li>
       			</ul>
@@ -300,9 +300,9 @@ function show_premain($title = "", $stat = false)
     </nav>";
     }
 	else
-		$px = "60px";
+		$margin = "nostatwide";
 
-	echo "<main style='margin-top: $px'>";
+	echo "<main class='$margin'>";
 	
 	// Prints errors and stops the loading of the page
 	if(isset($_SESSION['err']) and $_SESSION['err'] != "")

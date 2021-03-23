@@ -1,4 +1,5 @@
 // Funzione per aggiornare il dato dell'anno scolastico sul nav
+// Collection of functions used in all pages
 
 $(function(){    
 	$(".anno").change(function(){
@@ -28,30 +29,44 @@ $(function(){
     });
 });
 
-$(function(){
-	
-	function navbar()
+// Makes the menus not fixed if the window is too narrow,
+// so that they don't cover content, and manages the main's
+// margin
+function navbar()
+{
+	$("footer").html(parseInt($(window).width()));
+	if(parseInt($(window).width()) > 750)
 	{
-    	if($(window).width()>750)
-        {
-        	$(".pg-head").addClass("navbar-fixed-top");
-        	$("#nav2").css("margin-top","50px");
-        }
-    	else
-        {
-        	$(".pg-head").removeClass("navbar-fixed-top");
- 	        $("#nav2").css("margin-top","0px");
-        }
+		$(".pg-head").addClass("navbar-fixed-top");
+		
+
+		if($("#nav2").length)
+		{
+			$("#nav2").css("margin-top", "50px");
+			$("main").addClass("statwide");
+		}
+		else
+			$("main").addClass("nostatwide");
 	}
+	else
+	{
+		$(".pg-head").removeClass("navbar-fixed-top");
+		if($("#nav2").length)
+		{
+			$("#nav2").css("margin-top", "0px");
+			$("main").removeClass("statwide");
+		}
+		else
+			$("main").removeClass("nostatwide");
+	}
+}
 
-	$(document).ready(function(){
-    	navbar();
-    });
+$(document).ready(function(){
+	navbar();
+});
 
-	$(window).resize(function(){
-    	navbar();
-    });
-
+$(window).resize(function(){
+	navbar();
 });
 
 $(function(){
