@@ -1,6 +1,9 @@
 <?php
 // Collection of functions used in the statistical section
 
+// Number of test results after which the correlation is deemed significant
+const CORRELATION_TRESH = 30;
+
 // Constants for graphs
 const MULTIBOX_YEAR = 0;
 const MULTIBOX_CLASS = 1;
@@ -55,31 +58,38 @@ function arr_std($vals,$avg="")
 	return "-";
 }
 
-// Funzione che calcola il coefficiente di correlazione campionaria tra due test
-// dati gli id
-function calc_r($id1,$id2,$cond="")
-{
-	 $ret1=query("SELECT AVG(valore) AS avg,STD(valore) AS std FROM PROVE".$cond['tabs']." WHERE fk_test=$id1".$cond['rstr']);
-	 $t1=$ret1->fetch_assoc();
-	
-	 $ret2=query("SELECT AVG(valore) AS avg,STD(valore) AS std FROM PROVE".$cond['tabs']." WHERE fk_test=$id2".$cond['rstr']);
-     $t2=$ret2->fetch_assoc();
-    
-	$retvals=r_vals($id1,$id2,$cond);
+// Function to calculate the correlation coefficient between two tests
+// given their ids
+function calc_r($id1, $stat1, $id2, $stat2, $cond = null)
+{    
+	global $r_id1;
+	global $r_id2;
+	global $rval_st;
 
-	$r['n']=$retvals->num_rows;
-    if($r['n']>30) // Non è indicativo con pochi dati
+	global $splom;
+
+	$r_id1 = $id1;
+	$r_id2 = $id2;
+	$retvals = execute_stmt($rval_st);
+	// $retvals = r_vals($id1, $id2, $cond);
+	$r['n'] = $retvals->num_rows;
+
+	// As r is not indicative with few data, only couples of tests 
+	// with	at least N values are considered
+    if($r['n'] > CORRELATION_TRESH)
     {
-    	// Calcolo del coefficiente di correlazione campionaria r
-    	// s=sum((x-avgx)*(y-avg(y))
-    	$s=0;
-    	while($row=$retvals->fetch_assoc())
-        	$s+=($row['v1']-$t1['avg'])*($row['v2']-$t2['avg']);
-        
-        $r['r']=number_format($s/(($retvals->num_rows-1)*$t1['std']*$t2['std']),5);
+    	// Calculation of the correlation coefficient as
+    	// sum((x - avg(x)) * (y - avg(y)) / ((n-1) * std(x) * std(y))
+		// From "Introduction to probability and statistics for engineers and scientists"
+		// By Sheldon M. Ross
+    	$s = 0;
+    	while($row = $retvals->fetch_assoc())
+			$s += ($row['v1'] - $stat1['avg']) * ($row['v2'] - $stat2['avg']);
+
+        $r['r'] = number_format($s / (($r['n'] - 1) * $stat1['std'] * $stat2['std']), 5);
     }
     else
-      	$r['r']="-";
+      	$r['r'] = "-";
 
 	return $r;
 }
@@ -241,7 +251,7 @@ function get_records($id, $cond = null)
 }
 
 // Ottiene le statistiche aggiornate con la condizione
-function get_stats($idtest, $cond = null)
+function get_stats($idtest, $cond = null, $get_median = true)
 {
 	if($cond)
 	{
@@ -249,7 +259,7 @@ function get_stats($idtest, $cond = null)
 		$genderlist = $cond['sex'];
 		$prof = $cond['prof'];
 
-		$stat_st = prepare_stmt("SELECT COUNT(valore) as n, ROUND(AVG(valore), 2) AS avg, ROUND(STD(valore), 2) AS std
+		$stat_st = prepare_stmt("SELECT COUNT(valore) as n, AVG(valore) AS avg, STD(valore) AS std
 			FROM PROVE 
 			JOIN ISTANZE ON fk_ist=id_ist
 			JOIN STUDENTI ON fk_stud=id_stud 
@@ -260,9 +270,25 @@ function get_stats($idtest, $cond = null)
 			AND sesso IN ('x' $genderlist)
 			$prof");
 		
-		$even_st = prepare_stmt("SELECT ROUND(AVG(valore), 2) AS med FROM (
-				SELECT valore 
-				FROM PROVE JOIN ISTANZE ON fk_ist=id_ist
+		if($get_median)
+		{
+			$even_st = prepare_stmt("SELECT AVG(valore) AS med FROM (
+					SELECT valore 
+					FROM PROVE JOIN ISTANZE ON fk_ist=id_ist
+					JOIN STUDENTI ON fk_stud=id_stud 
+					JOIN CLASSI ON fk_cl=id_cl 
+					WHERE fk_test=? 
+					AND anno BETWEEN ? AND ?
+					AND classe IN (0 $classlist)
+					AND sesso IN ('x' $genderlist)
+					$prof
+					ORDER BY valore ASC 
+					LIMIT ?, 2
+				) AS P");
+			
+			// Query to get the median if the number of results is odd
+			$odd_st = prepare_stmt("SELECT valore AS med FROM PROVE 
+				JOIN ISTANZE ON fk_ist=id_ist
 				JOIN STUDENTI ON fk_stud=id_stud 
 				JOIN CLASSI ON fk_cl=id_cl 
 				WHERE fk_test=? 
@@ -271,66 +297,62 @@ function get_stats($idtest, $cond = null)
 				AND sesso IN ('x' $genderlist)
 				$prof
 				ORDER BY valore ASC 
-				LIMIT ?, 2
-			) AS P");
-		
-		// Query to get the median if the number of results is odd
-		$odd_st = prepare_stmt("SELECT valore AS med FROM PROVE 
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN STUDENTI ON fk_stud=id_stud 
-			JOIN CLASSI ON fk_cl=id_cl 
-			WHERE fk_test=? 
-			AND anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof
-			ORDER BY valore ASC 
-			LIMIT ?, 1");
+				LIMIT ?, 1");
+		}
 
 		if($prof != "")
 		{
 			$stat_st->bind_param("iiii", $idtest, $cond['year1'], $cond['year2'], $_SESSION['id']);
-			$even_st->bind_param("iiiii", $idtest, $cond['year1'], $cond['year2'], $_SESSION['id'], $offset);
-			$odd_st->bind_param("iiiii", $idtest, $cond['year1'], $cond['year2'], $_SESSION['id'], $offset);
+			if($get_median)
+			{
+				$even_st->bind_param("iiiii", $idtest, $cond['year1'], $cond['year2'], $_SESSION['id'], $offset);
+				$odd_st->bind_param("iiiii", $idtest, $cond['year1'], $cond['year2'], $_SESSION['id'], $offset);
+			}
 		}
 		else
 		{
 			$stat_st->bind_param("iii", $idtest, $cond['year1'], $cond['year2']);
-			$even_st->bind_param("iiii", $idtest, $cond['year1'], $cond['year2'], $offset);
-			$odd_st->bind_param("iiii", $idtest, $cond['year1'], $cond['year2'], $offset);
+			if($get_median)
+			{
+				$even_st->bind_param("iiii", $idtest, $cond['year1'], $cond['year2'], $offset);
+				$odd_st->bind_param("iiii", $idtest, $cond['year1'], $cond['year2'], $offset);
+			}
 		}		
 	}
 	else
 	{
-		$stat_st = prepare_stmt("SELECT COUNT(valore) as n, ROUND(AVG(valore), 2) AS avg, ROUND(STD(valore), 2) AS std
+		$stat_st = prepare_stmt("SELECT COUNT(valore) as n, AVG(valore) AS avg, STD(valore) AS std
 			FROM PROVE
 			WHERE fk_test=?");
 		$stat_st->bind_param("i", $idtest);
 
-		// Query to get the median if the number of results is even
-		$even_st = prepare_stmt("SELECT ROUND(AVG(valore), 2) AS med FROM (
-				SELECT valore 
+		if($get_median)
+		{
+			// Query to get the median if the number of results is even
+			$even_st = prepare_stmt("SELECT AVG(valore) AS med FROM (
+					SELECT valore 
+					FROM PROVE 
+					WHERE fk_test=? 
+					ORDER BY valore ASC 
+					LIMIT ?, 2
+				) AS P");
+			$even_st->bind_param("ii", $idtest, $offset);
+
+			// Query to get the median if the number of results is odd
+			$odd_st = prepare_stmt("SELECT valore AS med
 				FROM PROVE 
 				WHERE fk_test=? 
 				ORDER BY valore ASC 
-				LIMIT ?, 2
-			) AS P");
-		$even_st->bind_param("ii", $idtest, $offset);
-
-		// Query to get the median if the number of results is odd
-		$odd_st = prepare_stmt("SELECT valore AS med
-			FROM PROVE 
-			WHERE fk_test=? 
-			ORDER BY valore ASC 
-			LIMIT ?, 1");
-		$odd_st->bind_param("ii", $idtest, $offset);
+				LIMIT ?, 1");
+			$odd_st->bind_param("ii", $idtest, $offset);
+		}
 	}
 
 	$ret = execute_stmt($stat_st);
 	$stat = $ret->fetch_assoc();
 	$stat_st->close();
 
-	if($stat['n'] > 0)
+	if($stat['n'] > 0 and $get_median)
 	{
 		// Calculation of the position of the median value(s)
 		// taking into account that MySQL limit starts at $offset + 1
@@ -541,15 +563,44 @@ function graph_vals($id, $cond = null)
 	return $graph;
 }
 
-//Appoggio per la funzione calc_r, query usata anche in altri casi
-function r_vals($id1,$id2,$cond="")
+// Function to open the global statement to get values of two tests
+function open_rvals_stmt($cond = null)
 {
-	$cond['tabs']=str_replace(",ISTANZE,CLASSI","",$cond['tabs']);
+	global $r_id1;
+	global $r_id2;
+	global $rval_st;
 
-    return query("SELECT DISTINCT (P1.fk_stud),P1.anno,v1,v2  FROM 
-		(SELECT valore AS v1,anno,fk_stud from PROVE,ISTANZE,CLASSI".$cond['tabs']." WHERE fk_ist=id_ist AND fk_cl=id_cl AND fk_test=$id1".$cond['rstr']." ) AS P1 
-		INNER JOIN 
-		(SELECT valore AS v2,anno,fk_stud from PROVE,ISTANZE,CLASSI".$cond['tabs']." WHERE fk_ist=id_ist AND fk_cl=id_cl AND fk_test=$id2".$cond['rstr']." ) AS P2 
-		USING (fk_stud,anno)");
+	if($cond)
+	{
+		$classlist = $cond['class'];
+		$genderlist = $cond['sex'];
+		$prof = $cond['prof'];
+
+		$rval_st = prepare_stmt("SELECT P1.valore AS v1, P2.valore AS v2
+			FROM PROVE AS P1 JOIN PROVE AS P2 ON P1.fk_ist=P2.fk_ist
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN STUDENTI ON fk_stud=id_stud 
+			JOIN CLASSI ON fk_cl=id_cl 
+			WHERE P1.fk_test=? AND P2.fk_test=?
+			AND anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof");
+
+		if($prof != "")
+			$rval_st->bind_param("iii", $r_id1, $r_id2, $_SESSION['id']);
+		else
+			$rval_st->bind_param("ii", $r_id1, $r_id2);
+	}
+	else
+	{
+		$rval_st = prepare_stmt("SELECT P1.valore AS v1, P2.valore AS v2
+			FROM PROVE AS P1 JOIN PROVE AS P2 ON P1.fk_ist=P2.fk_ist
+			WHERE P1.fk_test=?
+			AND P2.fk_test=?");
+		$rval_st->bind_param("ii", $r_id1, $r_id2);
+	}
+
+	return;
 }
 ?>

@@ -5,7 +5,6 @@
 // margin
 function navbar()
 {
-	$("footer").html(parseInt($(window).width()));
 	if(parseInt($(window).width()) > 750)
 	{
 		$(".pg-head").addClass("navbar-fixed-top");

@@ -24,7 +24,7 @@ $graph = graph_vals($_GET['id']);
    	<tr><td>Numero totale di prove: <span id="n"><?=$data['n']?></span></td>
    	<tr><td>Media: <span id="avg"><?=number_format($data['avg'], 2)?></span> <?=$test['simbolo']?></td></tr>
 	<tr><td>Mediana: <span id="med"><?=number_format($data['med'], 2)?></span> <?=$test['simbolo']?></td></tr>
-   	<tr><td>Deviazione Standard: <span id="std"><?=number_format($data['std'],2)?></span> <?=$test['simbolo']?></td></tr>	
+   	<tr><td>Deviazione Standard: <span id="std"><?=number_format($data['std'], 2)?></span> <?=$test['simbolo']?></td></tr>	
 </table>
 
 <h3 style="margin-bottom:0px">Record positivo: <span id="best"><?=$records['best']?></span> <?=$test['simbolo']?></h3>

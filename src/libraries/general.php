@@ -148,7 +148,7 @@ function query_error($stage, $query)
 
 // Base function for frontend pages; shows the static information of the page
 // If $stat is set it shows the statistical menu
-function show_premain($title = "", $stat = false)
+function show_premain($title = "", $stat = false, $fullwidth = false)
 {
 	if($title != "")
 		$title .= " -";
@@ -246,7 +246,6 @@ function show_premain($title = "", $stat = false)
   		</div>
 	</nav> ";
 	
-	
 	if($stat)
     {
     	$margin = "statwide";
@@ -301,8 +300,13 @@ function show_premain($title = "", $stat = false)
     }
 	else
 		$margin = "nostatwide";
+	
+	if($fullwidth)
+		$widthcl = "fullwidth";
+	else
+		$widthcl = "";
 
-	echo "<main class='$margin'>";
+	echo "<main class='$margin $widthcl'>";
 	
 	// Prints errors and stops the loading of the page
 	if(isset($_SESSION['err']) and $_SESSION['err'] != "")

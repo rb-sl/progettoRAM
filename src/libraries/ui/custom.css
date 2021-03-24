@@ -65,6 +65,9 @@ main {
 .statwide {
 	margin-top: 94px;
 }
+.fullwidth {
+	max-width: 100% !important;
+}
 
 .marginunder {
   	margin-bottom: 10px !important;
