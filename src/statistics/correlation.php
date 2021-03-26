@@ -6,29 +6,17 @@ chk_access(3);
 connect();
 show_premain("Correlazione dei test", true, true);
 
-// Gets tests with at least one result
-$threshold = CORRELATION_TRESH;
-$test_st = prepare_stmt("SELECT id_test, nometest, pos FROM TEST 
-	WHERE id_test IN (SELECT fk_test FROM PROVE GROUP BY fk_test HAVING COUNT(*) > ?) 
-	ORDER BY nometest");
-$test_st->bind_param("i", $threshold);
-$ret = execute_stmt($test_st);
-$test_st->close();
-
-$testlist = "-1";
-while($row = $ret->fetch_assoc())
-{
-	$test[$row['id_test']] = $row['nometest'];
-	$positive[$row['id_test']] = $row['pos'];
-	$stats[$row['id_test']] = get_stats($row['id_test']);
-	$testlist .= ", ".$row['id_test'];
-}
+$testinfo = get_test_correlation();
+$test = $testinfo['names'];
+$positive = $testinfo['positive'];
+$stats = $testinfo['statistics'];
+$testlist = $testinfo['list'];
 ?>
 
 <h2>Statistiche di correlazione campionaria dei test</h2>
 
 <h3>Matrice di correlazione campionaria</h3>
-<div class="tdiv">
+<div class="tdiv marginunder">
   	<div class="inner">
 		<table class="table table-striped">
 			<tr id="thr">
@@ -37,32 +25,8 @@ while($row = $ret->fetch_assoc())
 				</th>
 
 <?php
-$start = microtime(true);
-$i = 0; 
 open_rvals_stmt();
-
-$splom_st = prepare_stmt("SELECT nometest, fk_ist, valore, sesso 
-	FROM PROVE JOIN TEST ON fk_test=id_test 
-	JOIN ISTANZE ON fk_ist=id_ist
-	JOIN STUDENTI ON fk_stud=id_stud
-	WHERE fk_test IN ($testlist) ORDER BY fk_ist, nometest");
-$splomret = execute_stmt($splom_st);
-$previnst = -1;
-$instances = [];
-while($splomrow = $splomret->fetch_assoc())
-{
-	// build a table such as
-	// id_ist | id_test | val
-	// with empty val entries if needed
-	$splom[$splomrow['nometest']][$splomrow['fk_ist']] = $splomrow['valore'];
-
-	if($previnst != $splomrow['fk_ist'])
-	{
-		$previnst = $splomrow['fk_ist'];
-		$instances[$splomrow['fk_ist']] = $splomrow['sesso'];
-	}
-}
-
+$i = 0;
 foreach($test as $idcol => $namecol)
 {
 	echo "<th id='c$idcol' pos='".$positive[$idcol]."' class='col topfix'>$namecol</th>\n";
@@ -102,39 +66,61 @@ foreach($tab as $id => $row)
     	echo $cell;
 	echo "</tr>";
 }
-echo microtime(true) - $start;
 ?>	
 		</table>
 	</div>
 </div>
 
-<div id="cnv"></div>
+<div id="over" class="overlay jQhidden">
+	<div id="cnv" class="overcanvas"></div>
+</div>
 
 <div id="splom"></div>
 
 <script>
 var splomDimensions = [
 <?php
+$splom_st = prepare_stmt("SELECT nometest, fk_ist, valore, sesso 
+	FROM PROVE JOIN TEST ON fk_test=id_test 
+	JOIN ISTANZE ON fk_ist=id_ist
+	JOIN STUDENTI ON fk_stud=id_stud
+	WHERE fk_test IN ($testlist) ORDER BY fk_ist, nometest");
+$splomret = execute_stmt($splom_st);
+$previnst = -1;
+$instances = [];
+while($splomrow = $splomret->fetch_assoc())
+{
+	// build a table such as
+	// id_ist | id_test | val
+	// with empty val entries if needed
+	$splom[$splomrow['nometest']][$splomrow['fk_ist']] = $splomrow['valore'];
+
+	if($previnst != $splomrow['fk_ist'])
+	{
+		$previnst = $splomrow['fk_ist'];
+		$instances[$splomrow['fk_ist']] = $splomrow['sesso'];
+	}
+}
+
 foreach($splom as $test => $list)
 {	
 	$vals = "";
 	foreach($instances as $i => $gnd)
 	{
 		if(isset($list[$i]))
-			$vals .= $list[$i].", ";
+			$vals .= $list[$i].",";
 		else
-			$vals .= ", ";
+			$vals .= ",";
 	}
 
 	echo "{
-		label: '".(str_replace(" ", "<br>", $test))."',
+		label: '".str_replace(" ", "<br>", $test)."',
 		values: [$vals]
 	},";
-}		
+}	
 ?>	
 ];
-var splomText = []
 </script>
-<script src="js/correlation.js"></script>
+<script src="/statistics/js/correlation.js"></script>
 
 <?php show_postmain(); ?>

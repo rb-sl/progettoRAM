@@ -66,12 +66,9 @@ function calc_r($id1, $stat1, $id2, $stat2, $cond = null)
 	global $r_id2;
 	global $rval_st;
 
-	global $splom;
-
 	$r_id1 = $id1;
 	$r_id2 = $id2;
 	$retvals = execute_stmt($rval_st);
-	// $retvals = r_vals($id1, $id2, $cond);
 	$r['n'] = $retvals->num_rows;
 
 	// As r is not indicative with few data, only couples of tests 
@@ -578,7 +575,7 @@ function open_rvals_stmt($cond = null)
 
 		$rval_st = prepare_stmt("SELECT P1.valore AS v1, P2.valore AS v2
 			FROM PROVE AS P1 JOIN PROVE AS P2 ON P1.fk_ist=P2.fk_ist
-			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN ISTANZE ON P1.fk_ist=id_ist
 			JOIN STUDENTI ON fk_stud=id_stud 
 			JOIN CLASSI ON fk_cl=id_cl 
 			WHERE P1.fk_test=? AND P2.fk_test=?
@@ -588,9 +585,9 @@ function open_rvals_stmt($cond = null)
 			$prof");
 
 		if($prof != "")
-			$rval_st->bind_param("iii", $r_id1, $r_id2, $_SESSION['id']);
+			$rval_st->bind_param("iiiii", $r_id1, $r_id2, $cond['year1'], $cond['year2'], $_SESSION['id']);
 		else
-			$rval_st->bind_param("ii", $r_id1, $r_id2);
+			$rval_st->bind_param("iiii", $r_id1, $r_id2, $cond['year1'], $cond['year2']);
 	}
 	else
 	{
@@ -602,5 +599,27 @@ function open_rvals_stmt($cond = null)
 	}
 
 	return;
+}
+
+// Function to get tests with a significant number of result (for correlation)
+function get_test_correlation()
+{	
+	$threshold = CORRELATION_TRESH;
+	$test_st = prepare_stmt("SELECT id_test, nometest, pos FROM TEST 
+		WHERE id_test IN (SELECT fk_test FROM PROVE GROUP BY fk_test HAVING COUNT(*) > ?) 
+		ORDER BY nometest");
+	$test_st->bind_param("i", $threshold);
+	$res = execute_stmt($test_st);
+	$test_st->close();
+
+	$ret['list'] = "-1";
+	while($row = $res->fetch_assoc())
+	{
+		$ret['names'][$row['id_test']] = $row['nometest'];
+		$ret['positive'][$row['id_test']] = $row['pos'];
+		$ret['statistics'][$row['id_test']] = get_stats($row['id_test']);
+		$ret['list'] .= ", ".$row['id_test'];
+	}
+	return $ret;
 }
 ?>

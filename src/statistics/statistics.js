@@ -185,7 +185,7 @@ function getData()
 
     $.ajax({  
         url: "./test_stats_ajax.php",
-        data: cond + "&graph=" + $("#graph").val(),
+        data: "id=" + id + "&graph=" + $("#graph").val() + cond,
         dataType: "json",   
         async: false,
         success: function(data)	{

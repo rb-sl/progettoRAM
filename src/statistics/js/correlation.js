@@ -1,32 +1,45 @@
 // Javascript functions used in correlation.php
-$(function(){
+$(function() {
 	var prevPlotted;
 	var canUpdate = 1;
 
+	// Functions to hide the graph overlay:
+	// - on click on the shaded area
+	$(".overlay").click(function(){
+		if($(event.target).is("#over"))	{
+			$(this).hide();
+			window.history.back();
+		}
+	});
+	// - on press of any key
+	$(document).keyup(function(e) {
+		if(!$(".overlay").is(":hidden"))
+			$(".overlay").hide();
+	});
+	// - (*) on the press of the back button
+	$(window).on("popstate", function() {
+		if(!$(".overlay").is(":hidden"))
+			$(".overlay").hide();
+	});
+	// And to avoid a dangling state on reload
+	window.onbeforeunload =  function(){
+		if(!$(".overlay").is(":hidden"))
+			window.history.back();
+    };
+
+	// Function to create the scatter plot of a test 
 	$(".clcbl").click(function() {
-		// The graph update happens only if it is not already displayed
+		// The graph is updated only if its data is not already displayed
     	if(canUpdate && $(this) != prevPlotted)
         {
-        	canUpdate=0;
-        
-    		if(prevPlotted) {
-    	   		prevPlotted.css("background-color", prevPlotted.closest("tr").css("background-color"));
-    			prevPlotted.css("color", "black");
-        	}
-
+        	canUpdate = 0;
     		prevPlotted = $(this);
     
+			// Test ids for the request
     		var idr = parseInt($(this).attr("id").substring(1 , $(this).attr("id").lastIndexOf("_")));
         	var idc = parseInt($(this).attr("id").substring($(this).attr("id").lastIndexOf("_") + 1));
-    
-    		$(this).css("background-color", "rgb(240,173,78)");
-    		$(this).css("color", "white");
 
     		getData(idr, idc);
-    
-    		$(this).css("background-color", "rgb(51, 122, 183)");
-        
-        	canUpdate = 1;
         }    	
     });
 
@@ -48,8 +61,10 @@ $(function(){
 	function getData(idr, idc, upd = "")
 	{
     	if(!checkYears())
-        	return;
-
+        {
+			$("#update").attr("disabled", false);
+			return;
+		}
     	cond = buildCondFromMenu();
     	
 		if($("#update").hasClass("btn-warning"))
@@ -57,9 +72,8 @@ $(function(){
     	
     	$.ajax({  
     		url: "./correlation_ajax.php",
-      		data: cond + "upd=" + upd + "&id1=" + idr + "&id2=" + idc,
-      		dataType: "json",   
-      		async: false,
+      		data: "upd=" + upd + "&id1=" + idr + "&id2=" + idc + cond,
+      		dataType: "json",
       		success: function(data)	{
             	if(upd) {
                 	handleData(data['matrix']);
@@ -72,6 +86,7 @@ $(function(){
         		$("#update").removeClass("btn-warning");
     			$("#update").addClass("btn-primary");
             	$("#update").attr("disabled", false);
+				canUpdate = 1;
       		},
       		error: function() {
         		alert("Errore ottenimento dati aggiornati");
@@ -108,26 +123,30 @@ $(function(){
 		}];
 
     	var layout = {
-        	height: "600",
         	title: "Diagramma di dispersione " + data['n1'] + "/" + data['n2'] 
 				+ " (ρ=" + $("#m" + idr + "_" + idc).html() + ")",
         	xaxis: {
             	title: data['n1'] + data['u1']
             },
-        	yaxis:{
+        	yaxis: {
             	title: data['n2'] + data['u2']
             },
         	hovermode: "closest"
         };
 
 		Plotly.newPlot("cnv", trace, layout, {responsive: true}); 	
+		$("#over").show();
+		$("#over").css("display", "flex");
+
+		// Adds an entry to the history so that a back button press can
+		// just remove the overlay with function (*)
+		window.history.pushState("overlay", null, window.location.href);
 	}
 
 	function plotSplom() {
 		var data = [{
 			type: "splom",
 			dimensions: splomDimensions,
-			text: splomText,
 			marker: {
 				size: 3,
 				line: {
@@ -142,12 +161,12 @@ $(function(){
 			height: window.innerWidth - 50,
 			width: window.innerWidth - 50,
 			autosize: true,
-			hovermode:'closest',
-			dragmode:'select',
-			plot_bgcolor:'rgba(240,240,240, 0.95)'
+			hovermode: "closest",
+			dragmode: "select",
+			plot_bgcolor: "rgba(240,240,240, 0.95)"
 		}
 	  
-		Plotly.react("splom", data, layout)
+		Plotly.react("splom", data, layout);
 	}
 	
 	plotSplom();

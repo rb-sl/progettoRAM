@@ -14,16 +14,22 @@ $(function(){
             $(this).val("on");
         }
     });
+
+    $(".menuyear").keyup(function(){
+        $("#update").addClass("btn-warning");
+    });
 });
 
 // Builds the condition for ajax requests based on the menu elements
 function buildCondFromMenu() {
 	var cond = "";
+
 	$(".stat").each(function() {
 		if($(this).val() == "on")
 			cond += "&" + $(this).attr("id") + "=1";
 	});
-	return "id=" + id + "&year1=" + $("#a1").val() + "&year2=" + $("#a2").val() + cond;
+
+	return "&year1=" + $("#a1").val() + "&year2=" + $("#a2").val() + cond;
 }
 
 // If years are not a numeric value or their order is wrong the

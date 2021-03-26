@@ -1,53 +1,72 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT']."/librerie/general.php";
-include $_SERVER['DOCUMENT_ROOT']."/librerie/lib_stat.php";
+// Back end script to answer to ajax queries on correlation statistics
+include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 chk_access(3);
 connect();
 
-$cond=cond_builder(false);
+$cond = cond_builder();
+open_rvals_stmt($cond);
 
-if($_GET['upd']!=false)
+// Matrix are recomputed only if requested
+if($_GET['upd'] != false)
 {
-	$ret=query("SELECT id_test,nometest FROM TEST WHERE id_test IN (SELECT fk_test FROM PROVE GROUP BY fk_test) ORDER BY nometest");
-	while($row=$ret->fetch_assoc())
-		$test[$row['id_test']]=$row['nometest'];
-
-	foreach($test as $idc => $nomec)
-		foreach($test as $idr => $nomer)
-    		if($nomer<=$nomec)
+	$testinfo = get_test_correlation();
+	$test = $testinfo['names'];
+	$positive = $testinfo['positive'];
+	$stats = $testinfo['statistics'];
+	$testlist = $testinfo['list'];
+	
+	foreach($test as $idc => $colname)
+		foreach($test as $idr => $rowname)
+    		if($rowname <= $colname)
         	{
-        		$data['matrix'][$idc][$idr]=calc_r($idc,$idr,$cond);
-        		$data['matrix'][$idr][$idc]=$data['matrix'][$idc][$idr];
+				// Simmetric construction
+        		$data['matrix'][$idc][$idr] = calc_r($idc, $stats[$idc], $idr, $stats[$idr], $cond);
+        		$data['matrix'][$idr][$idc] = $data['matrix'][$idc][$idr];
        	 	}
 }
 
-if($_GET['id1']!=-1)
+// Graph request
+if($_GET['id1'] != -1)
 {
-	$retvals=r_vals($_GET['id1'],$_GET['id2'],$cond);
+	$r_id1 = $_GET['id1'];
+	$r_id2 = $_GET['id2'];
+	$retvals = execute_stmt($rval_st);
 
-	while($row=$retvals->fetch_assoc())
+	while($row = $retvals->fetch_assoc())
     {
-    	$data['test']['t1'][]=$row['v1'];
-    	$data['test']['t2'][]=$row['v2'];
+    	$data['test']['t1'][] = $row['v1'];
+    	$data['test']['t2'][] = $row['v2'];
     }
 
-	$ret=query("SELECT nometest,simbolo FROM TEST,UNITA WHERE fk_udm=id_udm AND id_test =".$_GET['id1']);
-	$row=$ret->fetch_assoc();
-    $data['test']['n1']=$row['nometest'];
-	if($row['simbolo'])
-		$data['test']['u1']=" [".$row['simbolo']."]";
-	else
-    	$data['test']['u1']="";
+	$test_st = prepare_stmt("SELECT nometest, simbolo 
+		FROM TEST JOIN UNITA ON fk_udm=id_udm 
+		WHERE id_test=?");
+	$test_st->bind_param("i", $id);
 
-	$ret=query("SELECT nometest,simbolo FROM TEST,UNITA WHERE fk_udm=id_udm AND id_test =".$_GET['id2']);
-	$row=$ret->fetch_assoc();
-    $data['test']['n2']=$row['nometest'];
+	// First test's info
+	$id = $_GET['id1'];
+	$ret = execute_stmt($test_st);
+	$row = $ret->fetch_assoc();
+    
+	$data['test']['n1'] = $row['nometest'];
 	if($row['simbolo'])
-    	$data['test']['u2']=" [".$row['simbolo']."]";
+		$data['test']['u1'] = " [".$row['simbolo']."]";
 	else
-    	$data['test']['u2']="";
+    	$data['test']['u1'] = "";
+
+	// Second test's info
+	$id = $_GET['id2'];
+	$ret = execute_stmt($test_st);
+	$row = $ret->fetch_assoc();
+
+    $data['test']['n2'] = $row['nometest'];
+	if($row['simbolo'])
+    	$data['test']['u2'] = " [".$row['simbolo']."]";
+	else
+    	$data['test']['u2'] = "";
 }
 
 echo json_encode($data)
-
 ?>

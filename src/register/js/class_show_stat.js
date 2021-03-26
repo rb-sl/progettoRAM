@@ -62,7 +62,7 @@ function getData(){
 	// Performs the ajax request
 	$.ajax({  
 		url: "./class_stat_ajax.php",
-		data: cond + "&vis=" + $("#vis").val() + "&forstud=" + forstud,
+		data: "id=" + id + "&vis=" + $("#vis").val() + "&forstud=" + forstud + cond,
 		dataType: "json",   
 		async: false, // Synchronous to allow the update inside the function
 		success: function(data){
