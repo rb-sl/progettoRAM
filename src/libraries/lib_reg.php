@@ -937,7 +937,7 @@ function show_cl_form($cl = 0, $sez = "", $year = null)
     }
 
 	echo "Classe: 
-		<select id='cl' class='form-control setform' name='cl' required>
+		<select id='cl' class='form-control' name='cl' required>
     		$nc
     		<option value='1'$c1>Prima</option>
     		<option value='2'$c2>Seconda</option>
@@ -945,8 +945,8 @@ function show_cl_form($cl = 0, $sez = "", $year = null)
     		<option value='4'$c4>Quarta</option>
     		<option value='5'$c5>Quinta</option>
   		</select> 
-  	Sezione: <input type='text' id='sez' class='setform' name='sez' value='".quoteHTML($sez)."' required>
-  	Anno: <input  type='text' id='a1' class='anno textright numinput' name='anno' value='$year' required>/<span id='flwa1'>".($year + 1)."</span>";
+  	Sezione: <input type='text' id='sez' class='smalltext' name='sez' value='".quoteHTML($sez)."' required>
+  	Anno: <input  type='text' id='a1' class='textright smalltext' name='anno' value='$year' required>/<span id='flwa1'>".($year + 1)."</span>";
 	
 	return;
 }

@@ -21,7 +21,7 @@ $testlist = $testinfo['list'];
 		<table class="table table-striped">
 			<tr id="thr">
 				<th class="topleft leftfix topfix">
-					<button id="btncol" class="btn wtot overpad">Colori</button>
+					<button id="btncol" class="btn fullwidth overpad">Colori</button>
 				</th>
 
 <?php
@@ -35,7 +35,7 @@ foreach($test as $idcol => $namecol)
 		$color = "evenrow";
 	else
 		$color = "oddrow";
-	$tab[$idcol]['st'] = "<tr><th id='r$idcol' class='leftfix dat2 col $color'>$namecol</th>";
+	$tab[$idcol]['st'] = "<tr><th id='r$idcol' class='leftfix squaredat col $color'>$namecol</th>";
 	
 	foreach($test as $idrow => $namerow)
 		// Due to the matrix's simmetry, only the lower half is calculated,
@@ -50,8 +50,8 @@ foreach($test as $idcol => $namecol)
             	$cl = "";
         
 			// The matrix is built simmetrically
-        	$tab[$idrow][$idcol] = "<td id='m$idrow"."_$idcol' class='dat2 r_$idcol $cl gr' title='n=".$r['n']."'>".$r['r']."</td>";
-        	$tab[$idcol][$idrow] = "<td id='m$idcol"."_$idrow' class='dat2 r_$idrow $cl gr' title='n=".$r['n']."'>".$r['r']."</td>";
+        	$tab[$idrow][$idcol] = "<td id='m$idrow"."_$idcol' class='squaredat r_$idcol $cl gr' title='n=".$r['n']."'>".$r['r']."</td>";
+        	$tab[$idcol][$idrow] = "<td id='m$idcol"."_$idrow' class='squaredat r_$idrow $cl gr' title='n=".$r['n']."'>".$r['r']."</td>";
 		}
 
 	$i++;
@@ -71,19 +71,21 @@ foreach($tab as $id => $row)
 	</div>
 </div>
 
-<div id="over" class="overlay jQhidden">
+<div id="over" class="overlay containerflex jQhidden">
 	<div id="cnv" class="overcanvas"></div>
 </div>
 
-<div id="splom"></div>
+<div class="containerflex">
+	<div id="splom" class="inner"></div>
+</div>
 
 <script>
+var splomWH = <?=($i * 130)?>;
+
 var splomDimensions = [
 <?php
-$splom_st = prepare_stmt("SELECT nometest, fk_ist, valore, sesso 
-	FROM PROVE JOIN TEST ON fk_test=id_test 
-	JOIN ISTANZE ON fk_ist=id_ist
-	JOIN STUDENTI ON fk_stud=id_stud
+$splom_st = prepare_stmt("SELECT nometest, fk_ist, valore 
+	FROM PROVE JOIN TEST ON fk_test=id_test
 	WHERE fk_test IN ($testlist) ORDER BY fk_ist, nometest");
 $splomret = execute_stmt($splom_st);
 $previnst = -1;
@@ -98,14 +100,14 @@ while($splomrow = $splomret->fetch_assoc())
 	if($previnst != $splomrow['fk_ist'])
 	{
 		$previnst = $splomrow['fk_ist'];
-		$instances[$splomrow['fk_ist']] = $splomrow['sesso'];
+		$instances[] = $splomrow['fk_ist'];
 	}
 }
 
 foreach($splom as $test => $list)
 {	
 	$vals = "";
-	foreach($instances as $i => $gnd)
+	foreach($instances as $i)
 	{
 		if(isset($list[$i]))
 			$vals .= $list[$i].",";

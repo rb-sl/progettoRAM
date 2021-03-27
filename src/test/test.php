@@ -60,7 +60,7 @@ if($_SESSION['priv'] == 0)
     	<tr>
         	<th>Voto</th>
            	<th>Percentuale assegnata</th>
-           	<th colspan="3" class="w30">Range percentili</th>
+           	<th colspan="3" class="thirdwidth">Range percentili</th>
        	</tr>
 <?php
 // Prints the table for grades
@@ -78,7 +78,7 @@ while($row = $ret->fetch_assoc())
 
 	echo "<tr>
 			<td style='background-color:#".$row['color']."'>".$row['voto']."</td>
-    		<td><input type='number' min='0' id='r$v10' class='range w50 textright' value='".($row['perc'] - $prev)."' name='perc[".$row['id_voto']."]'>%</td> 
+    		<td><input type='number' min='0' id='r$v10' class='range halfwidth textright' value='".($row['perc'] - $prev)."' name='perc[".$row['id_voto']."]'>%</td> 
             <td id='i$v10'>$prev</td>
 			<td>&rarr;</td>
 			<td id='f$v10'>".$row['perc']."</td>
@@ -106,9 +106,9 @@ while($row = $ret->fetch_assoc())
 }	
 ?>
 		<tr>
-        	<th class="btop">Totale:</th>
-        	<td class="err sum btop"><?=$prev?></td>
-        	<td class="err btop">0</td><td class="err btop">&rarr;</td><td class="err btop sum"><?=$prev?></td>
+        	<th class="borderover">Totale:</th>
+        	<td class="err sum borderover"><?=$prev?></td>
+        	<td class="err borderover">0</td><td class="err borderover">&rarr;</td><td class="err borderover sum"><?=$prev?></td>
     	</tr>
     </table>
 	<input type="submit" id="aggv" class="btn btn-warning btnmenu" value="Aggiorna tabella voti">

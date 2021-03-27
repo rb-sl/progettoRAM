@@ -49,9 +49,9 @@ $color = get_color_prc();
     	<table class="table table-striped">
       		<tr id="thr" class="dat">
             	<td class="topleft leftfix topfix">
-                	<button type="button" id="btnstat" class="btn overpad wtot">Medie e Mediane</button>
+                	<button type="button" id="btnstat" class="btn overpad fullwidth">Medie e Mediane</button>
                 	<br>
-                	<button type="button" id="btncol" class="btn overpad wtot">Colori</button>
+                	<button type="button" id="btncol" class="btn overpad fullwidth">Colori</button>
             	</td>
 <?php
 $ret = get_test($_GET['id'], true);
@@ -152,7 +152,7 @@ foreach($rclass as $idcl => $class)
 		$med = "-";
 	}
 
-	echo "<td id='a_$idcl' class='r_$idcl jsavg jcol lftbor r_stat jQhidden' vcolor='#$avgcolor'>$avg</td>
+	echo "<td id='a_$idcl' class='r_$idcl jsavg jcol borderleft r_stat jQhidden' vcolor='#$avgcolor'>$avg</td>
 		  <td id='m_$idcl' class='r_$idcl jsmed jcol r_stat jQhidden' vcolor='#$medcolor'>$med</td>
 		</tr>\n";
 }

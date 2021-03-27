@@ -140,7 +140,7 @@ function execute_stmt($stmt)
 function query_error($stage, $query)
 {
 	global $mysqli;
-	echo "<div class='row border'>".$mysqli->errno."<br>".$mysqli->error."<br>$query</div>";
+	echo "<div class='row bordermenu'>".$mysqli->errno."<br>".$mysqli->error."<br>$query</div>";
 	writelog("[query_err] [$stage] [".$mysqli->errno."] ".$mysqli->error."\n>>$query");
 	show_postmain();
 	exit();
@@ -180,7 +180,7 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
   	
     <body> 
   		<div id='wrapper'>
-      		<nav id='nav1' class='pg-head navbar navbar-inverse navbar-fixed-top'>
+      		<nav id='nav1' class='pg-head navbar navbar-inverse big-topfix'>
   				<div class='container-fluid'>
     				<div class='navbar-header'>
       					<button type='button' class='navbar-toggle' data-toggle='collapse' data-target='#myNavbar'>
@@ -249,12 +249,14 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 	if($stat)
     {
     	$margin = "statwide";
-		$stmt = prepare_stmt("SELECT MIN(anno) AS anno1, MAX(anno) AS anno2 FROM PROVE, ISTANZE, CLASSI 
-			WHERE id_ist=fk_ist AND fk_cl=id_cl");
+		$stmt = prepare_stmt("SELECT MIN(anno) AS y1, MAX(anno) AS y2 
+			FROM PROVE JOIN ISTANZE ON id_ist=fk_ist 
+			JOIN CLASSI ON fk_cl=id_cl");
     	$ret = execute_stmt($stmt);
+		$stmt->close();
     	$years = $ret->fetch_assoc();
 
-        echo " <nav id='nav2' class='pg-head navbar-inverse navbar-fixed-top'>
+        echo " <nav id='nav2' class='pg-head navbar-inverse big-topfix'>
 		<div class='container-fluid'>
 			<div class='navbar-header'>
 				<button type='button' class='navbar-toggle' data-toggle='collapse' data-target='#myNavbar2'>
@@ -262,17 +264,18 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 					<span class='icon-bar'></span>
 					<span class='icon-bar'></span>                        
 				</button>
+				<span id='statmenu' class='navbar-brand'>Menu statistico</span>
 			</div>
 			<div class='collapse navbar-collapse' id='myNavbar2'>
 				<ul class='nav navbar-nav'>
 					<li class='li-stat'>Anni da 
-                    	<input type='text' id='a1' class='anno menuyear' name='anno1' value='".$years['anno1']."' required>
+                    	<input type='text' id='y1' class='menuyear' name='y1' value='".$years['y1']."' required>
                         /
-                        <span id='flwa1'>".($years['anno1'] + 1)."</span>
+                        <span id='flwa1'>".($years['y1'] + 1)."</span>
 						a 
-                        <input type='text' id='a2' class='anno menuyear' name='anno2' value='".$years['anno2']."' size='4' required>
+                        <input type='text' id='y2' class='menuyear' name='y2' value='".$years['y2']."' size='4' required>
                         /
-                        <span id='flwa2'>".($years['anno2'] + 1)."</span>
+                        <span id='flwa2'>".($years['y2'] + 1)."</span>
                     </li>
 					<li class='li-stat'>
                     	Classi:

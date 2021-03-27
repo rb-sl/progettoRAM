@@ -1,7 +1,7 @@
 // Javascript functions used in correlation.php
 $(function() {
 	var prevPlotted;
-	var canUpdate = 1;
+	var canUpdate = true;
 
 	// Functions to hide the graph overlay:
 	// - on click on the shaded area
@@ -12,7 +12,7 @@ $(function() {
 		}
 	});
 	// - on press of any key
-	$(document).keyup(function(e) {
+	$(document).keyup(function() {
 		if(!$(".overlay").is(":hidden"))
 			$(".overlay").hide();
 	});
@@ -22,7 +22,7 @@ $(function() {
 			$(".overlay").hide();
 	});
 	// And to avoid a dangling state on reload
-	window.onbeforeunload =  function(){
+	window.onbeforeunload =  function() {
 		if(!$(".overlay").is(":hidden"))
 			window.history.back();
     };
@@ -32,7 +32,7 @@ $(function() {
 		// The graph is updated only if its data is not already displayed
     	if(canUpdate && $(this) != prevPlotted)
         {
-        	canUpdate = 0;
+        	canUpdate = false;
     		prevPlotted = $(this);
     
 			// Test ids for the request
@@ -43,7 +43,9 @@ $(function() {
         }    	
     });
 
+	// Handler for the update from the statistical menu
 	$("#update").click(function(){
+		// The update is performed only in case of modifications
     	if($(this).hasClass("btn-warning"))
         {
         	var idr = -1;
@@ -58,6 +60,7 @@ $(function() {
         }
     });
 
+	// Function to perform the data request
 	function getData(idr, idc, upd = "")
 	{
     	if(!checkYears())
@@ -75,18 +78,22 @@ $(function() {
       		data: "upd=" + upd + "&id1=" + idr + "&id2=" + idc + cond,
       		dataType: "json",
       		success: function(data)	{
+				// Different actions are performed based on what the
+				// user changed
             	if(upd) {
                 	handleData(data['matrix']);
                 	if(prevPlotted)
                        	drawGraph(data['test'], idr, idc);
                 }
-            	else
+            	else {
                 	drawGraph(data['test'], idr, idc);
-        	
+					showGraph();
+				}
+				// Restores the possibility to change data again
         		$("#update").removeClass("btn-warning");
     			$("#update").addClass("btn-primary");
             	$("#update").attr("disabled", false);
-				canUpdate = 1;
+				canUpdate = true;
       		},
       		error: function() {
         		alert("Errore ottenimento dati aggiornati");
@@ -95,7 +102,7 @@ $(function() {
     	});
 	}
 
-	// Funzione per l'update dei dati
+	// Data update function
 	function handleData(data)
 	{
    		$(".gr").each(function() {
@@ -113,6 +120,7 @@ $(function() {
         });
 	}	
 
+	// Function to draw (but not make visible) the scatter plot for two tests
 	function drawGraph(data, idr, idc)
 	{
     	var trace = [{
@@ -135,6 +143,10 @@ $(function() {
         };
 
 		Plotly.newPlot("cnv", trace, layout, {responsive: true}); 	
+	}
+
+	// Function to make visible the plot for two tests
+	function showGraph() {
 		$("#over").show();
 		$("#over").css("display", "flex");
 
@@ -143,6 +155,7 @@ $(function() {
 		window.history.pushState("overlay", null, window.location.href);
 	}
 
+	// Function to create the scatter matrix plot
 	function plotSplom() {
 		var data = [{
 			type: "splom",
@@ -150,7 +163,7 @@ $(function() {
 			marker: {
 				size: 3,
 				line: {
-					color: 'white',
+					color: "white",
 					width: 0.3
 				}
 			}
@@ -158,11 +171,10 @@ $(function() {
 	  
 		var layout = {
 			title: "Matrice di dispersione dei test",
-			height: window.innerWidth - 50,
-			width: window.innerWidth - 50,
-			autosize: true,
+			height: splomWH,
+			width: splomWH,
 			hovermode: "closest",
-			dragmode: "select",
+			dragmode: false,
 			plot_bgcolor: "rgba(240,240,240, 0.95)"
 		}
 	  

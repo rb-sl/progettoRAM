@@ -16,11 +16,11 @@ $unit_st = prepare_stmt("SELECT * FROM UNITA ORDER BY udm");
 	<table class="table table-striped">
     	<tr>
         	<td>Nome test:</td>
-        	<td class="halfpage"><input type="text" name="testname"></td>
+        	<td class="halfwidth"><input type="text" name="testname"></td>
 		<tr>
     		<td>Tipo di test:</td>
     		<td>
-        		<select name="class">
+        		<select name="class" class="form-control">
                 	<option selected="selected" disabled>
 <?php
 $ctest = execute_stmt($clt_st);
@@ -35,7 +35,7 @@ while($row = $ctest->fetch_assoc())
 		<tr>
     		<td>Unità di misura:</td>
     		<td>
-    			<select name="unit" required>
+    			<select name="unit" class="form-control" required>
                 	<option selected="selected" disabled>
 <?php
 $retunita = execute_stmt($unit_st);
@@ -50,7 +50,7 @@ while($row = $retunita->fetch_assoc())
 		<tr>
 	    	<td>Valori migliori:</td>
     		<td>
-        		<select name="positive" required>
+        		<select name="positive"  class="form-control" required>
                 	<option selected="selected" disabled>
             		<option value="Maggiori">Maggiori</option>
             		<option value="Minori">Minori</option>
@@ -60,7 +60,7 @@ while($row = $retunita->fetch_assoc())
 		<tr>
 	    	<td>Tipo di valori:</td>
     		<td>
-        		<select name="type" required>
+        		<select name="type" class="form-control" required>
                 	<option selected="selected" disabled>
 <?php
 $ttest = execute_stmt($test_st);

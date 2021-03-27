@@ -47,7 +47,7 @@ echo "<a href='./test_delete.php?id=".$_GET['id']."' ".confirm("Il test ".$test[
 	<table class="table table-striped">
 		<tr>
     		<td>Tipo di test:</td>
-    		<td class="halfpage">
+    		<td class="halfwidth">
         		<select name="class" class="form-control" required>
 <?php
 while($row = $ctest->fetch_assoc())

@@ -43,7 +43,7 @@ $(function(){
     // Function for the button that cancels new tests' input
 	$("#btncan").click(function(){
     	$(".new").remove();
-    	$(".in_mod").each(function(){
+    	$(".datmod").each(function(){
         	$(this).closest("td").html($(this).attr("prev"));
         });
                           
@@ -99,9 +99,9 @@ $(function(){
             step = data['passo'];
     	
         	// Includes a pattern to accept only values like +- n.nn with the step defined in the database
-    		$(this).html("<input type='number' size='5' class='in_mod input'"
-				+ " name='pr["+test+"]["+stud+"]' id='i"+$(this).attr("id")+"' prev='"
-				+ $(this).html() + "' style='width:70px' value='" + inner[0] 
+    		$(this).html("<input type='number' size='5' class='datmod'"
+				+ " name='pr[" + test + "][" + stud + "]' id='i" + $(this).attr("id") + "' prev='"
+				+ $(this).html() + "' value='" + inner[0] 
 				+ "' pattern='^[+-]?\\d+(\\.\\d+)?$' step='" + step + "'> " + inner[1]);
         	
         	$("#btncar").show();

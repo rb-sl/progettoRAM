@@ -17,7 +17,7 @@ show_premain("Manuale");
 	Il simbolo &#128279; indica un collegamento a un sito esterno.
 
 	<h3>Indice</h3>
-	<ul class="nobul border">
+	<ul class="nobul bordermenu">
 <?php
 // Professor-related functions
 if($_SESSION['priv'] <= 2)

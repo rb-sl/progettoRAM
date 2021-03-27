@@ -1,54 +1,23 @@
-/* Parte tabella scroll */
-table {
-	table-layout: fixed !important;
-	margin: 0 auto !important; 
-}
-.col {
-	width: 110px;
-	min-width: 110px;
-	overflow-wrap: break-word;
-}
-.tdiv {
+/*
+ * CSS file for the application, all rules are reported
+ * here  
+ */
+
+/* --------------------
+ * Main elements' rules 
+ * --------------------
+ */
+
+html {
 	position: relative;
-	margin:0 auto;
+	min-height: 100%;
 }
-.inner {	
-	overflow-x: scroll;
-	overflow-y: scroll;
-	max-height: 90vh;
-}
-.innerx {
-	overflow-x: scroll;
+body {
+	background-color: #eee;
+	margin-bottom: 60px; /* To host the footer */
 }
 
-.topleft{
-	width: 110px;
-	background-color: #f9f9f9;
-	z-index: 3 !important;
-}
-.topfix{
-	position: sticky; 
-	position: -webkit-sticky;
-	top: 0;
-	background-color: #f9f9f9;
-	z-index: 2;
-}
-.leftfix{
-	position: sticky; 
-	position: -webkit-sticky;
-	left: 0;
-	z-index: 2;
-}
-/* Fine scroll */
-
-/* Table row colors */
-.evenrow {
-  	background-color: #eee;
-}
-.oddrow {
-  	background-color: #f9f9f9;
-}
-
+/* Rules for the main (includes centering) */
 main {
 	font-size: 20px !important;
 	max-width: 1440px;
@@ -58,15 +27,11 @@ main {
 	margin-left: auto;
 }
 
-.mainstyle {
-	max-width: 1440px;
-	padding-right: 15px;
-	padding-left: 15px;
-	margin-right: auto;
-	margin-left: auto;
+main > * {
+	text-align: center;
 }
 
-/* Main margin options */
+/* Main's optional style */
 .nostatwide {
 	margin-top: 60px;
 }
@@ -77,8 +42,230 @@ main {
 	max-width: 100% !important;
 }
 
-.marginunder {
-  	margin-bottom: 10px !important;
+/* -------------------
+ * Fixed footer styles
+ * -------------------
+ */
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	background-color: #343a40;
+	color: rgba(255, 255, 255, 0.5);
+	text-align: left;
+}
+
+/* ---------------------
+ * Handling of the menus
+ * ---------------------
+ */
+
+/* Gestione navbars: menu principale > menu statistico > tutto il resto */
+
+/* Default properties */
+nav { 
+	margin-bottom: 0px !important;
+}
+.navbar-inverse {
+	border: none;
+}
+#nav1 {
+	z-index: 5;
+}
+#nav2 {
+	margin-top: 0px;
+	z-index: 4;
+}
+#statmenu {
+	display: none;
+}
+.li-stat {
+	color: #9d9d9d;
+	margin: 5px 10px;
+}
+.menuyear {
+	text-align: right;
+	color: #000;
+	width: 40px;
+}
+
+/* 
+ * Rules used to avoid that the update buttom
+ * goes on another row in the statistical menu,
+ * when elements are not already collapsed
+ */
+@media (max-width: 850px) {
+	.li-stat {
+		margin-left: 0px;
+		margin-right: 3px;
+	}
+}
+
+/* 
+ * Rules to handle collapsing of the menus
+ */
+
+/* Rules for screens that show collapsed menus*/
+@media (max-width: 768px){
+	/* Shows the statistical menu's title*/
+	#statmenu {
+		display: block;
+	}
+	/* Centers the elements inside the statistical menu */
+    #myNavbar2 {
+		text-align: center !important;
+	}
+	/* Cancels the main's displacement due to floating elements */
+	main {
+		margin-top: 0px !important;
+	}
+}
+
+/* Rules for screens big enough to show the normal menus */
+@media (min-width: 768px){
+	/* Moves the statistical menu under the main one */
+	#nav2 {
+		margin-top: 50px;
+	}
+
+	/* 
+	* Some elements from navbar-fixed-top, to
+	* be activated only with a big enough screen;
+	* they allow to make the menus fixed on top 
+	*/
+	.big-topfix {
+		padding-right: 0;
+		padding-left: 0;
+	}
+	.big-topfix {
+		max-height: 340px
+	}
+	.big-topfix {
+		position: fixed;
+		right: 0; 
+		left: 0; 
+		z-index: 1030;
+	}
+	.big-topfix{
+		border-radius:0
+	}
+	.big-topfix {
+		top:0;
+		border-width: 0 0 1px
+	}
+}
+
+/* ---------------------------------
+ * Color rules (reflect Bootstrap's)
+ * ---------------------------------
+ */
+
+/* Colors for text */
+.primarycolor {
+	color: #007bff;
+}
+.infocolor {
+	color: #17a2b8;
+}
+.successcolor {
+	color: #28a745;
+}
+.warningcolor {
+	color: #eea236;
+}
+.dangercolor {
+	color: #c82333;
+}
+
+/* Colors for backgrounds */
+.primarybg {
+	background-color: #007bff;
+}
+.infobg {
+	background-color: #17a2b8;
+}
+.successbg {
+	background-color: #0bfc03;
+}
+.warningbg {
+	background-color: #ffc107;
+}
+.dangerbg {
+	background-color: #dc3545;
+}
+
+/* -------------------
+ * Table-related rules
+ * -------------------
+ */
+
+/* Default for tables and columns */
+table {
+	table-layout: fixed !important;
+	margin: 0 auto !important; 
+}
+.col {
+	width: 110px;
+	min-width: 110px;
+	overflow-wrap: break-word;
+}
+
+/* Table element containing data */
+.dat {
+	height: 40px;
+}
+/* Squared dat element */
+.squaredat {
+	height: 110px;
+}
+
+/* Rules for scrolling tables */
+
+/* External table container */
+.tdiv {
+	position: relative;
+	margin:0 auto;
+}
+/* Internal table container (can scroll) */
+.inner {	
+	overflow-x: scroll;
+	overflow-y: scroll;
+	max-height: 90vh;
+}
+/* Reduced rules to scroll only on x */
+.innerx {
+	overflow-x: scroll;
+}
+/* Element that needs to stay on top of all */
+.topleft {
+	width: 110px;
+	background-color: #f9f9f9;
+	z-index: 3 !important;
+}
+/* First row of a table */
+.topfix {
+	position: sticky; 
+	position: -webkit-sticky;
+	top: 0;
+	background-color: #f9f9f9;
+	z-index: 2;
+}
+/* First column of a table */
+.leftfix {
+	position: sticky; 
+	position: -webkit-sticky;
+	left: 0;
+	z-index: 2;
+}
+
+/* Table row colors and properties*/
+.evenrow {
+  	background-color: #eee;
+}
+.oddrow {
+  	background-color: #f9f9f9;
 }
 .borderunder {
 	border-bottom: 1px solid black;
@@ -86,45 +273,28 @@ main {
 .borderover {
 	border-top: 1px solid black;
 }
-
-/* Rules for graph overlay in correlation */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 3;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-.overcanvas {
-	z-index: 4;
-	width: 900px;
-	max-width: 100vw; 
-	height: 500px;
-	max-height: 70vh;
+.borderleft {
+	border-left: 1px solid black;
 }
 
-.textright {
-  	text-align: right;
+/* Rule for a class's new test column */
+.testadd {
+	width: 250px !important;
 }
 
-.textleft {
-	text-align: left !important;
+/* Special tables for student lists */
+.studtable {
+	max-width: 800px;
+	min-width: 600px;
 }
 
-.textcenter {
-  	text-align: center;
+/* Table elements rules*/
+td, th {
+	vertical-align: middle !important;
+	text-align: center;
 }
 
-.halfpage {
-  	width: 50%;
-}
-
-/* Privileges in user table */
+/* Rules for the privilege column */
 .privdiv {
 	display: inline-block; 
 	width: -webkit-calc(100% - 25px);
@@ -135,199 +305,55 @@ main {
 	display: inline-block; 
 	vertical-align: top;
 }
-
-/* Special .hidden to have jQuery modify it */
-.jQhidden {
-  	display: none;
+.colorbox {
+	width: 15px;
+	height: 15px;
+	display: inline-block;
+	left: 5px;
+	top: 5px;
 }
 
-.testadd {
-  	width: 250px !important;
+/* --------------------------------------
+ * Rules for graph overlay in correlation
+ * -------------------------------------- 
+ */
+/* Container div, darkens the page */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+}
+/* Canvas in the overlay */
+.overcanvas {
+	z-index: 4;
+	width: 900px;
+	max-width: 100vw; 
+	height: 500px;
+	max-height: 70vh;
+}
+/* Rules for a flex div */
+.containerflex {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+/* Under the graph width, it is set to occupy the 
+100% of the width in order to not overflow */
+@media (max-width: 900px) {
+	.overlay > .js-plotly-plot,
+	.overlay > .plot-container { 
+		width: 100vw;
+	}
 }
 
-.input {
-	max-width: 70px;
-	text-align: center;
-}
-
-label{
-	margin: 0 !important;
-}
-
-/* Colors for text (as in bootstrap) */
-.primarycolor {
-  	color: #007bff;
-}
-.infocolor {
-  	color: #17a2b8;
-}
-.successcolor {
-  	color: #28a745;
-}
-.warningcolor {
-  	color: #eea236;
-}
-.dangercolor {
-  	color: #c82333;
-}
-
-/* Colors for backgrounds (as in bootstrap) */
-.primarybg {
-  	background-color: #007bff;
-}
-.infobg {
-  	background-color: #17a2b8;
-}
-.successbg {
-  	background-color: #0bfc03;
-}
-.warningbg {
-  	background-color: #ffc107;
-}
-.dangerbg {
-  	background-color: #dc3545;
-}
-
-.studtable {
-	max-width: 800px;
-	min-width: 600px;
-}
-
-.setform {
-	width: 80px;
-}
-
-.numinput {
-	width: 50px;
-}
-
-.menuyear {
-	text-align: right;
-	width:40px;
-}
-
-.nobul{
-    list-style-type: none;
-}
-
-.border{
-	border: 1px solid grey;
-	max-width: 500px;
-	padding: 10px;
-}
-
-.lftbor{
-  	border-left: 1px solid black;
-}
-
-.wtot{
-	width: 100%;
-	white-space: normal;
-}
-
-/* Gestione navbars: menu principale > menu statistico > tutto il resto */
-#nav1 {
-  	z-index: 5;
-}
-#nav2 {
-	margin-top: 50px;
-  	z-index: 4;
-}
-
-.point {
-	cursor: pointer;
-}
-
-.textwall {
-	text-align: left;
-	margin: auto;
-	padding: 0 10px 30px 0;
-	max-width: 90%;
-	font-size: 18px;
-}
-
-.textwall a {
-  	text-decoration: underline;
-}
-
-.dat {
-	height:40px;
-}
-
-.dat2 {
-	height:110px;
-}
-
-.btncl {
-	margin-bottom:10px;
-	min-width: 65px; 
-}
-
-td,th{
-	vertical-align: middle !important;
-	text-align:center;
-}
-
-.btnmenu{
-	min-width: 125px; 
-	margin-bottom:5px;
-}
-
-select{
-	width:auto !important;
-	display:inline-block !important
-}
-
-input:disabled{
- 	background-color:rgb(235, 235, 228); 
-}
-
-.form-control {
-	font-size: 20px !important;
-	height: auto !important;
-}
-
-/* Per fare gli header floating */
-:target::before {
-	content: "";
-	display: block;
-	height: 50px; /* fixed header height*/
-	margin: -50px 0 0; /* negative fixed header height */
-}
-
-
-.navbar {
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
-}
-
-.w10{
-	width:10%;
-}
-
-.w30{
-	width:30%;
-}
-
-.w50{
-	width:50%;
-}
-
-.btop{
-	border-top:1px solid black !important
-}
-
-.txt{
-	width: 80%; 
-	height: 120px;
-	padding: 1px 2px;
-	border-radius: 4px;
-	overflow-y:scroll;
-	resize: none;
-}
-
-/* Log-related styles */
+/* ------------------
+ * Log-related styles 
+ * ------------------
+ */
 .logtxt {
 	width: 80%;
 	height: 70vh;
@@ -339,7 +365,7 @@ input:disabled{
 .logcontainer {
 	vertical-align: top;
 	width: 70%;
-	display:inline-block;
+	display: inline-block;
 	height: 80vh;
 }
 .loglist {
@@ -358,81 +384,81 @@ input:disabled{
 	overflow-x: scroll;
 }
 
-.colorbox {
-	width: 15px;
-	height: 15px;
-	display: inline-block;
-	left: 5px;
-	top: 5px;
-  }
-
-/* Componenti per il footer */
-html {
-	position: relative;
-	min-height: 100%;
+/* -----------------------
+ * Text pages and elements
+ * -----------------------
+ */
+.nobul {
+    list-style-type: none;
 }
-body {
-	background-color: #eee;
-	margin-bottom: 50px; /* Margin bottom by footer height */
+.bordermenu {
+	border: 1px solid grey;
+	max-width: 500px;
+	padding: 10px;
 }
-footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	height: 50px; /* Set the fixed height of the footer here */
-	line-height: 50px; /* Vertically center the text there */
-	background-color: #343a40;
-	color: rgba(255, 255, 255, 0.5);
+.textwall {
 	text-align: left;
+	margin: auto;
+	padding: 0 10px 30px 0;
+	max-width: 90%;
+	font-size: 18px;
 }
-/* Fine footer */
-
-.navbar-inverse{
-  	border: 0;
+.textwall a {
+  	text-decoration: underline;
 }
-
-nav { 
-	margin-bottom: 0px !important;
-}
-.overpad {
-	padding:1px 6px !important;
-}
-.anno {
-	color: #000;
-}
-.li-stat{
-	color: #9d9d9d;
-	margin: 5px 10px;
+.txt {
+	width: 80%; 
+	height: 120px;
+	padding: 1px 2px;
+	border-radius: 4px;
+	overflow-y: scroll;
+	resize: none;
 }
 
-#turnkey-credit { 
-	display: none; 
+/* -----------
+ * Input rules
+ * -----------
+ */
+
+select {
+	width: auto !important;
+	display: inline-block !important
+}
+/* Rule for register values being modified */
+.datmod {
+	max-width: 70px;
+	text-align: center;
+}
+.smalltext {
+	width: 55px;
+}
+input:disabled {
+	background-color: rgb(235, 235, 228); 
+}
+.form-control {
+	font-size: 20px !important;
+	height: auto !important;
+}
+input[type="text"] {
+	border: 1px solid #BBB;
+	border-radius: 4px;
+	font-size: inherit !important;
+}
+input[type="password"] {
+	border: 1px solid #BBB;
+	border-radius: 4px;
+	font-size: inherit !important;
 }
 
-.form-signin {
-	max-width: 380px;
-	padding: 15px 35px 45px;
-	margin: 0 auto;
-	background-color: #fff;
-	border: 1px solid rgba(0,0,0,0.1);  
-}
-.form-signin-heading,
-.checkbox {
-  	margin-bottom: 30px;
-}
-#cl .btn-warning{
-	margin-bottom: 10px;
-	margin-right: 5px;
-}
-.checkbox {
-  	font-weight: normal;
-}
-
+/*
+ * Login-related rules
+ * -------------------
+ */
 #login-dp{
     border: 1px solid #333;
     min-width: 250px;
     padding: 14px 14px 0;
-    overflow:hidden;
+    overflow: hidden;
     background-color: #222;
 }
 #login-dp .form-group, .top-bot-margin {
@@ -445,45 +471,68 @@ nav {
 #login-dp .btn-warning{
   	width: 100%;
 }
-.scrollable{
-    overflow-x: scroll;
-}
-.navbar-bottom{
-	margin-bottom: 0;
-	background-color: #222;
-	border: 0;
-}
 
-main > *{
+/* ---------------------
+ * General purpose rules
+ * ---------------------
+ */
+
+/* Text alignment */
+.textright {
+  	text-align: right;
+}
+.textleft {
+	text-align: left !important;
+}
+.textcenter {
   	text-align: center;
 }
-#graph-form table{
-  	margin-bottom: 10px;
+
+/* Button styles */
+/* Class link style */
+.btncl {
+	margin-bottom: 10px;
+	min-width: 65px; 
 }
-#graph-form input[type="submit"]{
-  	margin-bottom: 10px;
+/* Wide button style */
+.btnmenu {
+	min-width: 125px; 
+	margin-bottom: 5px;
+}
+.overpad {
+	padding: 1px 6px !important;
 }
 
-input[type="text"] {
-	border: 1px solid #BBB;
-	border-radius: 4px;
-	font-size: inherit !important;
+/* Options for elements' width */
+.halfwidth {
+  	width: 50%;
+}
+.thirdwidth {
+	width: 30%;
+}
+.fullwidth {
+	width: 100%;
+	white-space: normal;
 }
 
-input[type="password"] {
-	border: 1px solid #BBB;
-	border-radius: 4px;
-	font-size: inherit !important;
+/* Special .hidden to have jQuery modify it */
+.jQhidden {
+  	display: none;
 }
 
-@media (max-width: 750px){
-    #myNavbar2 {
-		text-align: center !important;
-	}
+.marginunder {
+	margin-bottom: 10px !important;
 }
 
-@media (max-width: 850px) {
-	.li-stat {
-		margin-left: 0px;
-	}
+.point {
+	cursor: pointer;
+}
+
+label {
+	margin: 0 !important;
+}
+
+/* Specific to worpress-bound systems */
+#turnkey-credit { 
+	display: none; 
 }

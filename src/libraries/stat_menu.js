@@ -29,14 +29,14 @@ function buildCondFromMenu() {
 			cond += "&" + $(this).attr("id") + "=1";
 	});
 
-	return "&year1=" + $("#a1").val() + "&year2=" + $("#a2").val() + cond;
+	return "&year1=" + $("#y1").val() + "&year2=" + $("#y2").val() + cond;
 }
 
 // If years are not a numeric value or their order is wrong the
 // execution is stopped and a message is shown to the user
 function checkYears() {
-	if(!$.isNumeric($("#a1").val()) || !$.isNumeric($("#a2").val()) 
-            || !(parseInt($("#a1").val()) <= parseInt($("#a2").val()))) {
+	if(!$.isNumeric($("#y1").val()) || !$.isNumeric($("#y2").val()) 
+            || !(parseInt($("#y1").val()) <= parseInt($("#y2").val()))) {
         	alert("Anni inseriti non validi");
         	return false;
         }

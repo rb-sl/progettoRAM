@@ -602,7 +602,7 @@ function open_rvals_stmt($cond = null)
 }
 
 // Function to get tests with a significant number of result (for correlation)
-function get_test_correlation()
+function get_test_correlation($cond = null)
 {	
 	$threshold = CORRELATION_TRESH;
 	$test_st = prepare_stmt("SELECT id_test, nometest, pos FROM TEST 
@@ -617,7 +617,7 @@ function get_test_correlation()
 	{
 		$ret['names'][$row['id_test']] = $row['nometest'];
 		$ret['positive'][$row['id_test']] = $row['pos'];
-		$ret['statistics'][$row['id_test']] = get_stats($row['id_test']);
+		$ret['statistics'][$row['id_test']] = get_stats($row['id_test'], $cond);
 		$ret['list'] .= ", ".$row['id_test'];
 	}
 	return $ret;

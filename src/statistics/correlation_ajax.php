@@ -11,7 +11,7 @@ open_rvals_stmt($cond);
 // Matrix are recomputed only if requested
 if($_GET['upd'] != false)
 {
-	$testinfo = get_test_correlation();
+	$testinfo = get_test_correlation($cond);
 	$test = $testinfo['names'];
 	$positive = $testinfo['positive'];
 	$stats = $testinfo['statistics'];
@@ -67,6 +67,8 @@ if($_GET['id1'] != -1)
 	else
     	$data['test']['u2'] = "";
 }
+
+$rval_st->close();
 
 echo json_encode($data)
 ?>

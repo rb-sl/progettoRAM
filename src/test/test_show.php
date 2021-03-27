@@ -30,7 +30,7 @@ show_premain($test['nometest']);
 <table class="table table-striped marginunder">
 	<tr>
     	<td>Classe del test:</td>
-    	<td class="halfpage"><?=$test['nomec']?></td>
+    	<td class="halfwidth"><?=$test['nomec']?></td>
 	</tr>
 	<tr>
     	<td>Unità di misura:</td>

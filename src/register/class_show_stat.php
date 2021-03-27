@@ -34,9 +34,9 @@ $color = get_color_prc();
     	<table class="table table-striped">
       		<tr id="thr" class="dat">
             	<td class="topleft leftfix topfix">
-                	<button type="button" id="btnstat" class="btn overpad wtot">Medie e Mediane</button>
+                	<button type="button" id="btnstat" class="btn overpad fullwidth">Medie e Mediane</button>
                 	<br>
-                	<button type="button" id="btncol" class="btn overpad wtot">Colori</button>
+                	<button type="button" id="btncol" class="btn overpad fullwidth">Colori</button>
             	</td>
 <?php
 // Header construction
@@ -116,7 +116,7 @@ foreach($cstud as $idist => $stud)
 		$med = "-";
 	}
 
-	echo "<td id='a_$idist' class='r_$idist jsavg jcol lftbor r_stat jQhidden' vcolor='#$avgcolor'>$avg</td>
+	echo "<td id='a_$idist' class='r_$idist jsavg jcol borderleft r_stat jQhidden' vcolor='#$avgcolor'>$avg</td>
 		  <td id='m_$idist' class='r_$idist jsmed jcol r_stat jQhidden' vcolor='#$medcolor'>$med</td>
 		</tr>\n";
 }
