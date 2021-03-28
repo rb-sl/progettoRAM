@@ -129,6 +129,7 @@ foreach($cstud as $idist => $stud)
 	var id = <?=$_GET['id']?>;
 	var forstud = false;
 </script>
-<script src="./js/class_show_stat.js"></script>
+<script src="js/common_register.js"></script>
+<script src="js/class_show_stat.js"></script>
 
 <?php show_postmain(); ?>

@@ -20,13 +20,13 @@ switch($_GET['graph'])
 		$graph = graph_prc($_GET['id'], $cond);
 		break;
 	case "hbox":
-		$graph = graph_multibox($_GET['id'], MULTIBOX_YEAR, $cond);
+		$graph = graph_multibox($_GET['id'], GRAPH_YEAR, $cond);
 		break;
 	case "cbox":
-		$graph = graph_multibox($_GET['id'], MULTIBOX_CLASS, $cond);
+		$graph = graph_multibox($_GET['id'], GRAPH_CLASS, $cond);
 		break;
 	case "sbox":
-		$graph = graph_multibox($_GET['id'], MULTIBOX_GENDER, $cond);
+		$graph = graph_multibox($_GET['id'], GRAPH_GENDER, $cond);
 		break;
 }
 

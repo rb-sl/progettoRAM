@@ -14,7 +14,7 @@ const JQUERY_PATH = "/libraries/ui/jquery-3.4.1.min.js";
 const JQUERY_UI_JS_PATH = "/libraries/ui/jquery-ui/jquery-ui.min.js";
 const JQUERY_UI_CSS_PATH = "/libraries/ui/jquery-ui/jquery-ui.min.css";
 
-const PLOTLY_PATH = "/libraries/plotly-latest.min.js";
+const PLOTLY_PATH = "/libraries/plotly.min.js";
 
 // Debugging function, activated by the get
 function errors()
@@ -127,11 +127,11 @@ function execute_stmt($stmt)
 {
 	$stmt->execute();
 	if($stmt->errno !== 0)
-		echo "Execute failed: (".$stmt->errno.") ".$stmt->error;
+		echo "Execute failed: (".$stmt->errno.") ".$stmt->error."<br>";
 
 	$res = $stmt->get_result();
     if($stmt->errno !== 0)
-		echo "Getting result set failed: (".$stmt->errno.") ".$stmt->error;
+		echo "Getting result set failed: (".$stmt->errno.") ".$stmt->error."<br>";
 		
 	return $res;
 }
@@ -173,7 +173,6 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
                 
 		<!-- Graph and custom scripts -->
         <script src='".PLOTLY_PATH."'></script>
-        <script src='/libraries/ram.js'></script>
 		".($stat ? "<script src='/libraries/stat_menu.js'></script>" : "")."
 		<title>$title Progetto RAM</title>
 	</head> 

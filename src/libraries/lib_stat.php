@@ -5,11 +5,12 @@
 const CORRELATION_TRESH = 30;
 
 // Constants for graphs
-const MULTIBOX_YEAR = 0;
-const MULTIBOX_CLASS = 1;
-const MULTIBOX_GENDER = 2;
+const GRAPH_YEAR = 0;
+const GRAPH_CLASS = 1;
+const GRAPH_GENDER = 2;
+const GRAPH_TEST = 3;
 
-// Funzione per il calcolo della media dato un array $vals
+// Function to compute the average of an array
 function arr_avg($vals, $dec = 0)
 {
 	if(sizeof($vals))
@@ -20,7 +21,7 @@ function arr_avg($vals, $dec = 0)
 	return "-";
 }
 
-// Funzione per il calcolo della mediana dato un array $vals
+// Function to compute the median of an array
 function arr_med($vals, $dec)
 {
 	$size = sizeof($vals);
@@ -38,24 +39,228 @@ function arr_med($vals, $dec)
     	return number_format($vals[floor($size / 2)], $dec);	
 }
 
-// Funzione per il calcolo della deviazione standard di un array
-function arr_std($vals,$avg="")
+// Function to get the numbers displayed in statistics.php
+function get_general_stats($cond = null)
 {
-	$n=sizeof($vals);
-	if($n>2)
+	$ret = [];
+
+	// Number of students
+	$count_st = prepare_stmt("SELECT COUNT(*) AS n FROM STUDENTI");
+	$ret_s = execute_stmt($count_st);
+	$count_st->close();
+
+	$count_s = $ret_s->fetch_assoc();
+	$ret['stud_tot'] = $count_s['n'];
+
+	// Number of tests
+	$count_st = prepare_stmt("SELECT COUNT(*) AS n FROM PROVE");
+	$ret_r = execute_stmt($count_st);
+	$count_st->close();
+
+	$count_r = $ret_r->fetch_assoc();
+	$ret['res_tot'] = $count_r['n'];
+
+	// With restrictions, the number and ratio over the total
+	// are calculated
+	if($cond)
 	{
-		if(!$avg)
-			$avg=arr_avg($vals);
+		$classlist = $cond['class'];
+		$genderlist = $cond['sex'];
+		$prof = $cond['prof'];
 
-		$sum=array_sum($vals);
-		
-		$sq=0;
-		foreach($vals as $val)
-			$sq+=pow(($val-$avg),2);
+		// Restricted students' numbers
+		$count_st = prepare_stmt("SELECT COUNT(DISTINCT(id_stud)) AS n FROM STUDENTI
+			JOIN ISTANZE ON fk_stud=id_stud
+			JOIN CLASSI ON fk_cl=id_cl
+			WHERE anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof");
+		if($prof != "")
+			$count_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
+		else
+			$count_st->bind_param("ii", $cond['year1'], $cond['year2']);
 
-		return (sqrt((1/($n-1))*$sq));
+		$ret_s = execute_stmt($count_st);
+		$count_st->close();
+		$count_s = $ret_s->fetch_assoc();
+		$ret['stud_num'] = $count_s['n'];
+		$ret['stud_perc'] = number_format($ret['stud_num'] / $ret['stud_tot'] * 100, 2);
+
+		// Restricted results' numbers
+		$count_st = prepare_stmt("SELECT COUNT(*) AS n FROM PROVE
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN STUDENTI ON fk_stud=id_stud
+			JOIN CLASSI ON fk_cl=id_cl
+			WHERE anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof");
+		if($prof != "")
+			$count_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
+		else
+			$count_st->bind_param("ii", $cond['year1'], $cond['year2']);
+
+		$ret_r = execute_stmt($count_st);
+		$count_st->close();
+		$count_r = $ret_r->fetch_assoc();
+		$ret['res_num'] = $count_r['n'];
+		$ret['res_perc'] = number_format($ret['res_num'] / $ret['res_tot'] * 100, 2);
 	}
-	return "-";
+
+	return $ret;	
+}
+
+// Function to obtain the data used in the general plot in statistics.php
+function misc_graph($cond = null)
+{
+	if($cond)
+	{
+		$classlist = $cond['class'];
+		$genderlist = $cond['sex'];
+		$prof = $cond['prof'];
+
+		// Statement to get the number of results for each test
+		$test_st = prepare_stmt("SELECT nometest, COUNT(*) AS n FROM PROVE 
+			JOIN TEST ON fk_test=id_test
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN STUDENTI ON fk_stud=id_stud 
+			JOIN CLASSI ON fk_cl=id_cl 
+			WHERE anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof
+			GROUP BY id_test 
+			ORDER BY n");
+
+		// Statement to get the number of results for each student's gender
+		$stud_st = prepare_stmt("SELECT sesso, COUNT(*) AS n FROM PROVE 
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN STUDENTI ON fk_stud=id_stud
+			JOIN CLASSI ON fk_cl=id_cl 
+			WHERE anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof
+			GROUP BY sesso");
+
+		// Statement to get the number of results for each class number
+		$class_st = prepare_stmt("SELECT classe, COUNT(*) AS n FROM PROVE
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN CLASSI ON fk_cl=id_cl 
+			JOIN STUDENTI ON fk_stud=id_stud 
+			WHERE anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof
+			GROUP BY classe 
+			ORDER BY classe ASC");
+
+		// Statement to get the number of results for each year
+		$year_st = prepare_stmt("SELECT anno, COUNT(*) AS n FROM PROVE
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN CLASSI ON fk_cl=id_cl 
+			JOIN STUDENTI ON fk_stud=id_stud 
+			WHERE anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof
+			GROUP BY anno 
+			ORDER BY anno ASC");
+
+		if($prof != "")
+		{
+			$test_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
+			$stud_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
+			$class_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
+			$year_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
+		}
+		else
+		{
+			$test_st->bind_param("ii", $cond['year1'], $cond['year2']);
+			$stud_st->bind_param("ii", $cond['year1'], $cond['year2']);
+			$class_st->bind_param("ii", $cond['year1'], $cond['year2']);
+			$year_st->bind_param("ii", $cond['year1'], $cond['year2']);
+		}
+	}
+	else
+	{
+		// Statement to get the number of results for each test
+		$test_st = prepare_stmt("SELECT nometest, COUNT(*) AS n FROM PROVE 
+			JOIN TEST ON fk_test=id_test
+			GROUP BY id_test 
+			ORDER BY n");
+
+		// Statement to get the number of results for each student's gender
+		$stud_st = prepare_stmt("SELECT sesso, COUNT(*) AS n FROM PROVE 
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN STUDENTI ON fk_stud=id_stud 
+			GROUP BY sesso");
+
+		// Statement to get the number of results for each class number
+		$class_st = prepare_stmt("SELECT classe, COUNT(*) AS n FROM PROVE
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN CLASSI ON fk_cl=id_cl 
+			GROUP BY classe 
+			ORDER BY classe ASC");
+
+		// Statement to get the number of results for each year
+		$year_st = prepare_stmt("SELECT anno, COUNT(*) AS n FROM PROVE
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN CLASSI ON fk_cl=id_cl 
+			GROUP BY anno 
+			ORDER BY anno ASC");
+	}
+
+	// Number of results divided by test
+	$ret_t = execute_stmt($test_st);
+	$test_st->close();
+
+	$ret['test']['vals'] = [];
+	$ret['test']['lbls'] = [];
+	while($row = $ret_t->fetch_assoc())
+	{
+		$ret['test']['vals'][] = $row['n'];
+		$ret['test']['lbls'][] = $row['nometest'];
+	}
+
+	// Number of results divided by students' gender
+	$ret_s = execute_stmt($stud_st);
+	$stud_st->close();
+
+	$ret['stud']['vals'] = [];
+	$ret['stud']['lbls'] = [];
+	while($row = $ret_s->fetch_assoc())
+	{
+		$ret['stud']['vals'][] = $row['n'];
+		$ret['stud']['lbls'][] = $row['sesso'];
+	}
+
+	// Number of results divided by class
+	$ret_c = execute_stmt($class_st);
+	$class_st->close();
+
+	$ret['class']['vals'] = [];
+	$ret['class']['lbls'] = [];
+	while($row = $ret_c->fetch_assoc())
+	{
+		$ret['class']['vals'][] = $row['n'];
+		$ret['class']['lbls'][] = $row['classe'];
+	}
+
+	// Number of results divided by year
+	$ret_y = execute_stmt($year_st);
+	$year_st->close();
+
+	$ret['year']['vals'] = [];
+	$ret['year']['lbls'] = [];
+	while($row = $ret_y->fetch_assoc())
+	{
+		$ret['year']['vals'][] = $row['n'];
+		$ret['year']['lbls'][] = $row['anno']."/".($row['anno']+1);
+	}
+
+	return $ret;
 }
 
 // Function to calculate the correlation coefficient between two tests
@@ -378,13 +583,13 @@ function graph_multibox($id, $group, $cond = null)
 {
 	switch($group)
 	{
-		case MULTIBOX_CLASS:
+		case GRAPH_CLASS:
 			$field = "classe";
 			break;
-		case MULTIBOX_GENDER:
+		case GRAPH_GENDER:
 			$field = "sesso";
 			break;
-		case MULTIBOX_YEAR:
+		case GRAPH_YEAR:
 			$field = "anno";
 			break;
 	}
@@ -416,6 +621,7 @@ function graph_multibox($id, $group, $cond = null)
 		$val_st = prepare_stmt("SELECT $field, valore FROM PROVE
 			JOIN ISTANZE ON fk_ist=id_ist
 			JOIN CLASSI ON fk_cl=id_cl
+			JOIN STUDENTI ON fk_stud=id_stud 
 			WHERE fk_test=?
 			ORDER BY $field, valore ASC");
 		$val_st->bind_param("i", $id);

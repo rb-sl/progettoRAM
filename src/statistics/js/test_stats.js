@@ -1,76 +1,7 @@
-// Collection of functions used in statistics' JavaScript
-
-// Prints the plot in statistics.php
-function plotMiscStats() {
-    var data = [{
-        values: testDiv_vals,
-        labels: testDiv_lbls,
-        type: "pie",
-        name: "Per test",
-        title: "Per test",
-        sort: false,
-        direction: "clockwise",
-        domain: {
-            row: 0,
-            column: 0
-        },
-        textinfo: "none"
-    }, {
-        values: studDiv_vals,
-        labels: studDiv_lbls,
-        type: "pie",
-        name: "Per sesso",
-        title: "Per sesso",
-        domain: {
-            row: 0,
-            column: 1
-        },
-        textinfo: "none",
-        sort: false,
-        direction: "clockwise"
-    }, {
-        values: classDiv_vals,
-        labels: classDiv_lbls,
-        type: "pie",
-        name: "Per classe",
-        title: "Per classe",
-        domain: {
-            row: 1,
-            column: 0
-        },
-        textinfo: "none",
-        sort: false,
-        direction: "clockwise",
-    }, {
-        values: yearDiv_vals,
-        labels: yearDiv_lbls,
-        type: "pie",
-        name: "Per anno",
-        title: "Per anno",
-        domain: {
-            row: 1,
-            column: 1
-        },
-        textinfo: "none",
-        sort: false,
-        direction: "clockwise"
-    }];
-    
-    var layout = {
-        height: "700",
-        showlegend: false,
-        title: "Suddivisione delle prove",
-        grid: {rows: 2, columns: 2}
-    };
-    
-    Plotly.newPlot("cnv", data, layout, {responsive: true});
-}
-
-// Test functions
+// Collection of functions used for test_stats.php
 
 // Plot with values
-function draw_graph_val(vals)
-{	
+function draw_graph_val(vals) {	
     var dgraph = [{
         x: vals,
         type: "histogram",
@@ -91,8 +22,7 @@ function draw_graph_val(vals)
 }
 
 // Function to draw a single box plot
-function draw_graph_box(vals)
-{
+function draw_graph_box(vals) {
     var trace1 = {
         x: vals,
         type: "box",
@@ -115,8 +45,7 @@ function draw_graph_box(vals)
 }
 
 // Function to draw many box plots
-function draw_graph_multibox(graph, add)
-{
+function draw_graph_multibox(graph, add) {
     var data = [];
     $.each(graph, function(key, val){
         if(add == "hbox")
@@ -139,33 +68,33 @@ function draw_graph_multibox(graph, add)
 }
 
 // Function to deaw the percentiles graph
-function draw_graph_prc(lbls,vals)
-{
+function draw_graph_prc(lbls,vals) {
     var dgraph = [{
         x: lbls,
         y: vals,
         type: "scatter",
-        line: {shape: "spline"}
+        line: {
+            shape: "spline"
+        }
     }];
     var layout = {
         height: "600",
         title: $("#nomet").html() + " - Valori percentili"
     };
-    Plotly.newPlot('cnv',dgraph,layout,{responsive: true});
+    Plotly.newPlot("cnv", dgraph, layout, {responsive: true});
 }
 
 // Update button handlers
-$("#update").click(function(){
+$("#update").click(function() {
     getData();
 });
-$("#graph").change(function(){
+$("#graph").change(function() {
     getData();
 });
 
 // Ajax function to extract from the DB the requested data 
 // int he labels - values format  
-function getData()
-{
+function getData() {
     if(!checkYears())
         return;
 
@@ -184,7 +113,7 @@ function getData()
     $(".rcr").text("-");    
 
     $.ajax({  
-        url: "./test_stats_ajax.php",
+        url: "/statistics/test_stats_ajax.php",
         data: "id=" + id + "&graph=" + $("#graph").val() + cond,
         dataType: "json",   
         async: false,
@@ -194,8 +123,7 @@ function getData()
             var graph = data[2];
             
             handleData(stats, records);
-            switch($("#graph").val())
-            {
+            switch($("#graph").val()) {
                 case "val":
                     draw_graph_val(graph['vals']);
                     break;
@@ -224,19 +152,18 @@ function getData()
 }
 
 // Data update function
-function handleData(stats,rec)
-{
+function handleData(stats, rec) {
     $("#n").text(stats['n']);
     if(stats['avg'])
-        $("#avg").text(stats['avg']);
+        $("#avg").text(Math.round(stats['avg'] * 100) / 100);
     if(stats['std'])
-        $("#std").text(stats['std']);
+        $("#std").text(Math.round(stats['std'] * 100) / 100);
     if(stats['med'])
-        $("#med").text(stats['med']);
+        $("#med").text(Math.round(stats['med'] * 100) / 100);
 
     if(rec['best'])
-        $("#best").text(rec['best']);
+        $("#best").text(Math.round(rec['best'] * 100) / 100);
     if(rec['worst'])
-        $("#worst").text(rec['worst']);
+        $("#worst").text(Math.round(rec['worst'] * 100) / 100);
     $("#tbest").html(rec['list']);
 }

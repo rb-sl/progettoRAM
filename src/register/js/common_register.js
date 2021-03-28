@@ -1,5 +1,7 @@
-// Collection of functions used in all pages
+// Functions used by most register scripts
 
+// Handles the average and median button,
+// showing or hiding the information
 $(function(){
 	$("#btnstat").click(function(){
     	if($(this).hasClass("btn-primary"))
@@ -16,6 +18,7 @@ $(function(){
     });
 });
 
+// Resizes table elements
 function resizeText() {
 	fitty(".resizetext", {
 		minSize: 10,

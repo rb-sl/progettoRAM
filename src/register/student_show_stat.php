@@ -176,7 +176,8 @@ foreach($rclass as $idcl => $class)
 	var data = [];
   	<?=$plotinfo?>
 </script>
-<script src="./js/student_show_stat.js"></script>
-<script src="./js/class_show_stat.js"></script>
+<script src="js/common_register.js"></script>
+<script src="js/student_show_stat.js"></script>
+<script src="js/class_show_stat.js"></script>
 
 <?php show_postmain(); ?>

@@ -49,13 +49,13 @@ $graph = graph_vals($_GET['id']);
 <div id="cnv">
 </div>
 
-<script src="statistics.js"></script>
+<script src="./js/test_stats.js"></script>
 <script>
 var id  = <?=$_GET['id']?>;
 var vals = [
 <?php
 foreach($graph['vals'] as $val)
-	echo "$val, ";
+	echo "$val,";
 ?>];
    			
 draw_graph_val(vals);  

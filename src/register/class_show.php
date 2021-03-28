@@ -100,6 +100,7 @@ foreach($rstud as $idist => $tds)
 <script>
 	var id = <?=$_GET['id']?>;
 </script>
+<script src="js/common_register.js"></script>
 <script src="js/class_show.js"></script>
 
 <?php show_postmain(); ?>
