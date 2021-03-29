@@ -16,6 +16,8 @@ if($_GET['upd'] != false)
 	$positive = $testinfo['positive'];
 	$stats = $testinfo['statistics'];
 	$testlist = $testinfo['list'];
+
+	$data['splom'] = splom_graph($testlist, $cond);
 	
 	foreach($test as $idc => $colname)
 		foreach($test as $idr => $rowname)
@@ -66,8 +68,9 @@ if($_GET['id1'] != -1)
     	$data['test']['u2'] = " [".$row['simbolo']."]";
 	else
     	$data['test']['u2'] = "";
-}
 
+	$test_st->close();
+}
 $rval_st->close();
 
 echo json_encode($data)

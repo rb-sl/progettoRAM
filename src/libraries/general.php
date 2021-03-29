@@ -113,6 +113,17 @@ function maiuscolo($str)
 	return strtoupper(str_replace($lower, $upper, $str));
 }
 
+// Function to get the minimum and maximum years in the system
+function year_span()
+{
+	$stmt = prepare_stmt("SELECT MIN(anno) AS y1, MAX(anno) AS y2 
+		FROM PROVE JOIN ISTANZE ON id_ist=fk_ist 
+		JOIN CLASSI ON fk_cl=id_cl");
+	$ret = execute_stmt($stmt);
+	$stmt->close();
+	return $ret->fetch_assoc();
+}
+
 // Statement preparation and error handling
 function prepare_stmt($query)
 {
@@ -248,13 +259,8 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 	if($stat)
     {
     	$margin = "statwide";
-		$stmt = prepare_stmt("SELECT MIN(anno) AS y1, MAX(anno) AS y2 
-			FROM PROVE JOIN ISTANZE ON id_ist=fk_ist 
-			JOIN CLASSI ON fk_cl=id_cl");
-    	$ret = execute_stmt($stmt);
-		$stmt->close();
-    	$years = $ret->fetch_assoc();
-
+		$years = year_span();
+		
         echo " <nav id='nav2' class='pg-head navbar-inverse big-topfix'>
 		<div class='container-fluid'>
 			<div class='navbar-header'>
@@ -270,11 +276,11 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 					<li class='li-stat'>Anni da 
                     	<input type='text' id='y1' class='menuyear' name='y1' value='".$years['y1']."' required>
                         /
-                        <span id='flwa1'>".($years['y1'] + 1)."</span>
+                        <span id='flwy1'>".($years['y1'] + 1)."</span>
 						a 
                         <input type='text' id='y2' class='menuyear' name='y2' value='".$years['y2']."' size='4' required>
                         /
-                        <span id='flwa2'>".($years['y2'] + 1)."</span>
+                        <span id='flwy2'>".($years['y2'] + 1)."</span>
                     </li>
 					<li class='li-stat'>
                     	Classi:

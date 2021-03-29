@@ -82,46 +82,11 @@ foreach($tab as $id => $row)
 <script>
 var splomWH = <?=($i * 130)?>;
 
-var splomDimensions = [
+var splomDimensions =
 <?php
-$splom_st = prepare_stmt("SELECT nometest, fk_ist, valore 
-	FROM PROVE JOIN TEST ON fk_test=id_test
-	WHERE fk_test IN ($testlist) ORDER BY fk_ist, nometest");
-$splomret = execute_stmt($splom_st);
-$previnst = -1;
-$instances = [];
-while($splomrow = $splomret->fetch_assoc())
-{
-	// build a table such as
-	// id_ist | id_test | val
-	// with empty val entries if needed
-	$splom[$splomrow['nometest']][$splomrow['fk_ist']] = $splomrow['valore'];
-
-	if($previnst != $splomrow['fk_ist'])
-	{
-		$previnst = $splomrow['fk_ist'];
-		$instances[] = $splomrow['fk_ist'];
-	}
-}
-
-foreach($splom as $test => $list)
-{	
-	$vals = "";
-	foreach($instances as $i)
-	{
-		if(isset($list[$i]))
-			$vals .= $list[$i].",";
-		else
-			$vals .= ",";
-	}
-
-	echo "{
-		label: '".str_replace(" ", "<br>", $test)."',
-		values: [$vals]
-	},";
-}	
-?>	
-];
+$tests = splom_graph($testlist);
+echo json_encode($tests);
+?>;
 </script>
 <script src="/statistics/js/correlation.js"></script>
 

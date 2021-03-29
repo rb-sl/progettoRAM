@@ -1,11 +1,15 @@
 // Javascript functions used in correlation.php
 $(function() {
+	// Variable to avoid replotting a graph if already
+	// up to date
 	var prevPlotted;
+	
+	// Blocks an update if waiting for a previous one
 	var canUpdate = true;
 
 	// Functions to hide the graph overlay:
 	// - on click on the shaded area
-	$(".overlay").click(function(){
+	$(".overlay").click(function() {
 		if($(event.target).is("#over"))	{
 			$(this).hide();
 			window.history.back();
@@ -30,8 +34,7 @@ $(function() {
 	// Function to create the scatter plot of a test 
 	$(".clcbl").click(function() {
 		// The graph is updated only if its data is not already displayed
-    	if(canUpdate && $(this) != prevPlotted)
-        {
+    	if(canUpdate && $(this) != prevPlotted) {
         	canUpdate = false;
     		prevPlotted = $(this);
     
@@ -44,10 +47,9 @@ $(function() {
     });
 
 	// Handler for the update from the statistical menu
-	$("#update").click(function(){
+	$("#update").click(function() {
 		// The update is performed only in case of modifications
-    	if($(this).hasClass("btn-warning"))
-        {
+    	if($(this).hasClass("btn-warning")) {
         	var idr = -1;
     		var idc = -1;
     		if(prevPlotted) {
@@ -61,10 +63,8 @@ $(function() {
     });
 
 	// Function to perform the data request
-	function getData(idr, idc, upd = "")
-	{
-    	if(!checkYears())
-        {
+	function getData(idr, idc, upd = false) {
+    	if(!checkYears()) {
 			$("#update").attr("disabled", false);
 			return;
 		}
@@ -82,13 +82,16 @@ $(function() {
 				// user changed
             	if(upd) {
                 	handleData(data['matrix']);
-                	if(prevPlotted)
-                       	drawGraph(data['test'], idr, idc);
+					prevplotted = null;
+					splomDimensions = data['splom'];
+					splomWH = Object.keys(data['splom']).length * 130;
+					plotSplom();
                 }
             	else {
                 	drawGraph(data['test'], idr, idc);
 					showGraph();
 				}
+
 				// Restores the possibility to change data again
         		$("#update").removeClass("btn-warning");
     			$("#update").addClass("btn-primary");
@@ -103,8 +106,7 @@ $(function() {
 	}
 
 	// Data update function
-	function handleData(data)
-	{
+	function handleData(data) {
    		$(".gr").each(function() {
         	var idc = parseInt($(this).attr("id").substring(1, $(this).attr("id").lastIndexOf("_")));
         	var idr = parseInt($(this).attr("id").substring($(this).attr("id").lastIndexOf("_") + 1));
@@ -121,8 +123,7 @@ $(function() {
 	}	
 
 	// Function to draw (but not make visible) the scatter plot for two tests
-	function drawGraph(data, idr, idc)
-	{
+	function drawGraph(data, idr, idc) {
     	var trace = [{
  			x: data['t1'],
   			y: data['t2'],

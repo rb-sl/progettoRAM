@@ -16,6 +16,8 @@ $(function(){
     });
 
     $(".menuyear").keyup(function(){
+        if($(this).val().length == 4)
+            $("#flwy" + $(this).attr("id").substr(1)).text(parseInt($(this).val()) + 1); 
         $("#update").addClass("btn-warning");
     });
 });

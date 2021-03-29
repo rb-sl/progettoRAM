@@ -322,6 +322,10 @@ function cond_builder()
 		$base_cond = false;
 	
 	// Year-related restrictions
+	$year = year_span();
+	if($_GET['year1'] != $year['y1'] or $_GET['year2'] != $year['y2'])
+		$base_cond = false;
+
 	$cond['year1'] = $_GET['year1'];
 	$cond['year2'] = $_GET['year2'];
 
@@ -826,6 +830,78 @@ function get_test_correlation($cond = null)
 		$ret['statistics'][$row['id_test']] = get_stats($row['id_test'], $cond);
 		$ret['list'] .= ", ".$row['id_test'];
 	}
+	return $ret;
+}
+
+// Function to get the data for the scatter plot matrix
+function splom_graph($testlist, $cond = null)
+{
+	// Builds the query to get all results for given tests
+	if($cond)
+	{
+		$classlist = $cond['class'];
+		$genderlist = $cond['sex'];
+		$prof = $cond['prof'];
+
+		$splom_st = prepare_stmt("SELECT nometest, fk_ist, valore FROM PROVE 
+			JOIN TEST ON fk_test=id_test
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN CLASSI ON fk_cl=id_cl
+			JOIN STUDENTI ON fk_stud=id_stud 
+			WHERE fk_test IN ($testlist)
+			AND anno BETWEEN ? AND ?
+			AND classe IN (0 $classlist)
+			AND sesso IN ('x' $genderlist)
+			$prof
+			ORDER BY fk_ist, nometest");
+
+		if($prof != "")
+			$splom_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
+		else
+			$splom_st->bind_param("ii", $cond['year1'], $cond['year2']);
+	}
+	else
+	{
+		$splom_st = prepare_stmt("SELECT nometest, fk_ist, valore 
+			FROM PROVE JOIN TEST ON fk_test=id_test
+			WHERE fk_test IN ($testlist) ORDER BY fk_ist, nometest");
+	}
+	
+	$splomret = execute_stmt($splom_st);
+	$previnst = -1;
+	$instances = [];
+	$splom = [];
+	while($splomrow = $splomret->fetch_assoc())
+	{
+		// Builds a table such as
+		// id_ist | id_test | val
+		// with empty val entries if needed
+		$splom[$splomrow['nometest']][$splomrow['fk_ist']] = $splomrow['valore'];
+
+		if($previnst != $splomrow['fk_ist'])
+		{
+			$previnst = $splomrow['fk_ist'];
+			$instances[] = $splomrow['fk_ist'];
+		}
+	}
+
+	$ret = [];
+	foreach($splom as $test => $list)
+	{	
+		$curr = [];
+
+		$curr['label'] = str_replace(" ", "<br>", $test);
+		foreach($instances as $i)
+		{
+			if(isset($list[$i]))
+				$curr['values'][] = $list[$i];
+			else
+				$curr['values'][] = null;
+		}
+
+		$ret[] = $curr;
+	}
+
 	return $ret;
 }
 ?>

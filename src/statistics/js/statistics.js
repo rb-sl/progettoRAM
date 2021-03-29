@@ -8,17 +8,16 @@ function plotMiscStats() {
 // Animation of the plot
 function reloadPlot() {
     Plotly.animate("cnv", {
-        data: getPlotData(),
-        // traces: [0],
-        layout: getPlotLayout()
-      }, {
-        transition: {
-          duration: 500,
-          easing: 'cubic-in-out'
+            data: getPlotData(),
+            layout: getPlotLayout()
+        }, {
+            transition: {
+            duration: 500,
+            easing: "cubic-in-out"
         },
-          frame: {
-              duration: 500
-          }
+        frame: {
+            duration: 500
+        }
     });
 }
 
@@ -141,7 +140,7 @@ function getData() {
             yearDiv_vals = data['year']['vals'];
             yearDiv_lbls = data['year']['lbls'];
            
-            plotMiscStats();
+            reloadPlot();
 
             $("#update").attr("disabled", false);
             $("#update").removeClass("btn-warning");
