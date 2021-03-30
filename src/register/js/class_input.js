@@ -5,9 +5,8 @@
 var i = 1;
 	
 // Modifies the following year when modifying the first
-$(".anno").keyup(function(){
-	if($(this).val().length == 4)
-	{
+$(".anno").keyup(function() {
+	if($(this).val().length == 4) {
 		$("#update").removeClass("btn-success");
 		$("#update").addClass("btn-warning");
 	
@@ -16,19 +15,18 @@ $(".anno").keyup(function(){
 });
 
 // Shows the option to promote a class (only class_add.php)
-$("#prom").click(function(){
+$("#prom").click(function() {
 	$(this).hide();
 	$(".dpro").show();
 });
 
 // Handles the ajax request to get the promoted class's student
-$("#clpr").change(function(){
+$("#clpr").change(function() {
 	$.ajax({                                      
 		url: "class_promote_ajax.php",
 		data: "toprom=" + $("#clpr").val(),
 		dataType: "json",
-		async: false,
-		success: function(data){
+		success: function(data) {
 			$("#cl").val(data['cl']);
 			$("#sez").val(data['sez']);
 			$("#a1").val(data['anno']);
@@ -36,7 +34,7 @@ $("#clpr").change(function(){
 			
 			$("#divpro").html(data['list']);
 		},
-		error: function(){
+		error: function() {
 			alert("Errore richiesta studenti");
 		},
 		timeout: 5000
@@ -62,14 +60,14 @@ $("#tabadd").on("keyup change", ".last", function() {
 		// Removes the marker of last
 		$(this).attr("name", $(this).attr("name").substring(1));
 		// Makes required the element
-		$(".n" + $(this).attr('id').substring(1)).prop("required", true);
+		$(".n" + $(this).attr("id").substring(1)).prop("required", true);
 		$(this).addClass("tocheck");
 	}
 });
 
 // Function to remove a row if emptied
 $("#tabadd").on("keyup change", ".prev", function() {
-	if(!$(this).val()){
+	if(!$(this).val()) {
 		$(".last").closest("tr").remove();
 
 		$(this).prev().addClass("prev");
@@ -85,12 +83,12 @@ $("#tabadd").on("keyup change", ".prev", function() {
 });
 
 // Makes required the student's fields if they are marked for promotion
-$("#divpro").on("click", ".chkpro", function(){
-	if($(this).prop("checked")){
+$("#divpro").on("click", ".chkpro", function() {
+	if($(this).prop("checked")) {
 		$(this).closest("tr").css("color", "black");
 		$("#n" + $(this).attr("id").substring(1)).prop("required", true);
 	}
-	else{
+	else {
 		$(this).closest("tr").css("color", "#b0b0b0");
 		$("#n"+$(this).attr("id").substring(1)).prop("required", false);
 	}
@@ -99,13 +97,13 @@ $("#divpro").on("click", ".chkpro", function(){
 // Function to check if there already exist students with corresponding data
 // to some created as new; in this case the submission is blocked and it is
 // asked to link the students
-$("#frm").on("submit", function(e){
-	if($(".tocheck")[0]){
+$("#frm").on("submit", function(e) {
+	if($(".tocheck")[0]) {
 		var count;
 		var get = [];
 		var tmp = {};
 		
-		$(".tocheck").each(function(){
+		$(".tocheck").each(function() {
 			tmp = {};
 			count = $(this).attr("id").substring(1);
 		
@@ -122,21 +120,22 @@ $("#frm").on("submit", function(e){
 			$(this).removeClass("tocheck");
 		});
 	
+		// Synchronous ajax request to block the insert on possible duplicates
 		$.ajax({
 			url: "student_duplicate_ajax.php",
 			data: "cl={\"classe\":\"" + $("#cl").val() + "\",\"anno\":\"" + $("#a1").val() + "\"}&st=" + JSON.stringify(get),
 			async: false,
 			dataType: "json",
-			success: function(data){
-				if(data){
+			success: function(data) {
+				if(data) {
 					e.preventDefault();
 					var toprint = "";
 					
-					$.each(data,function(i){
+					$.each(data, function(i) {
 						toprint += "<tr class='borderover'><td>" + data[i]['cogs'] + " " 
-							+ data[i]['noms'] + " ("+data[i]['sesso']+")</td><td class='textleft'>";
+							+ data[i]['noms'] + " (" + data[i]['sesso'] + ")</td><td class='textleft'>";
 
-						$.each(data[i]['list'], function(k){
+						$.each(data[i]['list'], function(k) {
 							toprint += "<label>" + data[i]['list'][k] + "</label><br>";
 						});
 
@@ -151,7 +150,7 @@ $("#frm").on("submit", function(e){
 					alert("I dati di alcuni nuovi studenti sono già presenti nel database. Selezionarne la provenienza");
 				}
 			},
-			error: function(){
+			error: function() {
 				alert("Errore controllo duplicati");
 			}			
 		});

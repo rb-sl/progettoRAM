@@ -64,7 +64,7 @@ while($row = $ret->fetch_assoc())
     $test['pos'][$row['id_test']] = $row['pos'];
 	$test['name'][$row['id_test']] = $row['nometest'];
 
-    $test['row'] .= "<td id='c".$row['id_test']."' class='col topfix'>".$row['nometest']."</td>";
+    $test['row'] .= "<td id='test".$row['id_test']."' class='col topfix'>".$row['nometest']."</td>";
 }
 
 // Constuction of the table's body with percentile values
@@ -94,21 +94,15 @@ echo $test['row']."
     <td class='leftfix oddrow'>Mediane</td>$rowmed
 </tr>";
 
-$plotinfo = "";
-$plottheta = "";
 $options = "";
 foreach($rclass as $idcl => $class)
 {
 	echo $class['clrow'];
 	$options = "<option value='$idcl'>".$class['name']."</option>".$options;
 
-	$plotdata = "";
-	$plottheta = "";
-	$firstdata = "";
-	$firsttheta = "";
 	foreach($test['id'] as $idt)
 	{
-		echo "<td id='$idcl"."_$idt' class='jdat jcol r_$idcl c_$idt'";
+		echo "<td id='$idcl"."_$idt' class='jdat jcol r_$idcl c_$idt dat$idcl'";
 		if(isset($rstud['val'][$idcl][$idt]))
 		{
 			if(isset($rstud['data'][$idcl][$idt]) and $rstud['data'][$idcl][$idt] != "0000-00-00")
@@ -116,26 +110,10 @@ foreach($rclass as $idcl => $class)
 
         	echo " vcolor='#".$rstud['color'][$idcl][$idt]."'>"
 				.$rstud['val'][$idcl][$idt]."</td>";
-
-			if($firstdata == "")
-			{
-				$firstdata = $rstud['val'][$idcl][$idt];
-				$firsttheta = "'".$test['name'][$idt]."'";
-			}
-			$plotdata .= $rstud['val'][$idcl][$idt].", ";
-			$plottheta .= "'".$test['name'][$idt]."', ";
 		}
 		else 
         	echo ">-</td>";
     }
-
-	$plotinfo .= "data[$idcl] = [{
-		type: 'scatterpolar',
-		r: [$plotdata $firstdata],
-		theta: [$plottheta $firsttheta],
-		fill: 'toself',
-		name: '".$class['name']."',		
-	}]\n";
 
 	if(isset($am['savg'][$idcl]))
 	{
@@ -161,23 +139,22 @@ foreach($rclass as $idcl => $class)
 	</div>
 </div>
 
-<div>
-	<h3>Grafico dei percentili della classe
+<h3>
+	Grafico della classe
 	<select id="class" class="form-control">
 		<?=$options?>
 	</select>
 </h3>
-	<div id="myDiv">
-	</div>
+
+<div id="cnv">
 </div>
+
 <script>
 	var id = <?=$_GET['id']?>;
 	var forstud = true;
-	var data = [];
-  	<?=$plotinfo?>
 </script>
 <script src="js/common_register.js"></script>
 <script src="js/student_show_stat.js"></script>
-<script src="js/class_show_stat.js"></script>
+<script src="js/show_stat.js"></script>
 
 <?php show_postmain(); ?>

@@ -279,7 +279,7 @@ table {
 
 /* Rule for a class's new test column */
 .testadd {
-	width: 250px !important;
+	width: max-content;
 }
 
 /* Special tables for student lists */
@@ -428,6 +428,10 @@ select {
 .datmod {
 	max-width: 70px;
 	text-align: center;
+}
+.wrongvalue {
+	background-color: red;
+	color: white;
 }
 .smalltext {
 	width: 55px;

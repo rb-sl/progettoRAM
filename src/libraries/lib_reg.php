@@ -411,7 +411,7 @@ function get_avgmed_grades($class, $rstud, $forstud = false)
 		}
 		else
 		{
-			$ret['savg'][$ids]['val'] = "";
+			$ret['savg'][$ids]['val'] = "-";
 			$ret['savg'][$ids]['color'] = "";
 		}
 
@@ -423,7 +423,7 @@ function get_avgmed_grades($class, $rstud, $forstud = false)
 		}
 		else
 		{
-			$ret['smed'][$ids]['val'] = "";
+			$ret['smed'][$ids]['val'] = "-";
 			$ret['smed'][$ids]['color'] = "";
 		}
 	}
@@ -570,6 +570,9 @@ function get_perc($class, $cond = null, $forstud = false)
 
 	if($cond)
 	{
+		if(!class_in_years($class, $cond['year1'], $cond['year2']))
+			return null;
+
 		$classlist = $cond['class'];
 		$genderlist = $cond['sex'];
 		$prof = $cond['prof'];
@@ -755,6 +758,9 @@ function get_std($class, $cond = null, $forstud = false)
 
 	if($cond)
 	{
+		if(!class_in_years($class, $cond['year1'], $cond['year2']))
+			return null;
+		
 		$classlist = $cond['class'];
 		$genderlist = $cond['sex'];
 		$prof = $cond['prof'];
@@ -866,6 +872,19 @@ function get_grades($class, $cond = null, $forstud = false)
 		}
 
 	return $rstud;
+}
+
+// Function to check if a class is between the given years
+function class_in_years($class, $year1, $year2)
+{	
+	$chk_st = prepare_stmt("SELECT * FROM CLASSI 
+		WHERE id_cl = ? 
+		AND anno BETWEEN ? AND ?");
+	$chk_st->bind_param("iii", $class, $year1, $year2);	
+	$ret = execute_stmt($chk_st);
+	$chk_st->close();
+	
+	return $ret->num_rows == 1;
 }
 
 // Function to check whether a value belongs to the acceptance interval of a test.

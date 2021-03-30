@@ -15,9 +15,11 @@ $(function(){
         }
     });
 
-    $(".menuyear").keyup(function(){
-        if($(this).val().length == 4)
+    $(".menuyear").keyup(function() {
+        if($(this).val().length == 4) {
             $("#flwy" + $(this).attr("id").substr(1)).text(parseInt($(this).val()) + 1); 
+        }
+
         $("#update").addClass("btn-warning");
     });
 });
@@ -27,8 +29,9 @@ function buildCondFromMenu() {
 	var cond = "";
 
 	$(".stat").each(function() {
-		if($(this).val() == "on")
+		if($(this).val() == "on") {
 			cond += "&" + $(this).attr("id") + "=1";
+        }
 	});
 
 	return "&year1=" + $("#y1").val() + "&year2=" + $("#y2").val() + cond;
@@ -42,5 +45,6 @@ function checkYears() {
         	alert("Anni inseriti non validi");
         	return false;
         }
-		return true;
+        
+	return true;
 }

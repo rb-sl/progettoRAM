@@ -456,7 +456,7 @@ function get_records($id, $cond = null)
 	return $rcr;
 }
 
-// Ottiene le statistiche aggiornate con la condizione
+// Gets updated statistics for a test
 function get_stats($idtest, $cond = null, $get_median = true)
 {
 	if($cond)

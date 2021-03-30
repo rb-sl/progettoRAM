@@ -19,22 +19,19 @@ switch($_GET['vis'])
 	case "prc":
 		if($rstud = get_perc($_GET['id'], $cond, $forstud))
 			$am = get_avgmed($_GET['id'], $rstud['val'], true, $forstud);
-		else
-			$am = null;
 		break;
 	case "std":
 		if($rstud = get_std($_GET['id'], $cond, $forstud))	
 			$am = get_avgmed($_GET['id'], $rstud['val'], false, $forstud);
-		else
-			$am = null;
 		break;
 	case "gr":
 		if($rstud = get_grades($_GET['id'], $cond, $forstud))
 			$am = get_avgmed_grades($_GET['id'], $rstud, $forstud);
-		else
-			$am = null;
 		break;
 }
 
-echo json_encode(array($rstud, $am));
+if($rstud !== null)
+	echo json_encode(array_merge($rstud, $am));
+else
+	echo "null";
 ?>
