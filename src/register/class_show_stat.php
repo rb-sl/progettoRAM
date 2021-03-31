@@ -21,7 +21,7 @@ $color = get_color_prc();
 	<a href="class_show.php?id=<?=$_GET['id']?>" class="btn btn-primary btnmenu">Registro della classe</a>
 	<h3>
     	Visualizzazione classe:
-		<select id="vis" class="form-control">
+		<select id="vis" class="form-control trigger">
         	<option value="prc">Valori percentili</option>
     		<option value="std">Valori standard</option>
    	 		<option value="gr">Voti</option>
@@ -129,7 +129,7 @@ foreach($cstud as $idist => $stud)
 	var id = <?=$_GET['id']?>;
 	var forstud = false;
 </script>
-<script src="js/common_register.js"></script>
-<script src="js/show_stat.js"></script>
+<script src="/register/js/common_register.js"></script>
+<script src="/register/js/show_stat.js"></script>
 
 <?php show_postmain(); ?>

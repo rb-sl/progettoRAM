@@ -35,7 +35,7 @@ $graph = graph_vals($_GET['id']);
 
 <h3>
 	Grafico: 
-	<select id="graph" class="form-control">
+	<select id="graph" class="form-control trigger">
     	<option value="val">Valori</option>
     	<option value="box">Box plot</option>
     	<option value="hbox">Box plot (Anni)</option>
@@ -49,7 +49,7 @@ $graph = graph_vals($_GET['id']);
 <div id="cnv">
 </div>
 
-<script src="./js/test_stats.js"></script>
+<script src="/statistics/js/test_stats.js"></script>
 <script>
 var id  = <?=$_GET['id']?>;
 var vals = [

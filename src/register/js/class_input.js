@@ -23,16 +23,16 @@ $("#prom").click(function() {
 // Handles the ajax request to get the promoted class's student
 $("#clpr").change(function() {
 	$.ajax({                                      
-		url: "class_promote_ajax.php",
+		url: "/register/class_promote_ajax.php",
 		data: "toprom=" + $("#clpr").val(),
 		dataType: "json",
 		success: function(data) {
-			$("#cl").val(data['cl']);
-			$("#sez").val(data['sez']);
-			$("#a1").val(data['anno']);
-			$("#flwa1").text(parseInt(data['anno']) + 1);
+			$("#cl").val(data.cl);
+			$("#sez").val(data.sez);
+			$("#a1").val(data.anno);
+			$("#flwa1").text(parseInt(data.anno) + 1);
 			
-			$("#divpro").html(data['list']);
+			$("#divpro").html(data.list);
 		},
 		error: function() {
 			alert("Errore richiesta studenti");
@@ -107,13 +107,13 @@ $("#frm").on("submit", function(e) {
 			tmp = {};
 			count = $(this).attr("id").substring(1);
 		
-			tmp['cogs'] = $(this).val();
-			tmp['noms'] = $("#nm" + count).val();
+			tmp.cogs = $(this).val();
+			tmp.noms = $("#nm" + count).val();
 		
 			if($("#m" + count).is(":checked"))
-				tmp['sesso'] = "M";
+				tmp.sesso = "M";
 			else
-				tmp['sesso'] = "F";
+				tmp.sesso = "F";
 		
 			get.push(tmp);
 		
@@ -122,7 +122,7 @@ $("#frm").on("submit", function(e) {
 	
 		// Synchronous ajax request to block the insert on possible duplicates
 		$.ajax({
-			url: "student_duplicate_ajax.php",
+			url: "/register/student_duplicate_ajax.php",
 			data: "cl={\"classe\":\"" + $("#cl").val() + "\",\"anno\":\"" + $("#a1").val() + "\"}&st=" + JSON.stringify(get),
 			async: false,
 			dataType: "json",
@@ -132,15 +132,15 @@ $("#frm").on("submit", function(e) {
 					var toprint = "";
 					
 					$.each(data, function(i) {
-						toprint += "<tr class='borderover'><td>" + data[i]['cogs'] + " " 
-							+ data[i]['noms'] + " (" + data[i]['sesso'] + ")</td><td class='textleft'>";
+						toprint += "<tr class='borderover'><td>" + data[i].cogs + " " 
+							+ data[i].noms + " (" + data[i].sesso + ")</td><td class='textleft'>";
 
-						$.each(data[i]['list'], function(k) {
-							toprint += "<label>" + data[i]['list'][k] + "</label><br>";
+						$.each(data[i].list, function(k) {
+							toprint += "<label>" + data[i].list[k] + "</label><br>";
 						});
 
-						toprint+="<label><input type='radio' name='ext[" + data[i]['cogs'] + "_" 
-							+ data[i]['noms'] + "_" + data[i]['sesso'] + "]' value='new'> Nuovo</label></td></tr>";
+						toprint+="<label><input type='radio' name='ext[" + data[i].cogs + "_" 
+							+ data[i].noms + "_" + data[i].sesso + "]' value='new'> Nuovo</label></td></tr>";
 
 						$("#r" + i).remove();
 					});

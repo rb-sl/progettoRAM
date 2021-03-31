@@ -100,6 +100,6 @@ foreach($rclass as $id => $cl)
 	</div>
 </div>
 
-<script src="js/common_register.js"></script>
+<script src="/register/js/common_register.js"></script>
 
 <?php show_postmain(); ?>

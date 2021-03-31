@@ -299,7 +299,7 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
                     	<button id='rstr' class='btn overpad stat' value='off'>Solo personali</button>
                     </li>
                     <li class='li-stat lastmenu'>
-                    	<button id='update' class='btn btn-primary overpad'>Aggiorna</button>
+                    	<button id='update' class='btn btn-primary overpad trigger'>Aggiorna</button>
                     </li>
       			</ul>
             </div>

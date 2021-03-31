@@ -86,65 +86,64 @@ function getPlotLayout() {
             rows: 2, 
             columns: 2
         }
-    };
+    }
 }
 
 // Update button handler
 $("#update").click(function() {
-    if($(this).hasClass("btn-warning"))
+    if($(this).hasClass("btn-warning")) {
         getData();
+    }
 });
 
+// Function to update the page's data
 function getData() {
-    if(!checkYears())
+    if(!checkYears()) {
         return;
+    }
 
-    cond = buildCondFromMenu();
-    
-    $("#update").attr("disabled", true);
-    
+    disableUpdate();
+
+    cond = buildCondFromMenu();    
     $.ajax({  
         url: "/statistics/statistics_ajax.php",
         data: cond,
         dataType: "json",
         success: function(data)	{
             // Update of shown statistics
-            $("#stud_tot").text(data['stud_tot']);
-            $("#res_tot").text(data['res_tot']);
+            $("#stud_tot").text(data.stud_tot);
+            $("#res_tot").text(data.res_tot);
 
             if(data["stud_num"] !== undefined) {
-                $("#stud_num").text(data['stud_num']);
-                $("#stud_perc").text(data['stud_perc']);
+                $("#stud_num").text(data.stud_num);
+                $("#stud_perc").text(data.stud_perc);
 
-                $("#res_num").text(data['res_num']);
-                $("#res_perc").text(data['res_perc']);
+                $("#res_num").text(data.res_num);
+                $("#res_perc").text(data.res_perc);
             }
             else {
-                $("#stud_num").text(data['stud_tot']);
+                $("#stud_num").text(data.stud_tot);
                 $("#stud_perc").text("100");
 
-                $("#res_num").text(data['res_tot']);
+                $("#res_num").text(data.res_tot);
                 $("#res_perc").text("100");
             }
 
             // Reloads the plot with the new data
-            testDiv_vals = data['test']['vals'];
-            testDiv_lbls = data['test']['lbls'];
+            testDiv_vals = data.test.vals;
+            testDiv_lbls = data.test.lbls;
 
-            studDiv_vals = data['stud']['vals'];
-            studDiv_lbls = data['stud']['lbls'];
+            studDiv_vals = data.stud.vals;
+            studDiv_lbls = data.stud.lbls;
 
-            classDiv_vals = data['class']['vals'];
-            classDiv_lbls = data['class']['lbls'];
+            classDiv_vals = data.class.vals;
+            classDiv_lbls = data.class.lbls;
 
-            yearDiv_vals = data['year']['vals'];
-            yearDiv_lbls = data['year']['lbls'];
-           
+            yearDiv_vals = data.year.vals;
+            yearDiv_lbls = data.year.lbls;
+                       
             reloadPlot();
-
-            $("#update").attr("disabled", false);
-            $("#update").removeClass("btn-warning");
-            $("#update").addClass("btn-primary");
+            enableUpdate();
         },
         error: function() {
             alert("Errore ottenimento dati aggiornati");

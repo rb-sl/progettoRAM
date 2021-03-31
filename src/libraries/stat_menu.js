@@ -1,5 +1,8 @@
 // Functions used by the statistical menu
 
+// Blocks an update if waiting for a previous one
+var canUpdate = true;
+
 // Sets the behaviour of the menu's elements
 $(function(){
     $(".stat").click(function() {
@@ -47,4 +50,16 @@ function checkYears() {
         }
         
 	return true;
+}
+
+// Function to disable updates during functions executions
+function disableUpdate() {
+    $(".trigger").attr("disabled", true);
+}
+
+// Function to reenable updates after functions end
+function enableUpdate() {
+    $(".trigger").attr("disabled", false);
+    $("#update").removeClass("btn-warning");
+    $("#update").addClass("btn-primary");
 }

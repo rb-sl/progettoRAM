@@ -7,7 +7,7 @@ var selected;
 // Requests the content of a log file
 $(".splog").click(function() {
 	$.ajax({                                      
-		url: "log_reader.php",
+		url: "/admin/log_reader.php",
 		data: "f=" + $(this).text(),
 		dataType: "json",                
 		success: function(data) {
@@ -27,7 +27,7 @@ $(".splog").click(function() {
 // Requests the deletion of a log file
 $("#del").click(function() {
 	$.ajax({                                      
-		url: "log_delete.php",
+		url: "/admin/log_delete.php",
 		data: "f=" + $("#" + selected).text(),
 		dataType: "json",                
 		success: function(data) {

@@ -834,8 +834,17 @@ function get_test_correlation($cond = null)
 }
 
 // Function to get the data for the scatter plot matrix
-function splom_graph($testlist, $cond = null)
+function test_graph($testlist, $cond = null)
 {
+	// Gets each test's unit
+	$unit_st = prepare_stmt("SELECT nometest, simbolo FROM TEST
+		JOIN UNITA ON fk_udm=id_udm
+		WHERE id_test IN($testlist)");
+	$unit_r = execute_stmt($unit_st);
+	$unit_st->close();
+	while($row = $unit_r->fetch_assoc())
+		$unit[$row['nometest']] = $row['simbolo'];
+
 	// Builds the query to get all results for given tests
 	if($cond)
 	{
@@ -890,8 +899,13 @@ function splom_graph($testlist, $cond = null)
 	{	
 		$curr = [];
 
-		$curr['label'] = str_replace(" ", "<br>", $test);
-		foreach($instances as $i)
+		$curr['label'] = $test;
+		if($unit[$test] != "")
+			$curr['unit'] = " [".$unit[$test]."]";
+		else
+			$curr['unit'] = "";
+			
+ 		foreach($instances as $i)
 		{
 			if(isset($list[$i]))
 				$curr['values'][] = $list[$i];

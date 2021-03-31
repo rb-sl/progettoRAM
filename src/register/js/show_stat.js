@@ -34,10 +34,7 @@ function getData() {
 		return;
 	}
 
-	// Disables the possibility to make another request while this one
-	// is running
-	$("#update").attr("disabled", true);
-	$("#vis").attr("disabled", true);
+	disableUpdate();
 
 	// If grades are requested, averages are broken into first or second quadrimester		
 	if($("#vis").val() == "gr") {
@@ -54,7 +51,7 @@ function getData() {
 
 	// Performs the ajax request
 	$.ajax({  
-		url: "./class_stat_ajax.php",
+		url: "/register/class_stat_ajax.php",
 		data: "id=" + id + "&vis=" + $("#vis").val() + "&forstud=" + forstud + cond,
 		dataType: "json",
 		success: function(data) {
@@ -63,13 +60,13 @@ function getData() {
 				var idc;
 				var idr;
 				// Variables used for clarity
-				var dat_vals = data['val'];
-				var dat_colors = data['color'];
-				var avg = data['avg'];
-				var med = data['med'];
-				var savg = data['savg'];
-				var smed = data['smed'];
-				var tavg = data['tavg'];
+				var dat_vals = data.val;
+				var dat_colors = data.color;
+				var avg = data.avg;
+				var med = data.med;
+				var savg = data.savg;
+				var smed = data.smed;
+				var tavg = data.tavg;
 			
 				$(".jdat").each(function() {
 					idr = parseInt($(this).attr("id").substring(0, $(this).attr("id").lastIndexOf("_")));
@@ -91,16 +88,16 @@ function getData() {
 				$(".jtavg").each(function() {
 					idt = parseInt($(this).attr("id").substring(2));
 
-					$(this).text(avg[idt]['val']);
-					updateColor($(this), avg[idt]['color']);
+					$(this).text(avg[idt].val);
+					updateColor($(this), avg[idt].color);
 				});
 
 				// Updates the medians of tests
 				$(".jtmed").each(function() {
 					idt = parseInt($(this).attr("id").substring(2));
 
-					$(this).text(med[idt]['val']);
-					updateColor($(this), med[idt]['color']);
+					$(this).text(med[idt].val);
+					updateColor($(this), med[idt].color);
 				});
 
 				// Updates the averages of students
@@ -108,8 +105,8 @@ function getData() {
 					ids = parseInt($(this).attr("id").substring(2));
 
 					if(savg[ids] != undefined) {
-						$(this).text(savg[ids]['val']);
-						updateColor($(this), savg[ids]['color']);
+						$(this).text(savg[ids].val);
+						updateColor($(this), savg[ids].color);
 					}
 					else {
 						$(this).text("-");
@@ -123,8 +120,8 @@ function getData() {
 					ids = parseInt($(this).attr("id").substring(2));
 
 					if(smed[ids] !== undefined) {
-						$(this).text(smed[ids]['val']);
-						updateColor($(this), smed[ids]['color']);
+						$(this).text(smed[ids].val);
+						updateColor($(this), smed[ids].color);
 					}
 					else {
 						$(this).text("-");
@@ -134,8 +131,8 @@ function getData() {
 				});
 
 				// Updates the total average									
-				$("#tavg").text(tavg['val']);
-				updateColor($("#tavg"), tavg['color']);
+				$("#tavg").text(tavg.val);
+				updateColor($("#tavg"), tavg.color);
 			}
 			else {
 				// When no data is returned the table is emptied
@@ -150,10 +147,7 @@ function getData() {
 			}
 
 			// Restores the possibility to query again for different statistics
-			$("#vis").attr("disabled", false);
-			$("#update").removeClass("btn-warning");
-			$("#update").addClass("btn-primary");
-			$("#update").attr("disabled", false);
+			enableUpdate();
 		},
 		error: function() {
 			alert("Errore ottenimento statistiche aggiornate");

@@ -59,7 +59,7 @@ while($row = $test_r->fetch_assoc())
 	<a class="btn btn-primary btnmenu" disabled title="Prossimamente">Test di Tukey</a>
 </div>
 
-<script src="./js/statistics.js"></script>
+<script src="/statistics/js/statistics.js"></script>
 <script>
 <?php
 $test = misc_graph();

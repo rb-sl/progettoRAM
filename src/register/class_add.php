@@ -87,6 +87,6 @@ while($row = $ret->fetch_assoc())
 	<input type="submit" value="Inserisci classe" class="btn btn-warning top-bot-margin">
 </form>
 
-<script src="./js/class_input.js"></script>
+<script src="/register/js/class_input.js"></script>
 
 <?php show_postmain(); ?>

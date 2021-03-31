@@ -29,7 +29,7 @@ open_rvals_stmt();
 $i = 0;
 foreach($test as $idcol => $namecol)
 {
-	echo "<th id='c$idcol' pos='".$positive[$idcol]."' class='col topfix'>$namecol</th>\n";
+	echo "<th id='test$idcol' pos='".$positive[$idcol]."' class='col topfix'>$namecol</th>\n";
 
 	if($i % 2 == 0)
 		$color = "evenrow";
@@ -82,9 +82,9 @@ foreach($tab as $id => $row)
 <script>
 var splomWH = <?=($i * 130)?>;
 
-var splomDimensions =
+var testInfo =
 <?php
-$tests = splom_graph($testlist);
+$tests = test_graph($testlist);
 echo json_encode($tests);
 ?>;
 </script>

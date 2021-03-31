@@ -4,7 +4,7 @@
 // done by the class
 $("#btnadd").click(function() {
 	$.ajax({                                      
-		url: "testlist_ajax.php",
+		url: "/register/testlist_ajax.php",
 		data: "id=" + id,
 		dataType: "json",
 		success: function(data) {
@@ -67,7 +67,7 @@ function unitAjax(test) {
 	var d;
 
 	$.ajax({                                      
-		url: "unit_ajax.php",   
+		url: "/register/unit_ajax.php",   
 		data: "test=" + test, 
 		dataType: "json",
 		async: false,     
@@ -87,8 +87,8 @@ function unitAjax(test) {
 $(document).on("change", "#test", function() {
 	var data = unitAjax($("#test").val());
 
-	$(".udm").html(data['simbolo']);
-	$(".in_add").attr("step", data['passo']);
+	$(".udm").html(data.simbolo);
+	$(".in_add").attr("step", data.passo);
 
 	resizeText();
 });
@@ -107,8 +107,8 @@ $(document).on("dblclick", ".jdat", function() {
 
 		// Ajax request to know the unit and update the step
 		var data = unitAjax(test);
-		inner[1] = data['simbolo'];
-		step = data['passo'];
+		inner[1] = data.simbolo;
+		step = data.passo;
 	
 		// Includes a pattern to accept only values like +- n.nn with the step defined in the database
 		$(this).html("<input type='number' size='5' class='datmod'"
@@ -129,7 +129,7 @@ $("#frm").on("submit", function(e) {
 	$.ajax({
 		type: "POST",
 		async: false,
-		url: "result_check_ajax.php",
+		url: "/register/result_check_ajax.php",
 		data: $(this).serialize(),
 		dataType: "json",
 		success: function(data) {
@@ -139,11 +139,11 @@ $("#frm").on("submit", function(e) {
 
 				// Highlights the wrong values by reusing button properties, 
 				// both for updated and new values
-				$.each(data['pr'], function(ist, test) {
+				$.each(data.pr, function(ist, test) {
 					$("#i" + ist + "_" + test).addClass("wrongvalue");
 				});
 			
-				$.each(data['ntest'], function(test, id) {
+				$.each(data.ntest, function(test, id) {
 					$("#n" + id).addClass("wrongvalue");
 				});
 								

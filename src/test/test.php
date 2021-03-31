@@ -114,7 +114,7 @@ while($row = $ret->fetch_assoc())
 	<input type="submit" id="aggv" class="btn btn-warning btnmenu" value="Aggiorna tabella voti">
 </form>
 
-<script src="./test.js"></script>
+<script src="/test/test.js"></script>
 <script>
 	<?=$traces?>
 	var data = [<?=$tracelist?>];

@@ -50,6 +50,6 @@ show_premain("Modifica ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno
 	<input type="submit" value="Aggiorna classe" class="btn btn-warning top-bot-margin">
 </form>
 
-<script src="./js/class_input.js"></script>
+<script src="/register/js/class_input.js"></script>
 
 <?php show_postmain(); ?>

@@ -36,7 +36,7 @@ $color = get_color_prc();
 	<a href="student_show.php?id=<?=$_GET['id']?>" class="btn btn-primary btnmenu">Mostra valori</a> 
     <h3>
     	Visualizzazione dati:
-		<select id="vis" class="form-control">
+		<select id="vis" class="form-control trigger">
         	<option value="prc">Valori percentili</option>
     		<option value="std">Valori standard</option>
    	 		<option value="gr">Voti</option>
@@ -141,7 +141,7 @@ foreach($rclass as $idcl => $class)
 
 <h3>
 	Grafico della classe
-	<select id="class" class="form-control">
+	<select id="class" class="form-control trigger">
 		<?=$options?>
 	</select>
 </h3>
@@ -153,8 +153,8 @@ foreach($rclass as $idcl => $class)
 	var id = <?=$_GET['id']?>;
 	var forstud = true;
 </script>
-<script src="js/common_register.js"></script>
-<script src="js/student_show_stat.js"></script>
-<script src="js/show_stat.js"></script>
+<script src="/register/js/common_register.js"></script>
+<script src="/register/js/student_show_stat.js"></script>
+<script src="/register/js/show_stat.js"></script>
 
 <?php show_postmain(); ?>

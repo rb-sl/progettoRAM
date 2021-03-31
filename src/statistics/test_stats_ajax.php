@@ -14,21 +14,21 @@ switch($_GET['graph'])
 {
 	case "val":
 	case "box":
-		$graph = graph_vals($_GET['id'], $cond);
+		$graph['plot'] = graph_vals($_GET['id'], $cond);
 		break;
 	case "prc":
-		$graph = graph_prc($_GET['id'], $cond);
+		$graph['plot'] = graph_prc($_GET['id'], $cond);
 		break;
 	case "hbox":
-		$graph = graph_multibox($_GET['id'], GRAPH_YEAR, $cond);
+		$graph['plot'] = graph_multibox($_GET['id'], GRAPH_YEAR, $cond);
 		break;
 	case "cbox":
-		$graph = graph_multibox($_GET['id'], GRAPH_CLASS, $cond);
+		$graph['plot'] = graph_multibox($_GET['id'], GRAPH_CLASS, $cond);
 		break;
 	case "sbox":
-		$graph = graph_multibox($_GET['id'], GRAPH_GENDER, $cond);
+		$graph['plot'] = graph_multibox($_GET['id'], GRAPH_GENDER, $cond);
 		break;
 }
 
-echo json_encode(array($upvals, $rec, $graph));
+echo json_encode(array_merge($upvals, $rec, $graph));
 ?>
