@@ -34,9 +34,9 @@ $color = get_color_prc();
     	<table class="table table-striped">
       		<tr id="thr" class="dat">
             	<td class="topleft leftfix topfix">
-                	<button type="button" id="btnstat" class="btn overpad fullwidth">Medie e Mediane</button>
+                	<button type="button" id="btnstat" class="btn btn-secondary overpad fullwidth">Medie e Mediane</button>
                 	<br>
-                	<button type="button" id="btncol" class="btn overpad fullwidth">Colori</button>
+                	<button type="button" id="btncol" class="btn btn-secondary overpad fullwidth">Colori</button>
             	</td>
 <?php
 // Header construction

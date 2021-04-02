@@ -9,20 +9,37 @@ show_premain("Test e valutazioni");
 <h2>Visualizzazione Test</h2>
 
 <?php
-// An administrator or a professor with grants can add a new test
-if($_SESSION['priv'] <= 1)
-	echo "<div><a href='./test_add.php' class='btn btn-warning btnmenu'>Aggiungi nuovo</a></div>";
+if($_SESSION['priv'] <= 2)
+{
+	echo "<div>";
+	// An administrator or a professor with grants can add a new test
+	if($_SESSION['priv'] <= 1)
+		echo "<a href='./test_add.php' class='btn btn-primary btnmenu'>Aggiungi nuovo</a> ";
+	echo "<a href='./favourites_modify.php' class='btn btn-warning btnmenu'>Modifica preferiti</a>
+		</div>";
+}
 ?>
 
 <table class="table table-striped marginunder">
 	<tr><thead><th>Nome test</th></thead></tr>
 <?php
-$test_st = prepare_stmt("SELECT * FROM TEST ORDER BY nometest");
+$test_st = prepare_stmt("SELECT id_test, nometest, fk_test AS favourite FROM TEST
+	LEFT JOIN PROF_TEST ON fk_test=id_test
+	AND (fk_prof=? OR fk_prof IS NULL)
+	ORDER BY nometest");
+$test_st->bind_param("i", $_SESSION['id']);
 $rettest = execute_stmt($test_st);
 $test_st->close();
 
 while($rowt = $rettest->fetch_assoc())
-	echo "<tr><td><a href='test_show.php?id=".$rowt['id_test']."'>".$rowt['nometest']."</a></td>";
+{
+	if(!$rowt['favourite'])
+		$class = " class='inactivetext'";
+	else
+		$class = "";
+
+	echo "<tr><td><a href='test_show.php?id=".$rowt['id_test']."'$class>".$rowt['nometest']."</a></td></tr>";
+}
 ?>
 </table>
 
@@ -47,7 +64,9 @@ if($_SESSION['priv'] == 0)
 	$r = execute_stmt($pr_st);
 	
   	while($p = $r->fetch_assoc())
-    	echo "<option value='".$p['id_prof']."'>".$p['user']."</option>";
+    	echo "<option value='".$p['id_prof']."'"
+			.($p['id_prof'] == $_SESSION['id'] ? " selected" : "")
+			.">".$p['user']."</option>";
     echo "</select>";
 }
 ?></h2>
@@ -77,30 +96,13 @@ while($row = $ret->fetch_assoc())
 	$v10 = $row['voto'] * 10;
 
 	echo "<tr>
-			<td style='background-color:#".$row['color']."'>".$row['voto']."</td>
-    		<td><input type='number' min='0' id='r$v10' class='range halfwidth textright' value='".($row['perc'] - $prev)."' name='perc[".$row['id_voto']."]'>%</td> 
+			<td id='x_$v10' style='background-color:#".$row['color']."'>".$row['voto']."</td>
+    		<td><input type='number' min='0' id='p_$v10' class='range halfwidth textright' 
+				value='".($row['perc'] - $prev)."' name='perc[".$row['id_voto']."]'>%</td> 
             <td id='i$v10'>$prev</td>
 			<td>&rarr;</td>
 			<td id='f$v10'>".$row['perc']."</td>
         </tr>";
-
-	// Plotly graph components
-	$tracelist .= "trace$v10, ";
-	$traces .= "var trace$v10 = {
-  		x: [".($row['perc'] - $prev)."],
-  		type: 'bar',
-   		name: '".$row['voto']."',
-   		text: '".$row['voto']."',
-  		textposition: 'auto',
-   		hoverinfo: 'none',
-   		marker: {
-    		color: '".$row['color']."',
-    		line: {
-      			color: '#000',
-      			width: 1.5
-    		}
-  		}
-	};\n";
 
 	$prev = $row['perc'];
 }	
@@ -114,12 +116,9 @@ while($row = $ret->fetch_assoc())
 	<input type="submit" id="aggv" class="btn btn-warning btnmenu" value="Aggiorna tabella voti">
 </form>
 
-<script src="/test/test.js"></script>
+<script src="/test/js/test.js"></script>
 <script>
-	<?=$traces?>
-	var data = [<?=$tracelist?>];
-	var layout = { barmode: "stack", yaxis:{visible:false } };
-	Plotly.newPlot("cnv", data, layout, {responsive: true});
+	plotGrades();
 </script>
 
 <?php show_postmain(); ?>

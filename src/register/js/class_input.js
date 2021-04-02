@@ -85,12 +85,12 @@ $("#tabadd").on("keyup change", ".prev", function() {
 // Makes required the student's fields if they are marked for promotion
 $("#divpro").on("click", ".chkpro", function() {
 	if($(this).prop("checked")) {
-		$(this).closest("tr").css("color", "black");
+		$(this).closest("tr").removeClass("inactivetext");
 		$("#n" + $(this).attr("id").substring(1)).prop("required", true);
 	}
 	else {
-		$(this).closest("tr").css("color", "#b0b0b0");
-		$("#n"+$(this).attr("id").substring(1)).prop("required", false);
+		$(this).closest("tr").addClass("inactivetext");
+		$("#n" + $(this).attr("id").substring(1)).prop("required", false);
 	}
 });
 

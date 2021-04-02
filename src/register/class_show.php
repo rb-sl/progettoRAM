@@ -31,7 +31,7 @@ show_premain("Registro ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno
     		<table id="tts" class="table table-striped">
       			<tr id="thr" class="dat">
 					<td class="topleft topfix leftfix">
-						<button type="button" id="btnstat" class="btn overpad fullwidth">Medie e mediane</button>
+						<button type="button" id="btnstat" class="btn btn-secondary overpad fullwidth">Medie e mediane</button>
 					</td>
 <?php
 $rstud = col_stud();

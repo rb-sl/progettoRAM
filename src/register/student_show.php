@@ -39,7 +39,7 @@ show_premain("Dati di ".$stud['cogs']." ".$stud['noms']." (".$stud['sesso'].")")
 		<table id="tts" class="table table-striped">
 			<tr id="thr" class="dat">
 				<td class="topleft topfix leftfix">
-					<button type="button" id="btnstat" class="btn overpad fullwidth">Medie e mediane</button>
+					<button type="button" id="btnstat" class="btn btn-secondary overpad fullwidth">Medie e mediane</button>
 				</td>
 <?php
 // Construction of table body

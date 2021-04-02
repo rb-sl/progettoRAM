@@ -10,9 +10,11 @@ $(function(){
     
         if($(this).val() == "on") {
             $(this).removeClass("btn-primary");
+            $(this).addClass("btn-secondary");
             $(this).val("off");
         }
         else {
+            $(this).removeClass("btn-secondary");
             $(this).addClass("btn-primary");
             $(this).val("on");
         }

@@ -18,7 +18,7 @@ show_premain();
 <p>
 	Per utilizzare l'applicazione è necessario effettuare il login con le credenziali fornite. Per ottenere o 
 	ripristinare le credenziali <a href="mailto:$ADDRESS">inviare un messaggio</a> all'amministratore.<br>
-  	Per ulteriori informazioni si rimanda alla <a href="/progetto.php">descrizione del progetto</a> e al <a href="/manuale.php">manuale</a>.
+  	Per ulteriori informazioni si rimanda alla <a href="/project.php">descrizione del progetto</a> e al <a href="/guide/guide.php">manuale</a>.
 </p>
 
 <?php show_postmain(); ?>
