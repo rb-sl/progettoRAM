@@ -63,13 +63,19 @@ while($row = $ret->fetch_assoc())
 	<h3>Nuovi studenti:</h3>
 	<div class="tdiv">
   		<div id="tos" class="innerx">
-			<table id="tabadd" class="table table-striped studtable">
+			<table id="tabadd" class="table table-light table-striped studtable">
 				<tr id="r0">
 					<td><input type="text" id="c0" name="lcst[0]" class="last n0" placeholder="Cognome"></td>
 					<td><input type="text" id="nm0" class="n0" name="nst[0]" placeholder="Nome"></td>
-					<td>
-						<label><input id="m0" class="n0" type="radio" name="sesso[0]" value="m">M</label>
-						<label><input id="f0" class="n0" type="radio" name="sesso[0]" value="f">F</label>
+					<td class="containerflex">
+						<div class="form-check">
+							<input id="m0" class="n0 form-check-input" type="radio" name="sesso[0]" value="m">
+							<label class="form-check-label" for="m0">M</label>
+						</div>
+						<div class="form-check">
+							<input id="f0" class="n0 form-check-input" type="radio" name="sesso[0]" value="f">
+							<label class="form-check-label" for="f0">F</label>
+						</div>
 					</td>
 				</tr>
 			</table>
@@ -78,7 +84,7 @@ while($row = $ret->fetch_assoc())
 	
 	<div id="ext" class="jQhidden">
 		<h3>Possibili studenti già registrati:</h3>
-    	<table class="table table-striped studtable">
+    	<table class="table table-light table-striped studtable">
         	<tbody id="tabext">
             </tbody>
         </table>

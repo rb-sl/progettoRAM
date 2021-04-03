@@ -56,11 +56,13 @@ function checkYears() {
 
 // Function to disable updates during functions executions
 function disableUpdate() {
+    $("*").addClass("loading");
     $(".trigger").attr("disabled", true);
 }
 
 // Function to reenable updates after functions end
 function enableUpdate() {
+    $("*").removeClass("loading");
     $(".trigger").attr("disabled", false);
     $("#update").removeClass("btn-warning");
     $("#update").addClass("btn-primary");

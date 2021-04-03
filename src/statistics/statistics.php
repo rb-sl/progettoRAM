@@ -37,7 +37,7 @@ $stats = get_general_stats();
 
 <h2>Statistiche per test</h2>
 
-<table class="table table-striped">
+<table class="table table-light table-striped">
 <?php
 $test_st = prepare_stmt("SELECT id_test, nometest, COUNT(*) AS n 
 	FROM TEST JOIN PROVE ON fk_test=id_test 
@@ -54,7 +54,7 @@ while($row = $test_r->fetch_assoc())
 
 <h2>Statistiche avanzate</h2>
 <div>
-	<a href="correlation.php" class="btn btn-primary btnmenu">Correlazione campionaria</a><br>
+	<a href="correlation.php" class="btn btn-primary marginunder">Correlazione campionaria</a><br>
 	<a class="btn btn-primary btnmenu" disabled title="Prossimamente">ANOVA</a><br>
 	<a class="btn btn-primary btnmenu" disabled title="Prossimamente">Test di Tukey</a>
 </div>

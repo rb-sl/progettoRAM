@@ -44,7 +44,7 @@ echo "<a href='./test_delete.php?id=".$_GET['id']."' ".confirm("Il test ".$test[
 	." class='btn btn-danger'>Elimina test</a>";
 ?>
 	</h2>
-	<table class="table table-striped">
+	<table class="table table-light table-striped">
 		<tr>
     		<td>Tipo di test:</td>
     		<td class="halfwidth">

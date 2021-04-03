@@ -3,7 +3,29 @@
 // Variable to avoid replotting a graph if already
 // up to date
 var prevPlotted;
+
+// Function to change background to the table
+$("#btncol").click(function() {
+	var app;
 	
+	$(".gr").each(function() {
+		app = $(this).css("background-color");
+		$(this).css("background-color", $(this).attr("vcolor"));
+		$(this).attr("vcolor", app);
+	});
+
+	if($(this).hasClass("btn-primary")) {
+		$(this).removeClass("btn-primary");
+		$(this).addClass("btn-secondary");
+		$("table").addClass("table-striped");
+	}
+	else {
+		$(this).removeClass("btn-secondary");
+		$(this).addClass("btn-primary");
+		$("table").removeClass("table-striped");
+	}
+});
+
 // Functions to hide the graph overlay:
 // - on click on the shaded area
 $(".overlay").click(function() {
@@ -142,6 +164,7 @@ function handleData(data) {
 		var idr = parseInt($(this).attr("id").substring($(this).attr("id").lastIndexOf("_") + 1));
 		
 		$(this).text(data[idc][idr].r);
+		updateColor($(this), data[idc][idr].color);
 		
 		if(data[idc][idr].r != "-") {
 			$(this).addClass("point clcbl");
@@ -152,6 +175,16 @@ function handleData(data) {
 		
 		$(this).attr("title", "n=" + data[idc][idr].n);
 	});
+}
+
+// Function to change the color of a cell
+function updateColor(object, color) {
+	if($("#btncol").hasClass("btn-primary")) {
+		object.css("background-color", color);
+	}
+	else {
+		object.attr("vcolor", color);
+	}
 }
 
 // Function to create the scatter matrix plot

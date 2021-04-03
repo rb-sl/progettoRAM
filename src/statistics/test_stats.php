@@ -20,7 +20,7 @@ $graph = graph_vals($_GET['id']);
 
 <h2>Statistiche <span id="nomet"><?=$test['nometest']?></span></h2>
 
-<table class='table table-striped'>
+<table class='table table-light table-striped'>
    	<tr><td>Numero totale di prove: <span id="n"><?=$data['n']?></span></td>
    	<tr><td>Media: <span id="avg"><?=number_format($data['avg'], 2)?></span> <?=$test['simbolo']?></td></tr>
 	<tr><td>Mediana: <span id="med"><?=number_format($data['med'], 2)?></span> <?=$test['simbolo']?></td></tr>

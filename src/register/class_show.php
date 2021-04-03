@@ -14,11 +14,11 @@ show_premain("Registro ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno
 
 <h2>
 	Registro della classe <?=$cl['classe'].$cl['sez']?> - Anno <?=$cl['anno']."/".($cl['anno'] + 1)?> 
-	<a href="./class_modify.php?id=<?=$_GET['id']?>" class="btn btn-warning btnmenu">Modifica</a>
+	<a href="./class_modify.php?id=<?=$_GET['id']?>" class="btn btn-warning">Modifica</a>
 </h2>
 
 <div>
-	<a href="class_show_stat.php?id=<?=$_GET['id']?>" class="btn btn-primary btnmenu">Elaborazione dati della classe</a> 
+	<a href="class_show_stat.php?id=<?=$_GET['id']?>" class="btn btn-primary marginunder">Elaborazione dati della classe</a> 
 </div>
 
 <form action="result_insert.php?cl=<?=$_GET['id']?>" id="frm" method="POST">
@@ -28,10 +28,10 @@ show_premain("Registro ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno
      
 	<div class="tdiv">
   		<div id="tos" class="inner">
-    		<table id="tts" class="table table-striped">
+    		<table id="tts" class="table table-light table-striped">
       			<tr id="thr" class="dat">
 					<td class="topleft topfix leftfix">
-						<button type="button" id="btnstat" class="btn btn-secondary overpad fullwidth">Medie e mediane</button>
+						<button type="button" id="btnstat" class="btn btn-secondary overpad">Medie e mediane</button>
 					</td>
 <?php
 $rstud = col_stud();

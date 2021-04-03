@@ -16,6 +16,9 @@ body {
 	background-color: #eee;
 	margin-bottom: 60px; /* To host the footer */
 }
+.loading {
+	cursor: wait !important;
+}
 
 /* Rules for the main (includes centering) */
 main {
@@ -38,7 +41,7 @@ main > * {
 .statwide {
 	margin-top: 126px;
 }
-.fullwidth {
+.mainfullwidth {
 	max-width: 100% !important;
 }
 
@@ -171,6 +174,9 @@ nav {
 .primarycolor {
 	color: #007bff;
 }
+.secondarycolor {
+	color: #404346;
+}
 .infocolor {
 	color: #17a2b8;
 }
@@ -178,7 +184,7 @@ nav {
 	color: #28a745;
 }
 .warningcolor {
-	color: #eea236;
+	color: #eea236; 
 }
 .dangercolor {
 	color: #c82333;
@@ -233,11 +239,26 @@ table {
 	position: relative;
 	margin:0 auto;
 }
-/* Internal table container (can scroll) */
-.inner {	
+/* Internal table container */
+/* By default takes into account
+ * the footer height
+ */
+.inner {
 	overflow-x: scroll;
 	overflow-y: scroll;
-	max-height: 90vh;
+	max-height: calc(100vh - 50px);
+}
+/* For big enough screen it takes into
+ * account the presence of the statistical
+ * menu
+ */
+@media(min-width: 991px) {
+	main.nostatwide .inner {
+		max-height: calc(100vh - 110px);
+	}
+	main.statwide .inner {
+		max-height: calc(100vh - 166px);
+	}
 }
 /* Reduced rules to scroll only on x */
 .innerx {
@@ -343,6 +364,11 @@ td, th {
 /* Rules for a flex div */
 .containerflex {
 	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+.flexcenter {
+	display: flex;
 	justify-content: center;
 	align-items: center;
 }
@@ -408,8 +434,23 @@ td, th {
 	max-width: 90%;
 	font-size: 18px;
 }
+.textwall h4 {
+	margin-top: 15px;
+	margin-bottom: 0px;
+}
+.textwall p {
+	text-indent: 15px;
+	margin-bottom: 0px;
+}
+.textwall ul:not(.nobul) {
+	margin-bottom: 0px;
+	margin-left: 10px;
+}
 .textwall a {
   	text-decoration: underline;
+}
+.section {
+	margin-bottom: 50px;
 }
 .txt {
 	width: 80%; 
@@ -465,13 +506,11 @@ input:disabled {
 .form-control {
 	font-size: 20px !important;
 	height: auto !important;
+	box-shadow: none !important;
 }
-input[type="text"] {
-	border: 1px solid #BBB;
-	border-radius: 4px;
-	font-size: inherit !important;
-}
-input[type="password"] {
+input[type="text"], 
+input[type="password"], 
+input[type="number"] {
 	border: 1px solid #BBB;
 	border-radius: 4px;
 	font-size: inherit !important;
@@ -518,6 +557,11 @@ input[type="password"] {
   	text-align: center;
 }
 
+/* Removes shadow from elements */
+.btn, .form-check-input, .navbar-toggler {
+	box-shadow: none !important;
+}
+
 /* Button styles */
 /* Class link style */
 .btncl {
@@ -526,7 +570,8 @@ input[type="password"] {
 }
 /* Wide button style */
 .btnmenu {
-	min-width: 125px; 
+	width: 125px; 
+	max-width: 100%;
 	margin-bottom: 5px;
 }
 .overpad {

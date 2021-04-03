@@ -293,6 +293,8 @@ function calc_r($id1, $stat1, $id2, $stat2, $cond = null)
     else
       	$r['r'] = "-";
 
+	$r['color'] = correlation_color($r['r']);
+
 	return $r;
 }
 
@@ -436,7 +438,7 @@ function get_records($id, $cond = null)
 		$rcr['worst'] = number_format($rcr['worst'], 2);
 	}
 	
-	$rcr['list'] = "<table id='tbest' class='table table-striped'>";
+	$rcr['list'] = "<table id='tbest' class='table table-light table-striped'>";
 	while($rcp = $ret->fetch_assoc())
 	{
 		$rcr['list'] .= "<tr><td class='rcr'>".$rcp['nomescuola']."</td><td class='rcr'>";
@@ -917,5 +919,13 @@ function test_graph($testlist, $cond = null)
 	}
 
 	return $ret;
+}
+
+// Function to get a color based on thr correlation coefficient
+function correlation_color($r)
+{
+	if($r == "-")
+		 return "rgba(0, 0, 0, 0.05)";
+	return "rgba(23, 147, 255, ".min(number_format(abs($r), 2), 1).")";
 }
 ?>

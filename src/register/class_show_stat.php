@@ -18,7 +18,7 @@ $color = get_color_prc();
 <h2>Registro della classe <?=$cl['classe'].$cl['sez']?> - Anno <?=$cl['anno']."/".($cl['anno'] + 1)?></h2>
 
 <div>
-	<a href="class_show.php?id=<?=$_GET['id']?>" class="btn btn-primary btnmenu">Registro della classe</a>
+	<a href="class_show.php?id=<?=$_GET['id']?>" class="btn btn-primary marginunder">Registro della classe</a>
 	<h3>
     	Visualizzazione classe:
 		<select id="vis" class="form-control trigger">
@@ -31,12 +31,12 @@ $color = get_color_prc();
 
 <div class="tdiv">
 	<div class="inner">
-    	<table class="table table-striped">
+    	<table class="table table-light table-striped">
       		<tr id="thr" class="dat">
             	<td class="topleft leftfix topfix">
-                	<button type="button" id="btnstat" class="btn btn-secondary overpad fullwidth">Medie e Mediane</button>
+                	<button type="button" id="btnstat" class="btn btn-secondary btnmenu overpad">Medie e Mediane</button>
                 	<br>
-                	<button type="button" id="btncol" class="btn btn-secondary overpad fullwidth">Colori</button>
+                	<button type="button" id="btncol" class="btn btn-secondary btnmenu overpad">Colori</button>
             	</td>
 <?php
 // Header construction

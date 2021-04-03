@@ -50,7 +50,7 @@ else
 <h2>Modifica studente <a href="./student_show.php?id=<?=$_GET['id']?>" class="btn btn-warning">Indietro</a></h2>
 
 <form action="student_update.php?id=<?=$_GET['id']?>" method="POST">
-	<table class="table table-striped studtable marginunder">
+	<table class="table table-light table-striped studtable marginunder">
 		<tr>
 			<th>Cognome:</th>
 			<td><input type="text" name="cogs" value="<?=$stud['cogs']?>" required></td>
@@ -61,14 +61,20 @@ else
 		</tr> 
 		<tr>
 			<th>Sesso:</th>
-			<td>
-				<label><input type="radio" name="sesso" value="m" <?=$m?> required>M</label>
-				<label><input type="radio" name="sesso" value="f" <?=$f?> required>F</label>
+			<td class="containerflex">
+				<div class="form-check">
+					<input type="radio" id="radiom" class="form-check-input" name="sesso" value="m" <?=$m?> required>
+					<label class="form-check-label" for="radiom">M</label>
+				</div>
+				<div class="form-check">
+					<input type="radio" id="radiof" class="form-check-input" name="sesso" value="f" <?=$f?> required>
+					<label class="form-check-label" for="radiof">F</label>
+				</div>
 			</td>
 		</tr>
 	</table>
 
-	<input type="submit" class="btn btn-warning btnmenu" value="Aggiorna dati studente">
+	<input type="submit" class="btn btn-warning" value="Aggiorna dati studente">
 </form>
 
 <?php show_postmain(); ?>

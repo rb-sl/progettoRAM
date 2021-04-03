@@ -25,7 +25,7 @@ function build_chk_table($classe, $prom = false)
 {
 	$table = "<div class='tdiv'>
 			<div class='innerx'>
-				<table id='tabchk' class='table table-striped studtable'>";
+				<table id='tabchk' class='table table-light table-striped studtable'>";
 	
 	// If this is the modification due to promotion, students already promoted to other classes
 	// will not be shown
@@ -45,8 +45,11 @@ function build_chk_table($classe, $prom = false)
 	while($row = $ret->fetch_assoc())
 	{
 		$table .= "<tr>
-			<td>
-				<input type='checkbox' id='c".$row['id_stud']."' name='pr[]' value='".$row['id_stud']."' class='chkpro' checked='true'>
+			<td class='containerflex'>
+				<div class='form-check'>
+					<input type='checkbox' id='c".$row['id_stud']."' name='pr[]' value='".$row['id_stud']."' class='form-check-input chkpro' checked='true'>
+					<label id='lbl".$row['id_stud']."' class='form-check-label' for='c".$row['id_stud']."'></label>
+				</div>
 			</td>
 			<td>".$row['cogs']."</td>
 			<td>".$row['noms']."</td>

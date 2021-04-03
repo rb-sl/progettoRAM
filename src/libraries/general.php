@@ -11,7 +11,6 @@ const BOOTSTRAP_JS_PATH = "/libraries/ui/bootstrap/js/bootstrap.min.js";
 
 const FITTY_PATH = "/libraries/ui/fitty/fitty.min.js";
 
-
 const JQUERY_PATH = "/libraries/ui/jquery-3.4.1.min.js";
 const JQUERY_UI_JS_PATH = "/libraries/ui/jquery-ui/jquery-ui.min.js";
 const JQUERY_UI_CSS_PATH = "/libraries/ui/jquery-ui/jquery-ui.min.css";
@@ -305,7 +304,7 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 		$margin = "nostatwide";
 	
 	if($fullwidth)
-		$widthcl = "fullwidth";
+		$widthcl = "mainfullwidth";
 	else
 		$widthcl = "";
 

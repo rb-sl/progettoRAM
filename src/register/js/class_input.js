@@ -50,8 +50,13 @@ $("#tabadd").on("keyup change", ".last", function() {
 		$($(this).closest("table")).append("<tr id='r" + i + "'>" 
 			+ "<td><input type='text' id='c" + i + "' class='last n" + i + "' name='lcst[" + i + "]' placeholder='Cognome'></td> "
 			+ "<td><input type='text' id='nm" + i + "' class='n" + i + "' name='nst[" + i + "]' placeholder='Nome'></td> "
-			+ "<td><label><input type='radio' id='m" + i + "' class='n" + i + "' name='sesso[" + i + "]' value='m'>M</label> " 
-			+ "<label><input type='radio' id='f" + i +"' class='n" + i + "' name='sesso[" + i + "]' value='f'>F</label></td></tr>"); 
+			+ "<td class='containerflex'><div class='form-check'>"
+				+ "<input type='radio' id='m" + i + "' class='n" + i + " form-check-input' name='sesso[" + i + "]' value='m'>"
+				+ "<label class='form-check-label' for='m" + i + "'>M</label>"
+			+ "</div><div class='form-check'>"
+				+ "<input type='radio' id='f" + i + "' class='n" + i + " form-check-input' name='sesso[" + i + "]' value='f'>"
+				+ "<label class='form-check-label' for='f" + i + "'>F</label>"
+			+ "</div>"); 
 
 		i++;
 		// Changes the last element
@@ -139,9 +144,13 @@ $("#frm").on("submit", function(e) {
 							toprint += "<label>" + data[i].list[k] + "</label><br>";
 						});
 
-						toprint+="<label><input type='radio' name='ext[" + data[i].cogs + "_" 
-							+ data[i].noms + "_" + data[i].sesso + "]' value='new'> Nuovo</label></td></tr>";
-
+						toprint += "<div class='form-check'>"
+							+ "<input type='radio' id='new' class='form-check-input'  name='ext[" + data[i].cogs + "_" 
+							+ data[i].noms + "_" + data[i].sesso + "]' value='new'>"
+							+ "<label class='form-check-label' for='new'>Nuovo</label>"
+							+ "</div>"
+							+ "</td></tr>";
+						
 						$("#r" + i).remove();
 					});
 				

@@ -33,7 +33,7 @@ $color = get_color_prc();
 <h2>Elaborazione dati di <span id="student"><?=$stud['cogs']?> <?=$stud['noms']?> (<?=$stud['sesso']?>)</span></h2>
 
 <div>
-	<a href="student_show.php?id=<?=$_GET['id']?>" class="btn btn-primary btnmenu">Mostra valori</a> 
+	<a href="student_show.php?id=<?=$_GET['id']?>" class="btn btn-primary marginunder">Mostra valori</a> 
     <h3>
     	Visualizzazione dati:
 		<select id="vis" class="form-control trigger">
@@ -46,12 +46,12 @@ $color = get_color_prc();
 
 <div class="tdiv">
 	<div class="inner">
-    	<table class="table table-striped">
+    	<table class="table table-light table-striped">
       		<tr id="thr" class="dat">
             	<td class="topleft leftfix topfix">
-                	<button type="button" id="btnstat" class="btn btn-secondary overpad fullwidth">Medie e Mediane</button>
+                	<button type="button" id="btnstat" class="btn btn-secondary btnmenu overpad">Medie e Mediane</button>
                 	<br>
-                	<button type="button" id="btncol" class="btn btn-secondary overpad fullwidth">Colori</button>
+                	<button type="button" id="btncol" class="btn btn-secondary btnmenu overpad">Colori</button>
             	</td>
 <?php
 $ret = get_test($_GET['id'], true);

@@ -16,7 +16,7 @@ show_premain("Gestione utenti");
 
 <div class="tdiv">
     <div class="inner">
-        <table class="table table-striped">
+        <table class="table table-light table-striped">
             <tr>
                 <th class="col">Username</th>
                 <th class="col">Cognome</th>

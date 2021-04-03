@@ -13,10 +13,12 @@ $("#btncol").click(function() {
 	if($(this).hasClass("btn-primary")) {
 		$(this).removeClass("btn-primary");
 		$(this).addClass("btn-secondary");
+		$("table").addClass("table-striped");
 	}
 	else {
 		$(this).removeClass("btn-secondary");
 		$(this).addClass("btn-primary");
+		$("table").removeClass("table-striped");
 	}
 });
 

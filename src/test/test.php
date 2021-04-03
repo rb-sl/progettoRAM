@@ -11,16 +11,16 @@ show_premain("Test e valutazioni");
 <?php
 if($_SESSION['priv'] <= 2)
 {
-	echo "<div>";
+	echo "<div class='marginunder'>";
 	// An administrator or a professor with grants can add a new test
 	if($_SESSION['priv'] <= 1)
-		echo "<a href='./test_add.php' class='btn btn-primary btnmenu'>Aggiungi nuovo</a> ";
-	echo "<a href='./favourites_modify.php' class='btn btn-warning btnmenu'>Modifica preferiti</a>
+		echo "<a href='./test_add.php' class='btn btn-primary'>Aggiungi nuovo</a> ";
+	echo "<a href='./favourites_modify.php' class='btn btn-warning'>Modifica preferiti</a>
 		</div>";
 }
 ?>
 
-<table class="table table-striped marginunder">
+<table class="table table-light table-striped marginunder">
 	<tr><thead><th>Nome test</th></thead></tr>
 <?php
 $test_st = prepare_stmt("SELECT id_test, nometest, fk_test AS favourite FROM TEST
@@ -75,7 +75,7 @@ if($_SESSION['priv'] == 0)
 	<div id="cnv">
 	</div>
 
-	<table class="table table-striped marginunder">
+	<table class="table table-light table-striped marginunder">
     	<tr>
         	<th>Voto</th>
            	<th>Percentuale assegnata</th>
@@ -113,7 +113,7 @@ while($row = $ret->fetch_assoc())
         	<td class="err borderover">0</td><td class="err borderover">&rarr;</td><td class="err borderover sum"><?=$prev?></td>
     	</tr>
     </table>
-	<input type="submit" id="aggv" class="btn btn-warning btnmenu" value="Aggiorna tabella voti">
+	<input type="submit" id="aggv" class="btn btn-warning" value="Aggiorna tabella voti">
 </form>
 
 <script src="/test/js/test.js"></script>

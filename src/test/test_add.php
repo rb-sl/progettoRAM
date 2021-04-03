@@ -13,7 +13,7 @@ $unit_st = prepare_stmt("SELECT * FROM UNITA ORDER BY udm");
 
 <h2>Aggiungi nuovo test</h2>
 <form method="POST" action="./test_insert.php">
-	<table class="table table-striped">
+	<table class="table table-light table-striped">
     	<tr>
         	<td>Nome test:</td>
         	<td class="halfwidth"><input type="text" name="testname"></td>

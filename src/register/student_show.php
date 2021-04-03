@@ -29,17 +29,17 @@ show_premain("Dati di ".$stud['cogs']." ".$stud['noms']." (".$stud['sesso'].")")
 <h2>Prove di <?=$stud['cogs']?> <?=$stud['noms']?> (<?=$stud['sesso']?>)</h2>
 
 <div>
-	<a href="/register/student_modify.php?id=<?=$stud['id_stud']?>" class="btn btn-warning btnmenu marginunder">Modifica</a>
+	<a href="/register/student_modify.php?id=<?=$stud['id_stud']?>" class="btn btn-warning marginunder">Modifica</a>
 	<br>
-	<a href="student_show_stat.php?id=<?=$_GET['id']?>" class="btn btn-primary btnmenu">Elaborazione dati</a> 
+	<a href="student_show_stat.php?id=<?=$_GET['id']?>" class="btn btn-primary marginunder">Elaborazione dati</a> 
 </div>
 
 <div class="tdiv">
 	<div id="tos" class="inner">
-		<table id="tts" class="table table-striped">
+		<table id="tts" class="table table-light table-striped">
 			<tr id="thr" class="dat">
 				<td class="topleft topfix leftfix">
-					<button type="button" id="btnstat" class="btn btn-secondary overpad fullwidth">Medie e mediane</button>
+					<button type="button" id="btnstat" class="btn btn-secondary btnmenu overpad">Medie e mediane</button>
 				</td>
 <?php
 // Construction of table body

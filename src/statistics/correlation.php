@@ -18,10 +18,10 @@ $testlist = $testinfo['list'];
 <h3>Matrice di correlazione campionaria</h3>
 <div class="tdiv marginunder">
   	<div class="inner">
-		<table class="table table-striped">
+		<table class="table table-light table-striped">
 			<tr id="thr">
 				<th class="topleft leftfix topfix">
-					<button id="btncol" class="btn fullwidth overpad">Colori</button>
+					<button id="btncol" class="btn overpad btnmenu btn-secondary">Colori</button>
 				</th>
 
 <?php
@@ -50,8 +50,8 @@ foreach($test as $idcol => $namecol)
             	$cl = "";
         
 			// The matrix is built simmetrically
-        	$tab[$idrow][$idcol] = "<td id='m$idrow"."_$idcol' class='squaredat r_$idcol $cl gr' title='n=".$r['n']."'>".$r['r']."</td>";
-        	$tab[$idcol][$idrow] = "<td id='m$idcol"."_$idrow' class='squaredat r_$idrow $cl gr' title='n=".$r['n']."'>".$r['r']."</td>";
+        	$tab[$idrow][$idcol] = "<td id='m$idrow"."_$idcol' class='squaredat r_$idcol $cl gr' vcolor='".$r['color']."' title='n=".$r['n']."'>".$r['r']."</td>";
+        	$tab[$idcol][$idrow] = "<td id='m$idcol"."_$idrow' class='squaredat r_$idrow $cl gr' vcolor='".$r['color']."' title='n=".$r['n']."'>".$r['r']."</td>";
 		}
 
 	$i++;

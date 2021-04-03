@@ -16,7 +16,7 @@ $prof_st->close();
 <h2>Registro <?=$prof['cogp'] ? "di ".$prof['nomp']." ".$prof['cogp'] : "" ?></h2>
 
 <div>
-	<a href="/register/class_add.php" class="btn btn-primary btnmenu">Aggiungi classe</a>
+	<a href="/register/class_add.php" class="btn btn-primary marginunder">Aggiungi classe</a>
 
 <?php
 if($_SESSION['priv'] != 0)

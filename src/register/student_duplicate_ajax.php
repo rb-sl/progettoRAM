@@ -38,8 +38,13 @@ foreach($st as $k => $stud)
         $data[$k]['sesso'] = $gender;
 
     	while($row = $ret->fetch_assoc())
-        	$data[$k]['list'][] = "<input type='radio' name='ext[".$stud->cogs."_".$stud->noms."_".$stud->sesso."]' 
-				value='".$row['id_stud']."'> ".$row['classe'].$row['sez']." ".$row['anno']."/".($row['anno'] + 1);
+        	$data[$k]['list'][] = "<div class='form-check'>
+				<input type='radio' id='ext".$row['id_stud']."' class='form-check-input' name='ext[".$stud->cogs."_"
+				.$stud->noms."_".$stud->sesso."]' value='".$row['id_stud']."'>
+				<label class='form-check-label' for='ext".$row['id_stud']."'>"
+				.$row['classe'].$row['sez']." ".$row['anno']."/".($row['anno'] + 1)
+				."</label>
+			</div>";
 	}
 }
 $dup_st->close();

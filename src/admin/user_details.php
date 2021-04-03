@@ -26,7 +26,7 @@ show_premain("Profilo di ".$user['user']);
 
 <form action="user_update.php?id=<?=$_GET['id']?>" method="POST" class="tdiv">
     <div class="inner">
-        <table class="table table-striped marginunder">
+        <table class="table table-light table-striped marginunder">
             <tr>
                 <td class="col">Cognome</td>
                 <td class="col"><?=$user['cogp']?></td>

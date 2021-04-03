@@ -27,7 +27,7 @@ show_premain($test['nometest']);
 ?>
 <h2>Informazioni <?=$test['nometest']?></h2>
 
-<table class="table table-striped marginunder">
+<table class="table table-light table-striped marginunder">
 	<tr>
     	<td>Classe del test:</td>
     	<td class="halfwidth"><?=$test['nomec']?></td>
