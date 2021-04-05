@@ -52,13 +52,14 @@ if($_SESSION['priv'] <= 3)
 	// Only professors can change evaluation parameters and their favourites list
 	if($_SESSION['priv'] <= 2)
 		echo "<li><a href='#grades'>Modificare i parametri di valutazione</a></li>
-			<li><a href='#fav'>Cambiare la lista di test preferiti</a></li>";
+			<li><a href='#fav'>Modificare la lista di test preferiti</a></li>";
 	
 	echo "</ul>
     	<li><a href='#stat'>Statistica</a></li>
 		<ul class='nobul'>
-			<li><a href='#statt'>Statistiche per test</a></li>
-			<li><a href='#stata'>Statistiche avanzate</a></li>
+			<li><a href='#genstat'>Visualizzare statistiche generali</a></li>
+			<li><a href='#statt'>Visualizzare le statistiche dei test</a></li>
+			<li><a href='#correlation'>Studiare la correlazione dei test</a></li>
 		</ul>
 		<li><a href='#menustat'>Sottomenu statistico</a></li>
 		<li><a href='#graph'>Grafici</a></li>";
@@ -81,31 +82,34 @@ if($_SESSION['priv'] <= 3)
 if($_SESSION['priv'] == 0)
 	include "admin_guide.php";
 ?>
-  	
-	<h3 id="profile">Profilo</h3>
-	<p>
-		Una volta effettuato l'accesso è possibile cliccare sul proprio nome utente (in alto a sinistra), quindi 
-		<span class="warningcolor">Profilo</span>. Da questa pagina è possibile modificare:
-		<ul>
-			<li>Nome utente</li>
-			<li>Nome e cognome</li>
-			<li>E-mail</li>
-			<li>Scuola</li>
-			<li>Password</li>
-		</ul>
-	</p>
-	
-	<h3 id="info">Ulteriori informazioni e contatti</h3>
-	<p>
-		Il Progetto RAM (Ricerca Attivit&agrave; Motorie) è un'applicazione sviluppata nell'A.S. 
-		2016/2017 all'ITIS G. Fauser di Novara come progetto di maturità. È stata poi successivamente per migliorarne
-		l'usabilità e permettere calcoli statistici più efficaci ed efficienti.
-	</p>
-	<p>
-		Il codice sorgente dell'applicazione è <a href="https://github.com/rb-sl/progettoRAM">disponibile su Github</a>
-		insieme alla documentazione del progetto.
-	</p>
+  	<div class="section">
+		<h3 id="profile">Profilo</h3>
+		<p>
+			Una volta effettuato l'accesso è possibile cliccare sul proprio nome utente (in alto a sinistra), quindi 
+			<span class="warningcolor">Profilo</span>. Da questa pagina è possibile modificare:
+			<ul>
+				<li>Nome utente</li>
+				<li>Nome e cognome</li>
+				<li>E-mail</li>
+				<li>Scuola</li>
+				<li>Password</li>
+			</ul>
+		</p>
+	</div>
 
-	<h4>Contatti</h4>
+	<div class="section">
+		<h3 id="info">Ulteriori informazioni e contatti</h3>
+		<p>
+			Il Progetto RAM (Ricerca Attivit&agrave; Motorie) è un'applicazione sviluppata nell'A.S. 
+			2016/2017 all'ITIS G. Fauser di Novara come progetto di maturità. È stata poi successivamente integrata
+			per migliorarne l'usabilità e permettere calcoli statistici più efficaci ed efficienti.
+		</p>
+		<p>
+			Il codice sorgente dell'applicazione è <a href="https://github.com/rb-sl/progettoRAM">disponibile su Github</a>
+			insieme alla documentazione del progetto.
+		</p>
+
+		<h4>Contatti</h4>
+	</div>
 </div>
 <?php show_postmain(); ?>

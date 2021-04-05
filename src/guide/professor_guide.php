@@ -6,8 +6,11 @@ chk_access(2);
 <div id="regdiv" class="section">
     <h3 id="reg">Registro</h3>
 
-    <div class="bordermenu">
-        Questa sezione permette di:
+    <p>
+        La sezione di registro presenta una lista delle classi dell'utente e permette
+        di effettuare inserimenti di prove e elaborare i dati delle classi o degli
+        studenti.<br>
+        È possibile:
         <ul class="nobul">
             <li><a href="#addcl">Aggiungere una classe</a></li>
             <li><a href="#vcl">Visualizzare e modificare le prove di una classe</a></li>
@@ -16,7 +19,7 @@ chk_access(2);
             <li><a href="#visst">Visualizzare le prove di uno studente</a></li>
             <li><a href="#modst">Modificare le informazioni di uno studente</a></li>
         </ul>
-    </div>
+    </p>
 
     <h4 id="addcl">Aggiungere una classe</h4>
     <p>
@@ -106,7 +109,7 @@ chk_access(2);
         percentili, standard o voti delle prove.
     </p>
 	<p>
-        In questa pagina è presente un <a href="#graph">grafico</a> di tipo radar per visualizzare i risultati 
+        In questa pagina è presente un <a href="#radar">grafico di tipo radaro</a> per visualizzare i risultati 
         ottenuti per ogni classe; è possibile modificare il campione attraverso 
         <a href="#menustat">il menu statistico</a>.
     </p>

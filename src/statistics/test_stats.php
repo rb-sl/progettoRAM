@@ -20,18 +20,26 @@ $graph = graph_vals($_GET['id']);
 
 <h2>Statistiche <span id="nomet"><?=$test['nometest']?></span></h2>
 
-<table class='table table-light table-striped'>
+<table class="table table-light table-striped marginunder">
    	<tr><td>Numero totale di prove: <span id="n"><?=$data['n']?></span></td>
    	<tr><td>Media: <span id="avg"><?=number_format($data['avg'], 2)?></span> <?=$test['simbolo']?></td></tr>
 	<tr><td>Mediana: <span id="med"><?=number_format($data['med'], 2)?></span> <?=$test['simbolo']?></td></tr>
    	<tr><td>Deviazione Standard: <span id="std"><?=number_format($data['std'], 2)?></span> <?=$test['simbolo']?></td></tr>	
 </table>
 
-<h3 style="margin-bottom:0px">Record positivo: <span id="best"><?=$records['best']?></span> <?=$test['simbolo']?></h3>
+<h3 style="margin-bottom:0px">
+	Record positivo: 
+	<span id="best"><?=$records['best']?></span> 
+	<?=$test['simbolo']?>
+</h3>
 
 <?=$records['list']?>
 
-<h3>Record negativo: <span id="worst"><?=$records['worst']?></span> <?=$test['simbolo']?></h3>
+<h3 class="section">
+	Record negativo: 
+	<span id="worst"><?=$records['worst']?></span>
+	<?=$test['simbolo']?>
+</h3>
 
 <h3>
 	Grafico: 
@@ -52,12 +60,9 @@ $graph = graph_vals($_GET['id']);
 <script src="/statistics/js/test_stats.js"></script>
 <script>
 var id  = <?=$_GET['id']?>;
-var vals = [
-<?php
-foreach($graph['vals'] as $val)
-	echo "$val,";
-?>];
+var vals = <?=json_encode($graph['vals']);?>;
    			
 draw_graph_val(vals);  
 </script>
+
 <?php show_postmain(); ?>
