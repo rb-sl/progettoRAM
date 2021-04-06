@@ -1,6 +1,6 @@
 <?php
 // Guide for the statistics section, to be included in guide.php
-chk_access(3);
+chk_access(RESEARCH);
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 ?>
 

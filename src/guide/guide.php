@@ -1,7 +1,7 @@
 <?php
 // Main guide page, includes elements depending on the user's state
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(5);
+chk_access();
 connect();
 show_premain("Manuale");
 ?>
@@ -28,58 +28,70 @@ show_premain("Manuale");
 	<ul class="nobul bordermenu section">
 <?php
 // Professor-related functions
-if($_SESSION['priv'] <= 2)
-	echo "<li><a href='#reg'>Registro</a></li>
-		<ul class='nobul'>
-			<li><a href='#addcl'>Aggiungere una classe</a></li>
-			<li><a href='#vcl'>Visualizzare e modificare le prove di una classe</a></li>
-			<li><a href='#stcl'>Elaborare i dati della classe</a></li>
-			<li><a href='#modcl'>Modificare le informazioni di una classe</a></li>
-			<li><a href='#visst'>Visualizzare le prove di uno studente</a></li>
-			<li><a href='#modst'>Modificare le informazioni di uno studente</a></li>
-		</ul>";
-
-// A statistical access can visualize types of tests and the statistical section
-if($_SESSION['priv'] <= 3)
+if($_SESSION['priv'] <= PROFESSOR)
 {
-	echo "<li><a href='#test'>Test e valutazioni</a></li>
-		<ul class='nobul'>
-			<li><a href='#vtest'>Visualizzare le informazioni dei test</a></li>";
-	
-	// Test modifications is reserved to admins or professors with grants
-	if($_SESSION['priv'] <= 1)
-    	echo "<li><a href='#modtst'>Aggiungere e modificare test</a></li>";
-	// Only professors can change evaluation parameters and their favourites list
-	if($_SESSION['priv'] <= 2)
-		echo "<li><a href='#grades'>Modificare i parametri di valutazione</a></li>
-			<li><a href='#fav'>Modificare la lista di test preferiti</a></li>";
-	
-	echo "</ul>
-    	<li><a href='#stat'>Statistica</a></li>
-		<ul class='nobul'>
-			<li><a href='#genstat'>Visualizzare statistiche generali</a></li>
-			<li><a href='#statt'>Visualizzare le statistiche dei test</a></li>
-			<li><a href='#correlation'>Studiare la correlazione dei test</a></li>
+?>
+		<li><a href="#reg">Registro</a></li>
+		<ul class="nobul">
+			<li><a href="#addcl">Aggiungere una classe</a></li>
+			<li><a href="#vcl">Visualizzare e modificare le prove di una classe</a></li>
+			<li><a href="#stcl">Elaborare i dati della classe</a></li>
+			<li><a href="#modcl">Modificare le informazioni di una classe</a></li>
+			<li><a href="#visst">Visualizzare le prove di uno studente</a></li>
+			<li><a href="#modst">Modificare le informazioni di uno studente</a></li>
 		</ul>
-		<li><a href='#menustat'>Sottomenu statistico</a></li>
-		<li><a href='#graph'>Grafici</a></li>";
+<?php	
+}
+// A statistical access can visualize types of tests and the statistical section
+if($_SESSION['priv'] <= RESEARCH)
+{
+?>
+		<li><a href="#test">Test e valutazioni</a></li>
+		<ul class="nobul">
+			<li><a href="#vtest">Visualizzare le informazioni dei test</a></li>
+<?php
+	// Test modifications is reserved to admins or professors with grants
+	if($_SESSION['priv'] <= PROFESSOR_GRANTS)
+	{
+?>
+    		<li><a href="#modtst">Aggiungere e modificare test</a></li>
+<?php
+	}
+	// Only professors can change evaluation parameters and their favourites list
+	if($_SESSION['priv'] <= PROFESSOR)
+	{
+?>
+			<li><a href="#grades">Modificare i parametri di valutazione</a></li>
+			<li><a href="#fav">Modificare la lista di test preferiti</a></li>
+<?php
+	}
+?>
+		</ul>
+    	<li><a href="#stat">Statistica</a></li>
+		<ul class="nobul">
+			<li><a href="#genstat">Visualizzare statistiche generali</a></li>
+			<li><a href="#statt">Visualizzare le statistiche dei test</a></li>
+			<li><a href="#correlation">Studiare la correlazione dei test</a></li>
+		</ul>
+		<li><a href="#menustat">Sottomenu statistico</a></li>
+		<li><a href="#graph">Grafici</a></li>
+<?php
 }
 ?>
 		<li><a href="#profile">Profilo</a></li>
 		<li><a href="#info">Ulteriori informazioni e contatti</a></li>
 	</ul>
-
 <?php
-if($_SESSION['priv'] <= 2)
+if($_SESSION['priv'] <= PROFESSOR)
 	include "professor_guide.php";
 
-if($_SESSION['priv'] <= 3)
+if($_SESSION['priv'] <= RESEARCH)
 {
 	include "test_guide.php";
 	include "stat_guide.php";
 }
 
-if($_SESSION['priv'] == 0)
+if($_SESSION['priv'] == ADMINISTRATOR)
 	include "admin_guide.php";
 ?>
   	<div class="section">

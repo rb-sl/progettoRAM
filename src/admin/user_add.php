@@ -1,7 +1,8 @@
 <?php
 // Front end form to add a new user
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(0);
+include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_admin.php";
+chk_access(ADMINISTRATOR);
 connect();
 show_premain();
 ?>
@@ -50,10 +51,11 @@ while($row = $ret->fetch_assoc())
 			<td>
 				<select name="priv" class="form-control marginunder" required>
 					<option selected disabled></option>
-					<option value="0">Amministratore</option>
-					<option value="1">Professore (modifica test)</option>
-					<option value="2">Professore</option>
-					<option value="3">Ricerca</option>
+					<option value="<?=ADMINISTRATOR?>">Amministratore</option>
+					<option value="<?=PROFESSOR_GRANTS?>">Professore (modifica test)</option>
+					<option value="<?=PROFESSOR?>">Professore</option>
+					<option value="<?=RESEARCH?>">Ricerca</option>
+					<option value="<?=NONE?>">Nessuno</option>
 				</select>
 			</td>			
   	</table>

@@ -25,10 +25,10 @@ if($ret->num_rows != 0)
 	writelog("Accesso");
 
 	if($row['lastpsw'] === null)
-		$_SESSION['err'] = 5;
+		set_error(FIRST_ACCESS);
 	
 	// Redirects based on the user's status
-	if($row['priv'] > 2)
+	if($row['priv'] > PROFESSOR)
 		header("Location: /");
 	else
 		header("Location: /register/register.php");
@@ -36,7 +36,7 @@ if($ret->num_rows != 0)
 }
 
 // If no user is found an error is shown
-$_SESSION['err'] = 2;
+set_error(WRONG_LOGIN);
 header("Location: /");
 exit;
 ?>

@@ -46,7 +46,8 @@ function buildCondFromMenu() {
 // execution is stopped and a message is shown to the user
 function checkYears() {
 	if(!$.isNumeric($("#y1").val()) || !$.isNumeric($("#y2").val()) 
-            || !(parseInt($("#y1").val()) <= parseInt($("#y2").val()))) {
+            || !(parseInt($("#y1").val()) <= parseInt($("#y2").val()))
+            || !($("#y1").val().length == 4 && $("#y2").val().length == 4)) {
         	alert("Anni inseriti non validi");
         	return false;
         }

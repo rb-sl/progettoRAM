@@ -11,6 +11,10 @@ $(".splog").click(function() {
 		data: "f=" + $(this).text(),
 		dataType: "json",                
 		success: function(data) {
+			if(data === null) {
+				window.location.reload();
+			}
+			
 			$("#txt").text(data);
 		},
 		error: function() {
@@ -31,6 +35,10 @@ $("#del").click(function() {
 		data: "f=" + $("#" + selected).text(),
 		dataType: "json",                
 		success: function(data) {
+			if(data === null) {
+				window.location.reload();
+			}
+
 			$("#" + selected).remove();
 			$("#txt").text("");
 			$("#del").attr("disabled", true);

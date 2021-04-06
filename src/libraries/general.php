@@ -17,6 +17,21 @@ const JQUERY_UI_CSS_PATH = "/libraries/ui/jquery-ui/jquery-ui.min.css";
 
 const PLOTLY_PATH = "/libraries/plotly.min.js";
 
+// Constants for access control
+// They must reflect those in the database
+const ADMINISTRATOR = 0;
+const PROFESSOR_GRANTS = 1;
+const PROFESSOR = 2;
+const RESEARCH = 3;
+const NONE = 5;
+
+// Constants for errors
+const NEED_LOGIN = 0;
+const WRONG_LOGIN = 1;
+const UNAUTHORIZED = 2;
+const LOGIN_DISABLED = 3;
+const FIRST_ACCESS = 4;
+
 // Debugging function, activated by the get
 function errors()
 {
@@ -35,28 +50,36 @@ function writelog($action)
 		FILE_APPEND);
 }
 
-// Access and privilege control; the levels are
-// 0 -> Administrator
-// 1 -> Professor with grants to modify tests
-// 2 -> Normal professor
-// 3 -> Statistical access
-function chk_access($priv = 5)
+// Access and privilege control, if needed stops
+// the loading of the page
+function chk_access($priv = NONE, $kill = true)
 {
+	// If an error is already set it is not overwritten
 	if(!isset($_SESSION['err']) or $_SESSION['err'] == "")
 	{
 		if(!isset($_SESSION['user']))
-		{
-			$_SESSION['err'] = 1;
-			header('Location: /');
-			exit;
-		}
-		if(!isset($_SESSION['priv']) or $_SESSION['priv'] > $priv)
-		{
-			$_SESSION['err'] = 3;
-			header('Location: /');
-			exit;
-		}
+			set_error(NEED_LOGIN);
+		else if(!isset($_SESSION['priv']) or $_SESSION['priv'] > $priv)
+			set_error(UNAUTHORIZED);
+		else
+			return true;
+		
+		// If an error was discovered actions are
+		// taken based on the parameter
+		if(!$kill)
+			return false;
+
+		header('Location: /');
+		exit;
 	}
+
+	return true;
+}
+
+// Function to add an error to the session
+function set_error($error)
+{
+	$_SESSION['err'] = $error;
 }
 
 // Checks if the user can access the class's register page 
@@ -163,180 +186,199 @@ function query_error($stage, $query)
 function show_premain($title = "", $stat = false, $fullwidth = false)
 {
 	if($title != "")
-		$title .= " -";
-
-	echo "<!DOCTYPE html> 
+		$title .= " - ";
+?>
+<!DOCTYPE html> 
 <html> 
 	<head> 
-    	<meta charset='utf-8'>
-	    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    	<meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<!-- jQuery and jQuery UI -->
-        <script src='".JQUERY_PATH."'></script>
-        <script src='".JQUERY_UI_JS_PATH."'></script>
-        <link rel='stylesheet' href='".JQUERY_UI_CSS_PATH."'>
-		<script src='".FITTY_PATH."'></script>
+        <script src="<?=JQUERY_PATH?>"></script>
+        <script src="<?=JQUERY_UI_JS_PATH?>"></script>
+        <link rel="stylesheet" href="<?=JQUERY_UI_CSS_PATH?>">
+		<script src="<?=FITTY_PATH?>"></script>
 
 		<!-- Bootstrap and custom graphical elements -->
-        <link rel='stylesheet' href='".BOOTSTRAP_CSS_PATH."'>
-    	<script src='".BOOTSTRAP_JS_PATH."'></script>
+        <link rel="stylesheet" href="<?=BOOTSTRAP_CSS_PATH?>">
+    	<script src="<?=BOOTSTRAP_JS_PATH?>"></script>
         
-        <link rel='stylesheet' href='/libraries/ui/custom.css' type='text/css' media='all'> 
+        <link rel="stylesheet" href="/libraries/ui/custom.css" type="text/css" media="all"> 
                 
 		<!-- Graph and custom scripts -->
-        <script src='".PLOTLY_PATH."'></script>
-		".($stat ? "<script src='/libraries/stat_menu.js'></script>" : "")."
-		<title>$title Progetto RAM</title>
+        <script src="<?=PLOTLY_PATH?>"></script>
+<?php 
+	if($stat)
+	{
+?>
+		<script src="/libraries/stat_menu.js"></script>
+<?php
+	}
+?>
+		<title><?=$title?>Progetto RAM</title>
 	</head> 
   	
     <body> 
-  		<div id='wrapper'>
-		  	<div class='navcontainer'>
-				<nav id='nav1' class='navbar-expand-lg navbar navbar-dark bg-dark big-topfix'>
-					<div class='container-fluid'>
-						<a class='navbar-brand' href='/'>Progetto RAM</a>
-						<button type='button' class='navbar-toggler' data-bs-toggle='collapse' data-bs-target='#myNavbar' aria-controls='#myNavbar' aria-expanded='false' aria-label='Toggle navigation'>
-							<span class='navbar-toggler-icon'></span>
+  		<div id="wrapper">
+		  	<div class="navcontainer">
+				<nav id="nav1" class="navbar-expand-lg navbar navbar-dark bg-dark big-topfix">
+					<div class="container-fluid">
+						<a class="navbar-brand" href="/">Progetto RAM</a>
+						<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#myNavbar" aria-controls="#myNavbar" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
 						</button>
 
-						<div class='collapse navbar-collapse' id='myNavbar'>
-							<ul class='navbar-nav me-auto mb-2 mb-lg-0'>
-								<li class='nav-item'><a href='/project.php' class='nav-link'>Il progetto</a></li>
-								<li class='nav-item'><a href='/register/register.php' class='nav-link'>Registro</a></li>
-								<li class='nav-item'><a href='/test/test.php' class='nav-link'>Test e valutazioni</a></li>
-								<li class='nav-item'><a href='/statistics/statistics.php' class='nav-link'>Statistica</a></li>
-								<li class='nav-item'><a href='/guide/guide.php' class='nav-link'>Manuale</a></li>
+						<div class="collapse navbar-collapse" id="myNavbar">
+							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+								<li class="nav-item"><a href="/project.php" class="nav-link">Il progetto</a></li>
+								<li class="nav-item"><a href="/register/register.php" class="nav-link">Registro</a></li>
+								<li class="nav-item"><a href="/test/test.php" class="nav-link">Test e valutazioni</a></li>
+								<li class="nav-item"><a href="/statistics/statistics.php" class="nav-link">Statistica</a></li>
+								<li class="nav-item"><a href="/guide/guide.php" class="nav-link">Manuale</a></li>
 							</ul>
 							
 							<!-- Login -->
-							<ul class='navbar-nav ms-auto' aria-labelledby='navbarDropdown'>	
-								<li class='nav-item dropdown'>
-									<a id='logindropdown' href='#' class='dropdown-toggle nav-link' role='button' data-bs-toggle='dropdown' aria-expanded='false'> ".(isset($_SESSION['user']) ? $_SESSION['user'] : "Login")." <span class='caret'></span></a>
+							<ul class="navbar-nav ms-auto" aria-labelledby="navbarDropdown">	
+								<li class="nav-item dropdown">
+									<a id="logindropdown" href="#" class="dropdown-toggle nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false"> 
+										<?=(isset($_SESSION["user"]) ? $_SESSION["user"] : "Login")?> <span class="caret"></span>
+									</a>
 			
-									<ul id='login-dp' class='dropdown-menu dropdown-menu-end' aria-labelledby='logindropdown'>";
-	if(!isset($_SESSION['user']))
-		echo "<li>
-				<form class='form' role='form' method='POST' action='/user/login.php' accept-charset='UTF-8' id='login-nav'>
-					<div class='form-group'>
-	  					<input type='text' class='form-control' name='usr' placeholder='Username' required>
-					</div>
-					<div class='form-group'>
-	  					<input type='password' class='form-control' name='psw' placeholder='Password' required>
-					</div>
-					<div class='form-group'>
-	  					<button type='submit' class='btn btn-warning'>Accedi</button>
-					</div>
-  				</form>
-			</li>"; 
+									<ul id="login-dp" class="dropdown-menu dropdown-menu-end" aria-labelledby="logindropdown">
+<?php
+	if(!isset($_SESSION['user'])) 
+	{
+?>										
+										<li>
+											<form class="form" role="form" method="POST" action="/user/login.php" accept-charset="UTF-8" id="login-nav">
+												<div class="form-group">
+													<input type="text" class="form-control" name="usr" placeholder="Username" required>
+												</div>
+												<div class="form-group">
+													<input type="password" class="form-control" name="psw" placeholder="Password" required>
+												</div>
+												<div class="form-group">
+													<button type="submit" class="btn btn-warning">Accedi</button>
+												</div>
+											</form>
+										</li>
+<?php 
+	} 
 	else
-	{ 
-  		echo "<li>
-      			<a href='/user/profile.php' class='btn btn-warning'>Profilo</a>
-    		</li>";
-
-  		if($_SESSION['priv'] == 0)
-    		echo "<div class='form-group'>
-      			<a href='/admin/admin.php' class='btn btn-warning'>Amministrazione</a>
-    		</div>";
-
-  		echo "<div class='form-group'>
-    		<a href='/user/logout.php' class='btn btn-warning'>Log Out</a>
-  		</div>"; 
+	{
+?> 
+  										<li>
+      										<a href="/user/profile.php" class="btn btn-warning">Profilo</a>
+<?php
+		if($_SESSION["priv"] == ADMINISTRATOR)
+		{
+?> 
+											<div class="form-group">
+												<a href="/admin/admin.php" class="btn btn-warning">Amministrazione</a>
+											</div>
+<?php
+		}
+?>
+  											<div class="form-group">
+												<a href="/user/logout.php" class="btn btn-warning">Log Out</a>
+											</div>						
+										</li>
+<?php
 	}
-	
-	echo "							
-							</li>
-						</ul>
-       				 </li>
-      			</ul> <!-- End of login -->
-    		</div>
-  		</div>
-	</nav>";
-	
+?>
+									</ul>
+								</li>
+							</ul> <!-- End of login -->
+						</div>
+					</div>
+				</nav>
+<?php
 	if($stat)
-    {
-    	$margin = "statwide";
+	{
+		$margin = "statwide";
 		$years = year_span();
-		
-        echo "<nav id='nav2' class='navbar-expand-lg navbar navbar-dark bg-dark big-topfix'>
-		<div class='container-fluid'>
-			<span id='statmenu' class='navbar-brand'>Menu statistico</span>
-			<button type='button' class='navbar-toggler' data-bs-toggle='collapse' data-bs-target='#myNavbar2' aria-controls='#myNavbar2' aria-expanded='false' aria-label='Toggle navigation'>
-				<span class='navbar-toggler-icon'></span>                      
-			</button>
+?>
+				<nav id="nav2" class="navbar-expand-lg navbar navbar-dark bg-dark big-topfix">
+					<div class="container-fluid">
+						<span id="statmenu" class="navbar-brand">Menu statistico</span>
+						<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#myNavbar2" aria-controls="#myNavbar2" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>                      
+						</button>
 
-			<div class='collapse navbar-collapse' id='myNavbar2'>
-				<ul class='navbar-nav me-auto mb-2 mb-lg-0'>
-					<li class='li-stat nav-item'>Anni da 
-                    	<input type='text' id='y1' class='menuyear' name='y1' value='".$years['y1']."' required>
-                        /
-                        <span id='flwy1'>".($years['y1'] + 1)."</span>
-						a 
-                        <input type='text' id='y2' class='menuyear' name='y2' value='".$years['y2']."' size='4' required>
-                        /
-                        <span id='flwy2'>".($years['y2'] + 1)."</span>
-                    </li>
-					<li class='li-stat nav-item'>
-                    	Classi:
-                        <button id='c1' class='btn btn-primary overpad stat' value='on'>1</button>
-                        <button id='c2' class='btn btn-primary overpad stat' value='on'>2</button>
-                        <button id='c3' class='btn btn-primary overpad stat' value='on'>3</button>
-                        <button id='c4' class='btn btn-primary overpad stat' value='on'>4</button>
-                        <button id='c5' class='btn btn-primary overpad stat' value='on'>5</button>
-                    </li>
-					<li class='li-stat nav-item'>
-                    	Sesso:
-                        	<button id='m' class='btn btn-primary overpad stat' value='on'>M</button>
-                        	<button id='f' class='btn btn-primary overpad stat' value='on'>F</button>      
-                    </li>
-					<li class='li-stat nav-item'>
-                    	<button id='rstr' class='btn btn-secondary overpad stat' value='off'>Solo personali</button>
-                    </li>
-                    <li class='li-stat'>
-                    	<button id='update' class='btn btn-primary overpad'>Aggiorna</button>
-                    </li>
-      			</ul>
-            </div>
-        </div>    
-    </nav>";
-    }
+						<div class="collapse navbar-collapse" id="myNavbar2">
+							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+								<li class="li-stat nav-item">Anni da 
+									<input type="text" id="y1" class="menuyear" name="y1" value="<?=$years["y1"]?>" size="4" required>
+									/
+									<span id="flwy1"><?=($years["y1"] + 1)?></span>
+									a 
+									<input type="text" id="y2" class="menuyear" name="y2" value="<?=$years["y2"]?>" size="4" required>
+									/
+									<span id="flwy2"><?=($years["y2"] + 1)?></span>
+								</li>
+								<li class="li-stat nav-item">
+									Classi:
+									<button id="c1" class="btn btn-primary overpad stat" value="on">1</button>
+									<button id="c2" class="btn btn-primary overpad stat" value="on">2</button>
+									<button id="c3" class="btn btn-primary overpad stat" value="on">3</button>
+									<button id="c4" class="btn btn-primary overpad stat" value="on">4</button>
+									<button id="c5" class="btn btn-primary overpad stat" value="on">5</button>
+								</li>
+								<li class="li-stat nav-item">
+									Sesso:
+										<button id="m" class="btn btn-primary overpad stat" value="on">M</button>
+										<button id="f" class="btn btn-primary overpad stat" value="on">F</button>      
+								</li>
+								<li class="li-stat nav-item">
+									<button id="rstr" class="btn btn-secondary overpad stat" value="off">Solo personali</button>
+								</li>
+								<li class="li-stat">
+									<button id="update" class="btn btn-primary overpad">Aggiorna</button>
+								</li>
+							</ul>
+						</div>
+					</div>    
+				</nav>
+			</div>
+<?php
+	}
 	else
 		$margin = "nostatwide";
-	
+
 	if($fullwidth)
 		$widthcl = "mainfullwidth";
 	else
 		$widthcl = "";
-
-	echo "</div>
-		<main class='$margin $widthcl'>";
-	
+?>
+			<main class="<?=$margin." ".$widthcl?>">
+<?php
 	// Prints errors and stops the loading of the page
-	if(isset($_SESSION['err']) and $_SESSION['err'] != "")
-		if($_SESSION['err'] != 5 or basename($_SERVER['PHP_SELF']) != "profile.php")
+	if(isset($_SESSION['err']) and $_SESSION['err'] != ""
+		and ($_SESSION['err'] != FIRST_ACCESS or basename($_SERVER['PHP_SELF']) != "profile.php"))
 		{
-  			echo "<h3 class='dangercolor'>Accesso negato</h3>";
+			echo "<h3 class='dangercolor'>Accesso negato</h3>";
 			switch($_SESSION['err'])
 			{
-				case 1:
+				case NEED_LOGIN:
 					echo "<h4>Effettuare il login</h4>";
 					$_SESSION['err'] = "";
 					break;
-				case 2:
+				case WRONG_LOGIN:
 					echo "<h4>Login errato</h4>";
 					$_SESSION['err'] = "";
 					break;
-				case 3:
+				case UNAUTHORIZED:
 					echo "<h4>Utente non autorizzato</h4>";
 					$_SESSION['err'] = "";
 					break;
-				case 4:
+				case LOGIN_DISABLED:
 					echo "<h4>Login disabilitato</h4>";
 					$_SESSION['err'] = "";
 					break;
-				case 5:
+				case FIRST_ACCESS:
 					echo "<h4>Primo accesso: <a href='/user/profile.php'>modificare la password</a></h4>";
-					break;	
+					break;
 				default:
 					break;
 			}
@@ -352,16 +394,27 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 // Shows the final static elements 
 function show_postmain()
 {
-	global $mysqli;
+?>
+				<div id="dialog"></div>
+			</main>
+		</div>
+		<footer>
+			<div id="container">
+				&nbsp;ITIS Fauser Novara - 2017
+			</div>
+		</footer>
+<?php
 	if(isset($_SESSION['alert']) and $_SESSION['alert'] != "")
 	{
-		echo "<script>
-    		$(function(){
-    			$(document).ready(function(){
-    				alert(\"".addslashes($_SESSION['alert'])."\");
+?>
+		<script>
+    		$(function() {
+    			$(document).ready(function() {
+    				alert("<?=addslashes($_SESSION['alert'])?>");
   				});
   	  		});
-		</script>";
+		</script>
+<?php
     	$_SESSION['alert'] = "";
 	}
 
@@ -370,15 +423,9 @@ function show_postmain()
     	echo "<h3>".$_SESSION['msg']."</h3>";
     	$_SESSION['msg'] = "";
 	}
-	
-	echo "			<div id='dialog'></div>
-				</main>
-			</div>
-		<footer>
-			<div id='container'>
-				&nbsp;ITIS Fauser Novara - 2017
-			</div>
-		</footer>
+?>
 	</body> 
-</html>";
+</html>
+<?php
 }
+?>

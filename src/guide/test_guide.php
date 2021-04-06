@@ -105,7 +105,10 @@ while($row = $tstt->fetch_assoc())
         </ul>
         Queste informazioni sono facoltative (eccetto la valutazione).
     </p>
-
+<?php
+if($_SESSION['priv'] <= 2)
+{
+?>
     <h4 id="modtst">Aggiungere e modificare test</h4>
     <p>
         Per creare un nuovo test accedere alla sezione Test e Valutazioni e premere su 
@@ -150,4 +153,7 @@ while($row = $tstt->fetch_assoc())
     <p>
         Per riabilitare un test è sufficiente riattivare la sua casella e salvare.
     </p>
+<?php
+}
+?>
 </div>

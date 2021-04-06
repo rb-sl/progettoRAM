@@ -2,7 +2,7 @@
 // Backend script to update a user's permissions
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_admin.php";
-chk_access(0);
+chk_access(ADMINISTRATOR);
 connect();
 
 $chk_st = prepare_stmt("SELECT priv FROM PROFESSORI WHERE id_prof=?");

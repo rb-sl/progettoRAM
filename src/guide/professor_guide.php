@@ -1,6 +1,6 @@
 <?php
 // Guide for professors, to be included in guide.php, if needed
-chk_access(2);
+chk_access(PROFESSOR);
 ?>
 
 <div id="regdiv" class="section">

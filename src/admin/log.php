@@ -1,7 +1,7 @@
 <?php
 // Front end page to show the application's logs
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(0);
+chk_access(ADMINISTRATOR);
 connect();
 show_premain("Log dell'applicazione");
 ?>

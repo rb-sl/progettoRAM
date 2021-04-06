@@ -2,7 +2,7 @@
 // Page to display and manage users
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_admin.php";
-chk_access(0);
+chk_access(ADMINISTRATOR);
 connect();
 
 show_premain("Gestione utenti");

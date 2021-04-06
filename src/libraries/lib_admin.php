@@ -7,23 +7,23 @@ function get_privilege($priv)
 {
 	switch($priv)
     {
-        case 0: 
+        case ADMINISTRATOR: 
             $ret['text'] = "Amministratore";
             $ret['color'] = "primarybg";
             break;
-        case 1: 
+        case PROFESSOR_GRANTS: 
             $ret['text'] = "Professore (modifica test)";
             $ret['color'] = "infobg";
             break;
-        case 2: 
+        case PROFESSOR: 
             $ret['text'] = "Professore";
             $ret['color'] = "successbg";
             break;
-        case 3: 
+        case RESEARCH: 
             $ret['text'] = "Ricerca";
             $ret['color'] = "warningbg";
             break;
-        case 5:
+        case NONE:
 			$ret['text'] = "Nessuno";
             $ret['color'] = "dangerbg";
             break;

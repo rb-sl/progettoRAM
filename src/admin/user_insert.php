@@ -1,7 +1,7 @@
 <?php
 // Backend script to add a new user
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(0);
+chk_access(ADMINISTRATOR);
 connect();
 
 $in_st = prepare_stmt("INSERT INTO PROFESSORI(user, psw, priv, granted_by, nomp, cogp, email, fk_scuola) 

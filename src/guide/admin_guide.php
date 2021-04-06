@@ -1,6 +1,6 @@
 <?php
 // Administrative guide, to be included in guide.php
-chk_access(0); 
+chk_access(ADMINISTRATOR); 
 ?>
 
 <div id="admindiv" class="section">

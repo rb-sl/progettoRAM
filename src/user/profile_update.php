@@ -27,7 +27,7 @@ if(!empty($_POST['psw']))
 	$up_st = prepare_stmt("UPDATE PROFESSORI SET user=?, nomp=?, cogp=?, email=?, fk_scuola=?, psw=MD5(?), lastpsw=CURDATE() WHERE id_prof=?");
 	$up_st->bind_param("ssssssi", $_POST['usr'], $_POST['nomp'], $_POST['cogp'], $_POST['email'], $_POST['school'], $_POST['psw'], $_SESSION['id']);
   	
-	if($_SESSION['err'] == 5)
+	if($_SESSION['err'] == FIRST_ACCESS)
 	{
 		$_SESSION['err'] = "";
 		$_SESSION['alert'] = "Primo accesso completato: ora l'applicazione è attivata";

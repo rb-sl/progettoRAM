@@ -50,7 +50,7 @@ show_premain("Profilo di ".$user['user']);
 <?php
 // Options to change the privilege level are shown only in 
 // upgrade if the user is not the original granter
-$end = $dg ? 5 : $user['priv'];
+$end = $dg ? NONE : $user['priv'];
 for($i = 0; $i <= $end; $i++)
 {
     $priv = get_privilege($i);
