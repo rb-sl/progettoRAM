@@ -434,6 +434,9 @@ td, th {
 	max-width: 90%;
 	font-size: 18px;
 }
+.textwall h3 {
+	margin-top: 15px;
+}
 .textwall h4 {
 	margin-top: 15px;
 	margin-bottom: 0px;
@@ -517,6 +520,13 @@ input[type="number"] {
 }
 .flexform {
 	flex-direction: column;
+}
+.bigtextarea {
+	padding: 10px;
+	border-radius: 4px;
+	width: 100%;
+	height: 90vh;
+	resize: none;
 }
 
 /* -------------------

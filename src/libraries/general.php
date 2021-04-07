@@ -340,7 +340,6 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 						</div>
 					</div>    
 				</nav>
-			</div>
 <?php
 	}
 	else
@@ -351,6 +350,7 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 	else
 		$widthcl = "";
 ?>
+			</div>
 			<main class="<?=$margin." ".$widthcl?>">
 <?php
 	// Prints errors and stops the loading of the page
@@ -395,7 +395,7 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 function show_postmain()
 {
 ?>
-				<div id="dialog"></div>
+				
 			</main>
 		</div>
 		<footer>
@@ -416,12 +416,6 @@ function show_postmain()
 		</script>
 <?php
     	$_SESSION['alert'] = "";
-	}
-
-	if(isset($_SESSION['msg']) and $_SESSION['msg'] != "")
-	{
-    	echo "<h3>".$_SESSION['msg']."</h3>";
-    	$_SESSION['msg'] = "";
 	}
 ?>
 	</body> 
