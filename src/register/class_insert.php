@@ -3,13 +3,15 @@
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
-chk_access(2);
+chk_access(PROFESSOR);
 connect();
 
 $section = strtoupper($_POST['sez']);
 
 // Check of class uniqueness per year and school
-$chk_st = prepare_stmt("SELECT * FROM CLASSI JOIN SCUOLE ON fk_scuola=id_scuola WHERE classe=? AND sez=? AND anno=? AND fk_scuola=?");
+$chk_st = prepare_stmt("SELECT * FROM CLASSI 
+	JOIN SCUOLE ON fk_scuola=id_scuola 
+	WHERE classe=? AND sez=? AND anno=? AND fk_scuola=?");
 $chk_st->bind_param("isii", $_POST['cl'], $section, $_POST['anno'], $_SESSION['scuola']);
 $chk = execute_stmt($chk_st);
 $chk_st->close();

@@ -26,9 +26,9 @@ $unit_st->close();
         <ul class="nobul">
             <li><a href="#vtest">Visualizzare le informazioni dei test</a></li>
 <?php
-if($_SESSION['priv'] <= 1)
+if($_SESSION['priv'] <= PROFESSOR_GRANTS)
     echo "<li><a href='#modtst'>Aggiungere e modificare test</a></li>";
-if($_SESSION['priv'] <= 2)
+if($_SESSION['priv'] <= PROFESSOR)
     echo "<li><a href='#grades'>Modificare i parametri di valutazione</a></li>
         <li><a href='#fav'>Modificare la lista di test preferiti</a></li>";
 ?>
@@ -106,7 +106,7 @@ while($row = $tstt->fetch_assoc())
         Queste informazioni sono facoltative (eccetto la valutazione).
     </p>
 <?php
-if($_SESSION['priv'] <= 2)
+if($_SESSION['priv'] <= PROFESSOR)
 {
 ?>
     <h4 id="modtst">Aggiungere e modificare test</h4>

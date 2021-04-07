@@ -2,7 +2,7 @@
 // Frontend page to display ststistical correlation between tests
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
-chk_access(3);
+chk_access(RESEARCH);
 connect();
 show_premain("Correlazione dei test", true, true);
 

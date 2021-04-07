@@ -25,6 +25,10 @@ function getData() {
         dataType: "json",   
         async: false,
         success: function(data)	{
+            if(data === null) {
+				window.location.reload();
+			}
+
             // Data is updated only if some returned,
             // otherwise all is invalidated
             if(parseInt(data.n) > 0) {

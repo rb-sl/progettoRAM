@@ -1,7 +1,7 @@
 <?php
 // Page used to display and modify a user's favourite tests
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(2);
+chk_access(PROFESSOR);
 connect();
 show_premain("Modifica test preferiti");
 ?>

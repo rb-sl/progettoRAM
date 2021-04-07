@@ -1,11 +1,11 @@
 <?php 
 // Form page to change a student's information
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(2);
+chk_access(PROFESSOR);
 connect();
 show_premain("Modifica Studente");
 
-if($_SESSION['priv'] > 0)
+if($_SESSION['priv'] > ADMINISTRATOR)
 {
 	$stud_st = prepare_stmt("SELECT * FROM STUDENTI 
 		JOIN ISTANZE ON fk_stud=id_stud

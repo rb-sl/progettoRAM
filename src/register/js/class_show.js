@@ -8,12 +8,18 @@ $("#btnadd").click(function() {
 		data: "id=" + id,
 		dataType: "json",
 		success: function(data) {
+			if(data === null) {
+				window.location.reload();
+			}
+			
 			// Adds the select with the possible tests
-			$("#thr").append("<td class='new col topfix testadd'>"
+			var select = "<td class='new col topfix testadd'>"
 				+ "	<select id='test' name='test' class='form-control' required>"
-				+ "		<option selected disabled></option>"
-				+ data
-				+ "	</select></td>");
+				+ "<option selected disabled></option>";
+			Array.from(data).forEach(function(test) {
+				select += "<option value='" + test.id + "'>" + test.name + "</option>";
+			});
+			$("#thr").append(select + "</select></td>");
 
 			// Adds an input field for each student (checks for valid inputs)
 			$(".tdr").each(function() {
@@ -72,6 +78,10 @@ function unitAjax(test) {
 		dataType: "json",
 		async: false,     
 		success: function(data) {
+			if(data === null) {
+				window.location.reload();
+			}
+			
 			d = data;
 		},
 		error: function() {
@@ -133,8 +143,12 @@ $("#frm").on("submit", function(e) {
 		data: $(this).serialize(),
 		dataType: "json",
 		success: function(data) {
-			// If data is returned some values are out of range
-			if(jQuery.type(data) == "object") {        
+			if(data === null) {
+				window.location.reload();
+			}
+
+			// If data is returned as an object some values are out of range
+			if(jQuery.type(data) == "object") {     
 				e.preventDefault();      
 
 				// Highlights the wrong values by reusing button properties, 

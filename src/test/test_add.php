@@ -1,7 +1,7 @@
 <?php
 // Page to add new tests
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(1);
+chk_access(PROFESSOR_GRANTS);
 connect();
 show_premain("Aggiungi test");
 

@@ -3,7 +3,7 @@
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
-chk_access(2);
+chk_access(PROFESSOR);
 connect();
 
 $cl = get_class_info($_GET['id']);

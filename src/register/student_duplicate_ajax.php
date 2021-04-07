@@ -2,7 +2,11 @@
 // Script to check if a student with the same data of those sent
 // in the ajax request already exists
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(2);
+if(!chk_access(PROFESSOR, false))
+{
+	echo "null";
+	exit;
+}
 connect();
 
 $st = json_decode($_GET['st']);
@@ -21,7 +25,7 @@ $dup_st = prepare_stmt("SELECT id_stud, cogs, noms, id_ist, classe, sez, anno FR
 	HAVING(anno=MAX(anno))");
 $dup_st->bind_param("sssiii", $lastname, $firstname, $gender, $year, $class, $_SESSION['scuola']);
 
-$data = null;
+$data = [];
 foreach($st as $k => $stud)
 {
 	$lastname = $stud->cogs;
@@ -50,3 +54,4 @@ foreach($st as $k => $stud)
 $dup_st->close();
 
 echo json_encode($data);
+?>

@@ -1,11 +1,11 @@
 <?php 
 // Pagina chiamata da test.php per l'aggiornamento dei voti dell'utente prof
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(2);
+chk_access(PROFESSOR);
 connect();
 
 // Selects which user's grades are updated
-if($_SESSION['priv'] == 0 and isset($_POST['slp']))
+if($_SESSION['priv'] == ADMINISTRATOR and isset($_POST['slp']))
 	$prof = $_POST['slp'];
 else
 	$prof = $_SESSION['id'];

@@ -1,7 +1,7 @@
 <?php
 // Frontend for test update
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(1);
+chk_access(PROFESSOR_GRANTS);
 connect();
 
 // If the test does not exist an error is shown to the user

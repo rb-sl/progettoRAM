@@ -1,7 +1,7 @@
 <?php 
 // Backend script to delete a class
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(2);
+chk_access(PROFESSOR);
 connect();
 
 $del_st = prepare_stmt("DELETE FROM CLASSI WHERE id_cl=?");

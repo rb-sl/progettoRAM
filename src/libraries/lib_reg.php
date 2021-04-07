@@ -312,6 +312,7 @@ function get_avgmed($class, $vals, $isperc, $forstud = false)
 
 	// Tests' averages and medians
 	$sum = 0;
+	$enablesum = false;
 	foreach($idtest as $id)
 	{
 		// Test's average and color
@@ -320,7 +321,10 @@ function get_avgmed($class, $vals, $isperc, $forstud = false)
 
 		// Sum for the total average
 		if($ret['avg'][$id]['val'] != "-")
+		{
 			$sum += $ret['avg'][$id]['val'];
+			$enablesum = true;
+		}
 	
 		// Test's median and color
 		$ret['med'][$id]['val'] = arr_med(array_column($vals, $id), 5);
@@ -339,8 +343,12 @@ function get_avgmed($class, $vals, $isperc, $forstud = false)
 		$ret['smed'][$ids]['color'] = color_from_val($ret['smed'][$ids]['val'], $color, $isperc);
 	}
 	
-	// Total percentile average	and percentile
-	$ret['tavg']['val'] = number_format($sum / sizeof($idtest), 5);
+	// Total percentile average	and color
+	if($enablesum)
+		$ret['tavg']['val'] = number_format($sum / sizeof($idtest), 5);
+	else
+		$ret['tavg']['val'] = "-";
+
 	$ret['tavg']['color'] = color_from_val($ret['tavg']['val'], $color, $isperc);
 
 	return $ret;
@@ -437,7 +445,7 @@ function get_avgmed_grades($class, $rstud, $forstud = false)
 	else
 		$ret['tavg']['val'] = "-";
 
-	$ret['tavg']['color'] = color_from_grade($ret['tavg']['val'], $color,);
+	$ret['tavg']['color'] = color_from_grade($ret['tavg']['val'], $color);
 
 	return $ret;
 }
@@ -574,7 +582,7 @@ function get_perc($class, $cond = null, $forstud = false)
 	if($cond)
 	{
 		if(!class_in_years($class, $cond['year1'], $cond['year2']))
-			return null;
+			return $rstud;
 
 		$classlist = $cond['class'];
 		$genderlist = $cond['sex'];
@@ -665,7 +673,7 @@ function get_perc($class, $cond = null, $forstud = false)
 		$class_st->close();
 		$values_st->close();
 		
-		return null;
+		return $rstud;
 	}
 	
 	foreach($positive as $test => $greater)

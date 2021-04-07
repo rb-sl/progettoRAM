@@ -136,6 +136,10 @@ function getData() {
 		data: cond,
 		dataType: "json",
 		success: function(data)	{
+			if(data === null) {
+				window.location.reload();
+			}
+
 			// Updates the table
 			handleData(data.matrix);
 			

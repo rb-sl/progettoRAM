@@ -1,7 +1,11 @@
 <?php
 // Ajax script to retrieve the tests yet to do of a given class
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(2);
+if(!chk_access(PROFESSOR, false))
+{
+	echo "null";
+	exit;
+}
 connect();
 
 // Statement to find tests in the favourite list of the user
@@ -16,9 +20,12 @@ $test_st->bind_param("ii", $_GET['id'], $_SESSION['id']);
 $ret = execute_stmt($test_st);
 $test_st->close();
 
-$data = "";
+$data = [];
 while($row = $ret->fetch_assoc())
- 	 $data .= "<option value='".$row['id_test']."'>".$row['nometest']."</option>";
-          
+{
+	$buff['id'] = $row['id_test'];
+	$buff['name'] = $row['nometest'];
+	$data[] = $buff;
+}         
 echo json_encode($data);
 ?>

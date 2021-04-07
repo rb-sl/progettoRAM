@@ -2,7 +2,11 @@
 // Backend page used to answer ajax queries from statistics.php
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
-chk_access(3);
+if(!chk_access(RESEARCH, false))
+{
+    echo "null";
+    exit;
+}
 connect();
 
 $cond = cond_builder();

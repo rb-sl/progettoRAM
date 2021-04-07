@@ -110,6 +110,10 @@ function getData() {
         data: cond,
         dataType: "json",
         success: function(data)	{
+            if(data === null) {
+				window.location.reload();
+			}
+
             // Update of shown statistics
             $("#stud_tot").text(data.stud_tot);
             $("#res_tot").text(data.res_tot);

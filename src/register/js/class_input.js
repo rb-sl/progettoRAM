@@ -27,6 +27,10 @@ $("#clpr").change(function() {
 		data: "toprom=" + $("#clpr").val(),
 		dataType: "json",
 		success: function(data) {
+			if(data === null) {
+				window.location.reload();
+			}
+
 			$("#cl").val(data.cl);
 			$("#sez").val(data.sez);
 			$("#a1").val(data.anno);
@@ -132,7 +136,11 @@ $("#frm").on("submit", function(e) {
 			async: false,
 			dataType: "json",
 			success: function(data) {
-				if(data) {
+				if(data === null) {
+					window.location.reload();
+				}
+				
+				if(data.length > 0) {
 					e.preventDefault();
 					var toprint = "";
 					

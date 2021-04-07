@@ -1,7 +1,7 @@
 <?php
 // Script to delete a test
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(0);
+chk_access(PROFESSOR_GRANTS);
 connect();
 
 $chk_st = prepare_stmt("SELECT COUNT(*) AS n FROM PROVE WHERE fk_test=?");

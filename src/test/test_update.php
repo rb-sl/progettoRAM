@@ -1,7 +1,7 @@
 <?php
 // Script to update tests
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(1);
+chk_access(PROFESSOR_GRANTS);
 connect();
 
 // If the new name corresponds to another test the update is blocked

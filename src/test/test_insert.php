@@ -1,7 +1,7 @@
 <?php
 // Insert of new tests in the system
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(1);
+chk_access(PROFESSOR_GRANTS);
 connect();
 
 // The system blocks the insert if a test with the given name is already present
@@ -18,11 +18,12 @@ if($name->num_rows > 0)
 	exit;
 }
 
-$in_st = prepare_stmt("INSERT INTO TEST (nometest, fk_cltest, fk_udm, pos, fk_tipot, posiz, equip, esec, cons, limite, valut) VALUES 
-	(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$in_st = prepare_stmt("INSERT INTO TEST (nometest, fk_cltest, fk_udm, pos, fk_tipot, posiz, equip, esec, cons, limite, valut) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 $in_st->bind_param("siisissssss", $_POST['testname'], $_POST['class'], $_POST['unit'], $_POST['positive'], 
-	$_POST['type'], $_POST['position'], $_POST['equipment'], $_POST['execution'], $_POST['suggestions'], $_POST['limit'], $_POST['grading']);
+	$_POST['type'], $_POST['position'], $_POST['equipment'], $_POST['execution'], $_POST['suggestions'], 
+	$_POST['limit'], $_POST['grading']);
 
 execute_stmt($in_st);
 $in_st->close();

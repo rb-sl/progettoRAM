@@ -2,7 +2,11 @@
 // Script to handle ajax calls about students to be promoted
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
-chk_access(2);
+if(!chk_access(PROFESSOR, false))
+{
+    echo "null";
+    exit;
+}
 connect();
 
 $prom_st = prepare_stmt("SELECT classe, sez, anno FROM CLASSI WHERE id_cl=?");

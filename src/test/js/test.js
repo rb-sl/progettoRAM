@@ -50,6 +50,10 @@ $("#slp").change(function() {
 		data: "idprof=" + $(this).val(), 
 		dataType: "json",                
 		success: function(data)	{
+			if(data === null) {
+				window.location.reload();
+			}
+
 			var prev = 0;
 			var id;
 

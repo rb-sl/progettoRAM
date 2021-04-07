@@ -443,7 +443,7 @@ function get_records($id, $cond = null)
 	{
 		$rcr['list'] .= "<tr><td class='rcr'>".$rcp['nomescuola']."</td><td class='rcr'>";
 
-		if($rcp['fk_prof'] == $_SESSION['id'] or $_SESSION['priv'] == 0)
+		if($rcp['fk_prof'] == $_SESSION['id'] or $_SESSION['priv'] == ADMINISTRATOR)
   		{
     		$rcr['list'] .= "<a href='/register/class_show.php?id=".$rcp['id_cl']."'>";
     		$fl = "</a>";

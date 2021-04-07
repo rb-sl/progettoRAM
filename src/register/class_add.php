@@ -1,7 +1,7 @@
 <?php 
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
-chk_access(2);
+chk_access(PROFESSOR);
 connect();
 show_premain("Aggiunta classe");
 
@@ -23,7 +23,7 @@ if(date("m") < 8)
 			<select id="clpr" class="form-control">
 				<option selected disabled></option>
 <?php
-if($_SESSION['priv'] > 0)
+if($_SESSION['priv'] > ADMINISTRATOR)
 	$nad = "fk_prof=? AND";
 else
 	$nad = "";
@@ -39,7 +39,7 @@ $prom_st = prepare_stmt("SELECT C1.id_cl, C1.classe, C1.sez FROM
 	WHERE C2.id_cl IS NULL 
 	ORDER BY classe, sez");
 
-if($_SESSION['priv'] == 0)
+if($_SESSION['priv'] == ADMINISTRATOR)
 	$prom_st->bind_param("iiii", $lastyear, $_SESSION['scuola'], $year, $_SESSION['scuola']);
 else
 	$prom_st->bind_param("iiiii", $_SESSION['id'], $lastyear, $_SESSION['scuola'], $year, $_SESSION['scuola']);

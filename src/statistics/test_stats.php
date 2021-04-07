@@ -2,7 +2,7 @@
 // Front end page to display a test's statistics
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
-chk_access(3);
+chk_access(RESEARCH);
 connect();
 
 $test_st = prepare_stmt("SELECT * FROM TEST JOIN UNITA ON fk_udm=id_udm WHERE id_test=?");
@@ -53,7 +53,7 @@ $graph = graph_vals($_GET['id']);
 	</select>
 </h3>
 
-<!-- Grafico -->
+<!-- Plot -->
 <div id="cnv">
 </div>
 

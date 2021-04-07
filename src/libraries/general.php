@@ -85,7 +85,7 @@ function set_error($error)
 // Checks if the user can access the class's register page 
 function chk_prof($fk_prof)
 {
-	if($fk_prof and $fk_prof != $_SESSION['id'] and $_SESSION['priv'] != 0)
+	if($fk_prof and $fk_prof != $_SESSION['id'] and $_SESSION['priv'] != ADMINISTRATOR)
 	{
 		$_SESSION['alert'] = "Permessi insufficienti per visualizzare la classe";
 		header("Location: /register/register.php");

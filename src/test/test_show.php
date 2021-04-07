@@ -1,7 +1,7 @@
 <?php
 // Test parameters visualization
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(3);
+chk_access(RESEARCH);
 connect();
 
 // If the test does not exist an error is shown to the user
@@ -79,7 +79,7 @@ show_premain($test['nometest']);
 </table>
 
 <?php
-if($_SESSION['priv'] <= 1)
+if($_SESSION['priv'] <= PROFESSOR_GRANTS)
 	echo "<div class='marginunder'><a href='./test_modify.php?id=".$_GET['id']."' class='btn btn-warning'>Modifica test</a></div>";
 	
 show_postmain();

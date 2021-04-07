@@ -2,7 +2,7 @@
 // Initial page of the statistical section; shows some general statistics
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
-chk_access(3);
+chk_access(RESEARCH);
 connect();
 show_premain("Statistica", true);
 

@@ -1,7 +1,7 @@
 <?php
 // Main page for tests, allows to show users the tests and update grades
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(3);
+chk_access(RESEARCH);
 connect();
 show_premain("Test e valutazioni");
 ?>
@@ -9,11 +9,11 @@ show_premain("Test e valutazioni");
 <h2>Visualizzazione Test</h2>
 
 <?php
-if($_SESSION['priv'] <= 2)
+if($_SESSION['priv'] <= PROFESSOR)
 {
 	echo "<div class='marginunder'>";
 	// An administrator or a professor with grants can add a new test
-	if($_SESSION['priv'] <= 1)
+	if($_SESSION['priv'] <= PROFESSOR_GRANTS)
 		echo "<a href='./test_add.php' class='btn btn-primary'>Aggiungi nuovo</a> ";
 	echo "<a href='./favourites_modify.php' class='btn btn-warning'>Modifica preferiti</a>
 		</div>";
@@ -45,7 +45,7 @@ while($rowt = $rettest->fetch_assoc())
 
 <?php
 // Ends if the user is not a professor
-if($_SESSION['priv'] > 2)
+if($_SESSION['priv'] > PROFESSOR)
 {
 	show_postmain();
 	exit;
@@ -56,7 +56,7 @@ if($_SESSION['priv'] > 2)
 	<h2>Tabella di valutazione
 <?php
 // An administrator can see each user's grades
-if($_SESSION['priv'] == 0)
+if($_SESSION['priv'] == ADMINISTRATOR)
 {
 	echo "di <select class='form-control' id='slp' name='slp'>";
 

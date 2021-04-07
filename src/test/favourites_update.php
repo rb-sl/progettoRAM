@@ -1,7 +1,7 @@
 <?php
 // Backend page to update a user's favourite tests
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access(2);
+chk_access(PROFESSOR);
 connect();
 
 // Statement to delete a favourite association

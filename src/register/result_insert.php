@@ -2,7 +2,7 @@
 // Script to insert test results
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
-chk_access(2);
+chk_access(PROFESSOR);
 connect();
 
 // Results insert or update

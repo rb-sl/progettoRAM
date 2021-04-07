@@ -3,7 +3,11 @@
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
-chk_access(2);
+if(!chk_access(PROFESSOR, false))
+{
+	echo "null";
+	exit;
+}
 connect();
 
 $cond = cond_builder(); 
@@ -30,8 +34,5 @@ switch($_GET['vis'])
 		break;
 }
 
-if($rstud !== null)
-	echo json_encode(array_merge($rstud, $am));
-else
-	echo "null";
+echo json_encode(array_merge($rstud, $am));
 ?>
