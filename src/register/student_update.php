@@ -6,7 +6,7 @@ connect();
 
 // Checks if the user owns at least one class with the student 
 // (or is an administrator)
-if($_SESSION['priv'] > ADMINISTRATOR)
+if(!chk_auth(ADMINISTRATOR))
 {
 	$chk_st = prepare_stmt("SELECT * FROM STUDENTI
 		JOIN ISTANZE ON fk_stud=id_stud

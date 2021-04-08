@@ -109,7 +109,7 @@ chk_access(PROFESSOR);
         percentili, standard o voti delle prove.
     </p>
 	<p>
-        In questa pagina è presente un <a href="#radar">grafico di tipo radaro</a> per visualizzare i risultati 
+        In questa pagina è presente un <a href="#radar">grafico di tipo radar</a> per visualizzare i risultati 
         ottenuti per ogni classe; è possibile modificare il campione attraverso 
         <a href="#menustat">il menu statistico</a>.
     </p>

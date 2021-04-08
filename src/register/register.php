@@ -27,9 +27,23 @@ else
 
 <div>
 	<a href="/register/class_add.php" class="btn btn-primary marginunder">Aggiungi classe</a>
-
 <?php
-if($_SESSION['priv'] != ADMINISTRATOR)
+if(chk_auth(ADMINISTRATOR))
+{
+?>
+	<div class="containerflex">
+        <div class="form-check">
+            <input type="checkbox" id="showall" class="form-check-input" name="important">
+
+            <label class="form-check-label" for="showall">
+                Mostra tutte le classi
+            </label>
+        </div>
+    </div>
+<?php
+}
+
+if(!chk_auth(ADMINISTRATOR))
 {
 	$class_st = prepare_stmt("SELECT * FROM CLASSI
 		JOIN SCUOLE ON fk_scuola=id_scuola 
@@ -61,16 +75,23 @@ while($row = $ret->fetch_assoc())
 	else if($classe != $row['classe'])
     	echo "</div><div>";
 
-	if($_SESSION['priv'] == ADMINISTRATOR and isset($row['cogp']))
+	if(chk_auth(ADMINISTRATOR) and isset($row['cogp']))
 		$name = "\n".$row['cogp'];
 	else 
 		$name = "";
 
-	echo "<a href='/register/class_show.php?id=".$row['id_cl']."' class='btn btn-warning btncl' 
+	if($_SESSION['id'] != $row['fk_prof'])
+		$class = " nonpersonal";
+	else
+		$class= "";
+
+	echo "<a href='/register/class_show.php?id=".$row['id_cl']."' class='btn btn-warning btncl$class' 
 		title='".$row['nomescuola']."\n".$row['citta'].$name."'>".$row['classe'].$row['sez']."</a> ";
 	
 	$classe = $row['classe'];
 }
-
-show_postmain();
 ?>
+
+<script src="/register/js/common_register.js"></script>
+
+<?php show_postmain(); ?>

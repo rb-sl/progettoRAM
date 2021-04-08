@@ -22,7 +22,7 @@ else
 <form action="project_update.php" method="POST">
     <h2>
         Descrizione nella pagina Il progetto
-        <a href="/admin/admin.php" class="btn btn-warning marginunder">Annulla</a>
+        <a href="/admin/admin.php" class="btn btn-warning marginunder">Indietro</a>
         <input type="submit" class="btn btn-primary marginunder" value="Aggiorna">
     </h2>
 

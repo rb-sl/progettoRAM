@@ -5,7 +5,7 @@ chk_access(PROFESSOR);
 connect();
 
 // Selects which user's grades are updated
-if($_SESSION['priv'] == ADMINISTRATOR and isset($_POST['slp']))
+if(chk_auth(ADMINISTRATOR) and isset($_POST['slp']))
 	$prof = $_POST['slp'];
 else
 	$prof = $_SESSION['id'];

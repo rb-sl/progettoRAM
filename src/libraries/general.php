@@ -59,7 +59,7 @@ function chk_access($priv = NONE, $kill = true)
 	{
 		if(!isset($_SESSION['user']))
 			set_error(NEED_LOGIN);
-		else if(!isset($_SESSION['priv']) or $_SESSION['priv'] > $priv)
+		else if(!chk_auth($priv))
 			set_error(UNAUTHORIZED);
 		else
 			return true;
@@ -74,6 +74,12 @@ function chk_access($priv = NONE, $kill = true)
 	}
 
 	return true;
+}
+
+// Function to check if a user has the given privilege level
+function chk_auth($priv)
+{
+	return (isset($_SESSION['priv']) and $_SESSION['priv'] <= $priv);
 }
 
 // Function to add an error to the session

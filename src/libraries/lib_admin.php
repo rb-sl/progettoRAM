@@ -149,8 +149,13 @@ function compile_text($text)
 		// If the element is neither a header nor a list element it is a
 		// new paragraph
 		else
+		{
+			// An escape at the start will cause to ignore the markup
+			if($line[0] == "\\")
+				$line = substr($line, 1);
 			$line = "<p>$line</p>";
-
+		}
+		
         // If the new line is not in a list any previous list is closed 
 		if(count($cur_list) == 0 and count($list_stack) > 0)
 		{

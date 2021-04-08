@@ -23,10 +23,10 @@ if(date("m") < 8)
 			<select id="clpr" class="form-control">
 				<option selected disabled></option>
 <?php
-if($_SESSION['priv'] > ADMINISTRATOR)
-	$nad = "fk_prof=? AND";
-else
+if(chk_auth(ADMINISTRATOR))
 	$nad = "";
+else
+	$nad = "fk_prof=? AND";
 
 // Gets all user's classes of the previous year that do not have a following class yet
 // An administrator can promote every class
@@ -39,7 +39,7 @@ $prom_st = prepare_stmt("SELECT C1.id_cl, C1.classe, C1.sez FROM
 	WHERE C2.id_cl IS NULL 
 	ORDER BY classe, sez");
 
-if($_SESSION['priv'] == ADMINISTRATOR)
+if(chk_auth(ADMINISTRATOR))
 	$prom_st->bind_param("iiii", $lastyear, $_SESSION['scuola'], $year, $_SESSION['scuola']);
 else
 	$prom_st->bind_param("iiiii", $_SESSION['id'], $lastyear, $_SESSION['scuola'], $year, $_SESSION['scuola']);

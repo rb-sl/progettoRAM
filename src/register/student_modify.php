@@ -5,7 +5,7 @@ chk_access(PROFESSOR);
 connect();
 show_premain("Modifica Studente");
 
-if($_SESSION['priv'] > ADMINISTRATOR)
+if(!chk_auth(ADMINISTRATOR))
 {
 	$stud_st = prepare_stmt("SELECT * FROM STUDENTI 
 		JOIN ISTANZE ON fk_stud=id_stud

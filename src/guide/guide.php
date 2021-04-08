@@ -1,7 +1,6 @@
 <?php
 // Main guide page, includes elements depending on the user's state
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
-chk_access();
 connect();
 show_premain("Manuale");
 ?>
@@ -26,9 +25,10 @@ show_premain("Manuale");
 
 	<h3>Indice</h3>
 	<ul class="nobul bordermenu section">
+		<li><a href="#access">Registrazione e accesso</a></li>
 <?php
 // Professor-related functions
-if($_SESSION['priv'] <= PROFESSOR)
+if(chk_auth(PROFESSOR))
 {
 ?>
 		<li><a href="#reg">Registro</a></li>
@@ -43,7 +43,7 @@ if($_SESSION['priv'] <= PROFESSOR)
 <?php	
 }
 // A statistical access can visualize types of tests and the statistical section
-if($_SESSION['priv'] <= RESEARCH)
+if(chk_auth(RESEARCH))
 {
 ?>
 		<li><a href="#test">Test e valutazioni</a></li>
@@ -51,14 +51,14 @@ if($_SESSION['priv'] <= RESEARCH)
 			<li><a href="#vtest">Visualizzare le informazioni dei test</a></li>
 <?php
 	// Test modifications is reserved to admins or professors with grants
-	if($_SESSION['priv'] <= PROFESSOR_GRANTS)
+	if(chk_auth(PROFESSOR_GRANTS))
 	{
 ?>
     		<li><a href="#modtst">Aggiungere e modificare test</a></li>
 <?php
 	}
 	// Only professors can change evaluation parameters and their favourites list
-	if($_SESSION['priv'] <= PROFESSOR)
+	if(chk_auth(PROFESSOR))
 	{
 ?>
 			<li><a href="#grades">Modificare i parametri di valutazione</a></li>
@@ -77,22 +77,42 @@ if($_SESSION['priv'] <= RESEARCH)
 		<li><a href="#graph">Grafici</a></li>
 <?php
 }
+if(chk_auth(NONE))
+{
 ?>
 		<li><a href="#profile">Profilo</a></li>
+<?php
+}
+?>		
 		<li><a href="#info">Ulteriori informazioni e contatti</a></li>
 	</ul>
+
+	<h3 id="access">Registrazione e accesso</h3>
+	<p>
+		La creazione di un profilo deve essere richiesto a un <a href="#contacts">amministratore</a>
+		per email o, se possibile, di persona. Saranno fornite delle credenziali temporanee e al primo
+		accesso verrà richiesta la modifica della password.
+	</p>
+	<p>
+		Per accedere al sistema premere la voce Login in alto a destra (o, se da mobile, premere sul 
+		bottone del menu e poi sulla voce Login) e inserire le proprie credenziali, quindi premere
+		<span class="warningcolor">Accedi</span>.
+	</p>
 <?php
-if($_SESSION['priv'] <= PROFESSOR)
+if(chk_auth(PROFESSOR))
 	include "professor_guide.php";
 
-if($_SESSION['priv'] <= RESEARCH)
+if(chk_auth(RESEARCH))
 {
 	include "test_guide.php";
 	include "stat_guide.php";
 }
 
-if($_SESSION['priv'] == ADMINISTRATOR)
+if(chk_auth(ADMINISTRATOR))
 	include "admin_guide.php";
+
+if(chk_auth(NONE))
+{
 ?>
   	<div class="section">
 		<h3 id="profile">Profilo</h3>
@@ -108,7 +128,9 @@ if($_SESSION['priv'] == ADMINISTRATOR)
 			</ul>
 		</p>
 	</div>
-
+<?php
+}
+?>
 	<div class="section">
 		<h3 id="info">Ulteriori informazioni e contatti</h3>
 		<p>
@@ -117,11 +139,12 @@ if($_SESSION['priv'] == ADMINISTRATOR)
 			per migliorarne l'usabilità e permettere calcoli statistici più efficaci ed efficienti.
 		</p>
 		<p>
-			Il codice sorgente dell'applicazione è <a href="https://github.com/rb-sl/progettoRAM">disponibile su Github</a>
+			Il codice sorgente dell'applicazione è <a href="https://github.com/rb-sl/progettoRAM">disponibile su Github&#128279;</a>
 			insieme alla documentazione del progetto.
 		</p>
 
-		<h4>Contatti</h4>
+		<h4 id="contacts">Contatti</h4>
 	</div>
 </div>
+
 <?php show_postmain(); ?>

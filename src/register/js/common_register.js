@@ -23,3 +23,12 @@ function resizeText() {
 		maxSize: 20
 	});
 }
+
+// Hides all non-personal classes
+$(".nonpersonal").hide();
+
+// Function to show or hide non-personal classes
+// for an admin in register.php
+$("#showall").change(function() {
+	$(".nonpersonal").toggle();
+});

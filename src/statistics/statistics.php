@@ -54,9 +54,7 @@ while($row = $test_r->fetch_assoc())
 
 <h2>Statistiche avanzate</h2>
 <div>
-	<a href="correlation.php" class="btn btn-primary marginunder">Correlazione campionaria</a><br>
-	<a class="btn btn-primary btnmenu" disabled title="Prossimamente">ANOVA</a><br>
-	<a class="btn btn-primary btnmenu" disabled title="Prossimamente">Test di Tukey</a>
+	<a href="correlation.php" class="btn btn-primary marginunder">Correlazione campionaria</a>
 </div>
 
 <script src="/statistics/js/statistics.js"></script>

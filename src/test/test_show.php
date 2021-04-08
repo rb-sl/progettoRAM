@@ -79,7 +79,7 @@ show_premain($test['nometest']);
 </table>
 
 <?php
-if($_SESSION['priv'] <= PROFESSOR_GRANTS)
+if(chk_auth(PROFESSOR_GRANTS))
 	echo "<div class='marginunder'><a href='./test_modify.php?id=".$_GET['id']."' class='btn btn-warning'>Modifica test</a></div>";
 	
 show_postmain();
