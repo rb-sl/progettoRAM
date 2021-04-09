@@ -27,6 +27,6 @@ foreach($cont as $g)
 	</div>
 </div>
 
-<script src="/admin/log.js"></script>
+<script src="/admin/js/log.js"></script>
 
 <?php show_postmain(); ?>
