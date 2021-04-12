@@ -521,6 +521,22 @@ input[type="number"] {
 .flexform {
 	flex-direction: column;
 }
+.flexrow {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.flexrow > * {
+	display: inline-flex;
+	margin-right: 10px;
+}
+.studentcard {
+	background-color: white;
+	padding-right: 5px;
+	padding-left: 35px;
+}
 .bigtextarea {
 	padding: 10px;
 	border-radius: 4px;

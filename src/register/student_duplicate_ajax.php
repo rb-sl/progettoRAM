@@ -19,7 +19,7 @@ $class = $cl->classe;
 $dup_st = prepare_stmt("SELECT id_stud, cogs, noms, id_ist, classe, sez, anno FROM STUDENTI
 	JOIN ISTANZE ON fk_stud=id_stud 
 	JOIN CLASSI ON fk_cl=id_cl
-	WHERE cogs=? AND (noms=? OR noms IS NULL) AND sesso=?
+	WHERE cogs=? AND (noms=? OR noms='') AND sesso=?
 	AND anno=? AND classe<=? AND fk_scuola=? 
 	GROUP BY id_stud 
 	HAVING(anno=MAX(anno))");
