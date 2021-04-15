@@ -21,7 +21,7 @@ function get_class_info($id)
 }
 
 // Construction of the list of students to confirm their presence in a class
-function build_chk_table($classe, $prom = false)
+function build_chk_table($class, $prom = false)
 {
 	$table = "<div class='tdiv'>
 			<div class='innerx'>
@@ -30,24 +30,29 @@ function build_chk_table($classe, $prom = false)
 	// If this is the modification due to promotion, students already promoted to other classes
 	// will not be shown
 	if($prom)
-		$chkp = " AND id_stud NOT IN 
-			(SELECT DISTINCT(fk_stud) FROM ISTANZE JOIN CLASSI ON fk_cl=id_cl WHERE anno=YEAR(CURDATE())) ";
+		$chkp = " AND id_stud NOT IN (
+			SELECT DISTINCT(fk_stud) FROM ISTANZE 
+			JOIN CLASSI ON fk_cl=id_cl 
+			WHERE anno=YEAR(CURDATE()))";
 	else
 		$chkp = "";
 	
 	$stud_st = prepare_stmt("SELECT id_stud, noms, cogs, sesso 
 		FROM STUDENTI JOIN ISTANZE ON id_stud=fk_stud
-		WHERE fk_cl=$classe 
+		WHERE fk_cl=? 
 		$chkp 
 		ORDER BY cogs, noms");
-
+	$stud_st->bind_param("i", $class);
 	$ret = execute_stmt($stud_st);
+	$stud_st->close();
+
 	while($row = $ret->fetch_assoc())
 	{
 		$table .= "<tr>
 			<td class='containerflex'>
 				<div class='form-check'>
-					<input type='checkbox' id='c".$row['id_stud']."' name='pr[]' value='".$row['id_stud']."' class='form-check-input chkpro' checked='true'>
+					<input type='checkbox' id='c".$row['id_stud']."' name='pr[]' value='".$row['id_stud']."' 
+						class='form-check-input chkpro' checked='true'>
 					<label id='lbl".$row['id_stud']."' class='form-check-label' for='c".$row['id_stud']."'></label>
 				</div>
 			</td>
@@ -303,7 +308,7 @@ function get_avgmed($class, $vals, $isperc, $forstud = false)
 	else
 		$color = get_color_std();
 
-	$testinfo = get_class_tests($class, $forstud);
+	$testinfo = get_tests($class, $forstud);
 
 	if($testinfo === null)
 		return $ret;
@@ -365,7 +370,7 @@ function get_avgmed_grades($class, $rstud, $forstud = false)
 
 	$color = get_color_gr();
 
-	$testinfo = get_class_tests($class, $forstud);
+	$testinfo = get_tests($class, $forstud);
 
 	if($testinfo === null)
 		return $ret;
@@ -453,7 +458,9 @@ function get_avgmed_grades($class, $rstud, $forstud = false)
 // Function to read colors for percentiles
 function get_color_prc()
 {
-	$color_st = prepare_stmt("SELECT * FROM VALUTAZIONI JOIN VOTI ON fk_voto=id_voto WHERE fk_prof=?");
+	$color_st = prepare_stmt("SELECT * FROM VALUTAZIONI 
+		JOIN VOTI ON fk_voto=id_voto 
+		WHERE fk_prof=?");
 	$color_st->bind_param("i", $_SESSION['id']);
 	$ret_gr = execute_stmt($color_st);
 	$color_st->close();
@@ -468,7 +475,8 @@ function get_color_prc()
 function get_color_std()
 {
 	// Gets only 6 colors
-	$color_st = prepare_stmt("SELECT * FROM VOTI WHERE voto NOT IN(6.5, 8.5, 9, 9.5) ORDER BY voto");
+	$color_st = prepare_stmt("SELECT * FROM VOTI 
+		WHERE voto NOT IN(6.5, 8.5, 9, 9.5) ORDER BY voto");
 	$ret_gr = execute_stmt($color_st);
 	$color_st->close();
 
@@ -496,7 +504,7 @@ function get_color_gr()
 }
 
 // Returns the list of test ids done by the class, and their positive values
-function get_class_tests($class, $forstud = false)
+function get_tests($id, $forstud = false)
 {
 	if($forstud)
 	{
@@ -514,7 +522,7 @@ function get_class_tests($class, $forstud = false)
 			WHERE $restr=?
 		)
 		$order");
-	$ctst_st->bind_param("i", $class);
+	$ctst_st->bind_param("i", $id);
 	$ctst = execute_stmt($ctst_st);
 	$ctst_st->close();
 
@@ -556,7 +564,7 @@ function get_perc($class, $cond = null, $forstud = false)
 
 	$color = get_color_prc();
 
-	$testinfo = get_class_tests($class, $forstud);
+	$testinfo = get_tests($class, $forstud);
 
 	if($testinfo === null)
 		return $rstud;
@@ -745,7 +753,7 @@ function get_std($class, $cond = null, $forstud = false)
 
 	$color = get_color_std();
 
-	$testinfo = get_class_tests($class, $forstud);
+	$testinfo = get_tests($class, $forstud);
 
 	if($testinfo === null)
 		return $rstud;

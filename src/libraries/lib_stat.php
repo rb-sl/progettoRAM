@@ -22,7 +22,7 @@ function arr_avg($vals, $dec = 0)
 }
 
 // Function to compute the median of an array
-function arr_med($vals, $dec)
+function arr_med($vals, $dec = 0)
 {
 	$size = sizeof($vals);
 
@@ -37,6 +37,56 @@ function arr_med($vals, $dec)
     	return number_format(($vals[$size / 2 - 1] + $vals[$size / 2]) / 2, $dec);
 	else
     	return number_format($vals[floor($size / 2)], $dec);	
+}
+
+// Construction of additional restrictions based on GET data
+function cond_builder()
+{
+	$base_cond = true;
+	
+	// Constuction of the class list
+	$cond['class'] = "";
+	for($i = 1; $i <= 5; $i++)
+    	if(isset($_GET['c'.$i]))
+       		$cond['class'] .= ", $i";
+		else
+			$base_cond = false;
+
+	// Construction of the gender list
+	$cond['sex'] = "";
+	if(isset($_GET['m']))
+    	$cond['sex'] .= ", 'm'";
+	else
+		$base_cond = false;
+
+	if(isset($_GET['f']))
+    	$cond['sex'] .= ", 'f'";
+	else
+		$base_cond = false;
+	
+	// Year-related restrictions
+	$year = year_span();
+	if($_GET['year1'] != $year['y1'] or $_GET['year2'] != $year['y2'])
+		$base_cond = false;
+
+	$cond['year1'] = $_GET['year1'];
+	$cond['year2'] = $_GET['year2'];
+
+	// Restriction on the teacher
+	if(isset($_GET['rstr']))
+	{
+		$base_cond = false;
+    	$cond['prof'] = "AND fk_prof=?";
+	}
+	else
+		$cond['prof'] = "";
+
+	// If all base elements are selected there 
+	// is no need to restrict results
+	if($base_cond)
+		return null;
+
+	return $cond;
 }
 
 // Function to get the numbers displayed in statistics.php
@@ -261,91 +311,6 @@ function misc_graph($cond = null)
 	}
 
 	return $ret;
-}
-
-// Function to calculate the correlation coefficient between two tests
-// given their ids
-function calc_r($id1, $stat1, $id2, $stat2, $cond = null)
-{    
-	global $r_id1;
-	global $r_id2;
-	global $rval_st;
-
-	$r_id1 = $id1;
-	$r_id2 = $id2;
-	$retvals = execute_stmt($rval_st);
-	$r['n'] = $retvals->num_rows;
-
-	// As r is not indicative with few data, only couples of tests 
-	// with	at least N values are considered
-    if($r['n'] > CORRELATION_TRESH)
-    {
-    	// Calculation of the correlation coefficient as
-    	// sum((x - avg(x)) * (y - avg(y)) / ((n-1) * std(x) * std(y))
-		// From "Introduction to probability and statistics for engineers and scientists"
-		// By Sheldon M. Ross
-    	$s = 0;
-    	while($row = $retvals->fetch_assoc())
-			$s += ($row['v1'] - $stat1['avg']) * ($row['v2'] - $stat2['avg']);
-
-        $r['r'] = number_format($s / (($r['n'] - 1) * $stat1['std'] * $stat2['std']), 5);
-    }
-    else
-      	$r['r'] = "-";
-
-	$r['color'] = correlation_color($r['r']);
-
-	return $r;
-}
-
-// Construction of additional restrictions based on GET data
-function cond_builder()
-{
-	$base_cond = true;
-	
-	// Constuction of the class list
-	$cond['class'] = "";
-	for($i = 1; $i <= 5; $i++)
-    	if(isset($_GET['c'.$i]))
-       		$cond['class'] .= ", $i";
-		else
-			$base_cond = false;
-
-	// Construction of the gender list
-	$cond['sex'] = "";
-	if(isset($_GET['m']))
-    	$cond['sex'] .= ", 'm'";
-	else
-		$base_cond = false;
-
-	if(isset($_GET['f']))
-    	$cond['sex'] .= ", 'f'";
-	else
-		$base_cond = false;
-	
-	// Year-related restrictions
-	$year = year_span();
-	if($_GET['year1'] != $year['y1'] or $_GET['year2'] != $year['y2'])
-		$base_cond = false;
-
-	$cond['year1'] = $_GET['year1'];
-	$cond['year2'] = $_GET['year2'];
-
-	// Restriction on the teacher
-	if(isset($_GET['rstr']))
-	{
-		$base_cond = false;
-    	$cond['prof'] = "AND fk_prof=?";
-	}
-	else
-		$cond['prof'] = "";
-
-	// If all base elements are selected there 
-	// is no need to restrict results
-	if($base_cond)
-		return null;
-
-	return $cond;
 }
 
 // Function to obtain record values and schools 
@@ -584,39 +549,26 @@ function get_stats($idtest, $cond = null, $get_median = true)
 	return array_merge($stat, $med);
 }
 
-// Function to get labels and values for multiple box plots
-function graph_multibox($id, $group, $cond = null)
+// Function to get values for normal and single box plots
+function graph_vals($id, $cond = null)
 {
-	switch($group)
-	{
-		case GRAPH_CLASS:
-			$field = "classe";
-			break;
-		case GRAPH_GENDER:
-			$field = "sesso";
-			break;
-		case GRAPH_YEAR:
-			$field = "anno";
-			break;
-	}
-
 	if($cond)
 	{
 		$classlist = $cond['class'];
 		$genderlist = $cond['sex'];
 		$prof = $cond['prof'];
 
-		$val_st = prepare_stmt("SELECT $field, valore FROM PROVE
+		$val_st = prepare_stmt("SELECT valore FROM PROVE
 			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl
 			JOIN STUDENTI ON fk_stud=id_stud 
-			WHERE fk_test=?
+			JOIN CLASSI ON fk_cl=id_cl  
+			WHERE fk_test=? 
 			AND anno BETWEEN ? AND ?
 			AND classe IN (0 $classlist)
 			AND sesso IN ('x' $genderlist)
 			$prof
-			ORDER BY $field, valore ASC");
-		
+			ORDER BY valore ASC");
+
 		if($prof != "")
 			$val_st->bind_param("iiii", $id, $cond['year1'], $cond['year2'], $_SESSION['id']);
 		else
@@ -624,21 +576,16 @@ function graph_multibox($id, $group, $cond = null)
 	}
 	else
 	{
-		$val_st = prepare_stmt("SELECT $field, valore FROM PROVE
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl
-			JOIN STUDENTI ON fk_stud=id_stud 
-			WHERE fk_test=?
-			ORDER BY $field, valore ASC");
+		$val_st = prepare_stmt("SELECT valore FROM PROVE WHERE fk_test=? ORDER BY valore ASC");
 		$val_st->bind_param("i", $id);
 	}
-
 	$ret = execute_stmt($val_st);
 	$val_st->close();
 
+	$graph['vals'] = [];
 	while($row = $ret->fetch_assoc())
-    	$graph[$row[$field]][] = $row['valore'];
-	
+    	$graph['vals'][] = $row['valore'];
+
 	return $graph;
 }
 
@@ -732,26 +679,40 @@ function graph_prc($id, $cond = null)
 	return $graph;
 }
 
-// Function to get values for normal and single box plots
-function graph_vals($id, $cond = null)
+
+// Function to get labels and values for multiple box plots
+function graph_multibox($id, $group, $cond = null)
 {
+	switch($group)
+	{
+		case GRAPH_CLASS:
+			$field = "classe";
+			break;
+		case GRAPH_GENDER:
+			$field = "sesso";
+			break;
+		case GRAPH_YEAR:
+			$field = "anno";
+			break;
+	}
+
 	if($cond)
 	{
 		$classlist = $cond['class'];
 		$genderlist = $cond['sex'];
 		$prof = $cond['prof'];
 
-		$val_st = prepare_stmt("SELECT valore FROM PROVE
+		$val_st = prepare_stmt("SELECT $field, valore FROM PROVE
 			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN CLASSI ON fk_cl=id_cl
 			JOIN STUDENTI ON fk_stud=id_stud 
-			JOIN CLASSI ON fk_cl=id_cl  
-			WHERE fk_test=? 
+			WHERE fk_test=?
 			AND anno BETWEEN ? AND ?
 			AND classe IN (0 $classlist)
 			AND sesso IN ('x' $genderlist)
 			$prof
-			ORDER BY valore ASC");
-
+			ORDER BY $field, valore ASC");
+		
 		if($prof != "")
 			$val_st->bind_param("iiii", $id, $cond['year1'], $cond['year2'], $_SESSION['id']);
 		else
@@ -759,18 +720,25 @@ function graph_vals($id, $cond = null)
 	}
 	else
 	{
-		$val_st = prepare_stmt("SELECT valore FROM PROVE WHERE fk_test=? ORDER BY valore ASC");
+		$val_st = prepare_stmt("SELECT $field, valore FROM PROVE
+			JOIN ISTANZE ON fk_ist=id_ist
+			JOIN CLASSI ON fk_cl=id_cl
+			JOIN STUDENTI ON fk_stud=id_stud 
+			WHERE fk_test=?
+			ORDER BY $field, valore ASC");
 		$val_st->bind_param("i", $id);
 	}
+
 	$ret = execute_stmt($val_st);
 	$val_st->close();
 
-	$graph['vals'] = [];
 	while($row = $ret->fetch_assoc())
-    	$graph['vals'][] = $row['valore'];
-
+    	$graph[$row[$field]][] = $row['valore'];
+	
 	return $graph;
 }
+
+// Functions for the correlation section
 
 // Function to open the global statement to get values of two tests
 function open_rvals_stmt($cond = null)
@@ -811,6 +779,41 @@ function open_rvals_stmt($cond = null)
 	}
 
 	return;
+}
+
+// Function to calculate the correlation coefficient between two tests
+// given their ids
+function calc_r($id1, $stat1, $id2, $stat2, $cond = null)
+{    
+	global $r_id1;
+	global $r_id2;
+	global $rval_st;
+
+	$r_id1 = $id1;
+	$r_id2 = $id2;
+	$retvals = execute_stmt($rval_st);
+	$r['n'] = $retvals->num_rows;
+
+	// As r is not indicative with few data, only couples of tests 
+	// with	at least N values are considered
+    if($r['n'] > CORRELATION_TRESH)
+    {
+    	// Calculation of the correlation coefficient as
+    	// sum((x - avg(x)) * (y - avg(y)) / ((n-1) * std(x) * std(y))
+		// From "Introduction to probability and statistics for engineers and scientists"
+		// By Sheldon M. Ross
+    	$s = 0;
+    	while($row = $retvals->fetch_assoc())
+			$s += ($row['v1'] - $stat1['avg']) * ($row['v2'] - $stat2['avg']);
+
+        $r['r'] = number_format($s / (($r['n'] - 1) * $stat1['std'] * $stat2['std']), 5);
+    }
+    else
+      	$r['r'] = "-";
+
+	$r['color'] = correlation_color($r['r']);
+
+	return $r;
 }
 
 // Function to get tests with a significant number of result (for correlation)
