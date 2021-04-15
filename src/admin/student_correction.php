@@ -6,7 +6,7 @@ connect();
 show_premain("Controllo istanze di studenti inconsistenti");
 ?>
 
-<h2>Correzione errori su istanze di studenti</h2>
+<h2>Correzione profili degli studenti</h2>
 
 <form action="student_merge.php" method="POST" class="flexform marginunder">
 	<h3>

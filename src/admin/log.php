@@ -22,8 +22,7 @@ foreach($cont as $g)
 	</div>
   
 	<div class="logcontainer">
-		<textarea id="txt" class="logtxt"></textarea><br>
-		<button id="del" class="btn btn-danger delbutton" disabled>Elimina</button>
+		<textarea id="txt" class="logtxt"></textarea>
 	</div>
 </div>
 

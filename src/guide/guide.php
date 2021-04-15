@@ -54,7 +54,7 @@ if(chk_auth(RESEARCH))
 	if(chk_auth(PROFESSOR_GRANTS))
 	{
 ?>
-    		<li><a href="#modtst">Aggiungere e modificare test</a></li>
+			<li><a href="#modtst">Aggiungere e modificare test</a></li>
 <?php
 	}
 	// Only professors can change evaluation parameters and their favourites list
@@ -67,7 +67,7 @@ if(chk_auth(RESEARCH))
 	}
 ?>
 		</ul>
-    	<li><a href="#stat">Statistica</a></li>
+		<li><a href="#stat">Statistica</a></li>
 		<ul class="nobul">
 			<li><a href="#genstat">Visualizzare statistiche generali</a></li>
 			<li><a href="#statt">Visualizzare le statistiche dei test</a></li>
@@ -75,6 +75,20 @@ if(chk_auth(RESEARCH))
 		</ul>
 		<li><a href="#menustat">Sottomenu statistico</a></li>
 		<li><a href="#graph">Grafici</a></li>
+<?php
+}
+if(chk_auth(ADMINISTRATOR))
+{
+?>
+		<li><a href="#admin">Amministrazione</a></li>
+		<ul class="nobul">
+			<li><a href="#log">Visualizzare i log di utilizzo</a></li>
+			<li><a href="#user">Visualizzare, aggiungere e modificare gli utenti</a></li>
+			<li><a href="#unit">Gestire le unità di misura nel sistema</a></li>
+			<li><a href="#proj">Modificare il testo della pagina Il progetto</a></li>
+			<li><a href="#motd">Modificare il testo mostrato in home page</a></li>
+			<li><a href="#studfix">Unire o separare profili degli studenti</a></li>
+		</ul>
 <?php
 }
 if(chk_auth(NONE))
@@ -136,10 +150,11 @@ if(chk_auth(NONE))
 		<p>
 			Il Progetto RAM (Ricerca Attivit&agrave; Motorie) è un'applicazione sviluppata nell'A.S. 
 			2016/2017 all'ITIS G. Fauser di Novara come progetto di maturità. È stata poi successivamente integrata
-			per migliorarne l'usabilità e permettere calcoli statistici più efficaci ed efficienti.
+			per migliorarne le funzionalità, l'usabilità l'efficienza.
 		</p>
 		<p>
-			Il codice sorgente dell'applicazione è <a href="https://github.com/rb-sl/progettoRAM">disponibile su Github&#128279;</a>
+			Il codice sorgente dell'applicazione è 
+			<a href="https://github.com/rb-sl/progettoRAM" target="_blank">disponibile su Github&#128279;</a>
 			insieme alla documentazione del progetto.
 		</p>
 
