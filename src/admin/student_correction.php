@@ -8,20 +8,10 @@ show_premain("Controllo istanze di studenti inconsistenti");
 
 <h2>Correzione errori su istanze di studenti</h2>
 
-<h3>Studenti registrati contemporaneamente a più classi</h3>
-<?php
-$err_st = prepare_stmt("SELECT fk_stud FROM ISTANZE
-	JOIN CLASSI ON fk_cl=id_cl 
-	WHERE anno=? 
-	GROUP BY fk_stud 
-	HAVING COUNT(*)>1");
-$err_st->bind_param("i", $cur_year);
-?>
-
 <form action="student_merge.php" method="POST" class="flexform marginunder">
 	<h3>
 		Unione profili studenti
-		<input type="reset" id="m_clear" class="btn btn-warning marginunder jQhidden" value="Annulla">
+		<input type="reset" id="m_clear" class="btn btn-warning marginunder clear jQhidden" value="Annulla">
 	</h3>
 	<div id="m_stage0">
 		<div class="flexrow">
@@ -30,12 +20,12 @@ $err_st->bind_param("i", $cur_year);
 			</div>
 
 			<div class="form-check">
-				<input id="m_id" class="form-check-input" type="radio" name="method" value="id">
+				<input id="m_id" class="form-check-input method" type="radio" name="m_method" value="id">
 				<label class="form-check-label" for="m_id">Id studente</label>
 			</div>
 
 			<div class="form-check">
-				<input id="m_name" class="form-check-input" type="radio" name="method" value="name">
+				<input id="m_name" class="form-check-input method" type="radio" name="m_method" value="name">
 				<label class="form-check-label" for="m_name">Cognome e nome</label>
 			</div>
 		</div>
@@ -44,22 +34,22 @@ $err_st->bind_param("i", $cur_year);
 			<div class="flexrow marginunder">
 				<div class="flexform">
 					Studente 1:
-					<div class="src_id jQhidden">
+					<div class="m_src_id jQhidden">
 						<input type="number" class="form-control" id="m_id1" name="m_id1" placeholder="Id">
 					</div>
 
-					<div class="src_name jQhidden">
+					<div class="m_src_name jQhidden">
 						<input type="text" class="form-control" id="m_surname1" name="surname1" placeholder="Cognome">
 						<input type="text" class="form-control" id="m_name1" name="name1" placeholder="Nome">
 					</div>
 				</div>
 				<div class="flexform">
 					Studente 2:
-					<div class="src_id jQhidden">
+					<div class="m_src_id jQhidden">
 						<input type="number" class="form-control" id="m_id2" name="m_id2" placeholder="Id">
 					</div>
 
-					<div class="src_name jQhidden">
+					<div class="m_src_name jQhidden">
 						<input type="text" class="form-control" id="m_surname2" name="surname2" placeholder="Cognome">
 						<input type="text" class="form-control" id="m_name2" name="name2" placeholder="Nome">
 					</div>
@@ -78,7 +68,7 @@ $err_st->bind_param("i", $cur_year);
 			</div>
 		</div>
 
-		<button type="button" id="m_go" class="btn btn-primary search marginunder">Continua</button>
+		<button type="button" id="m_go" class="btn btn-primary go marginunder">Continua</button>
 	</div>
 
 	<div id="m_stage3" class="jQhidden">
@@ -100,22 +90,73 @@ $err_st->bind_param("i", $cur_year);
 	</div>
 </form>
 
+<form action="student_split.php" method="POST" class="flexform marginunder">
+	<h3>
+		Separazione profili studenti
+		<input type="reset" id="s_clear" class="btn btn-warning clear marginunder jQhidden" value="Annulla">
+	</h3>
+	<div id="s_stage0">
+		<div class="flexrow">
+			<div>
+				Cerca studente tramite:
+			</div>
 
-<?php
-$err_st = prepare_stmt("SELECT fk_stud FROM ISTANZE
-	JOIN CLASSI ON fk_cl=id_cl 
-	WHERE anno=? 
-	GROUP BY fk_stud 
-	HAVING COUNT(*)>1");
-$err_st->bind_param("i", $cur_year);
+			<div class="form-check">
+				<input id="s_id" class="form-check-input method" type="radio" name="s_method" value="id">
+				<label class="form-check-label" for="s_id">Id studente</label>
+			</div>
 
-$show_st = prepare_stmt("SELECT * FROM ISTANZE
-	JOIN CLASSI ON fk_cl=id_cl 
-	WHERE fk_stud=? 
-	AND anno=? 
-	ORDER BY anno");
-$show_st->bind_param("ii", $stud, $cur_year);
-?>
+			<div class="form-check">
+				<input id="s_name" class="form-check-input method" type="radio" name="s_method" value="name">
+				<label class="form-check-label" for="s_name">Cognome e nome</label>
+			</div>
+		</div>
+
+		<div id="s_stage1" class="jQhidden">
+			<div class="flexrow marginunder">
+				<div class="flexform">
+					Studente:
+					<div class="s_src_id jQhidden">
+						<input type="number" class="form-control" id="s_id1" name="s_id1" placeholder="Id">
+					</div>
+
+					<div class="s_src_name jQhidden">
+						<input type="text" class="form-control" id="s_surname1" name="surname1" placeholder="Cognome">
+						<input type="text" class="form-control" id="s_name1" name="name1" placeholder="Nome">
+					</div>
+				</div>
+			</div>
+
+			<button type="button" id="s_src" class="btn btn-primary search marginunder">Cerca</button>
+		</div>
+	</div>
+
+	<div id="s_stage2" class="jQhidden">
+		<div class="flexrow marginunder">
+			<div id="s_info" class="flexform marginunder">
+			</div>
+		</div>
+
+		<button type="button" id="s_go" class="btn btn-primary go marginunder">Continua</button>
+	</div>
+
+	<div id="s_stage3" class="jQhidden">
+		<div id="s_choose" class="flexrow marginunder">
+			<div class="flexform">
+				Studente originale:
+				<div id="classlist1">
+				</div>
+			</div>
+			<div class="flexform">
+				Nuovo studente:
+				<div id="classlist2">
+				</div>
+			</div>
+		</div>
+
+		<input type="submit" class="btn btn-primary marginunder" value="Separa">
+	</div>
+</form>
 
 <script src="/admin/js/student.js"></script>
 <?php show_postmain(); ?>

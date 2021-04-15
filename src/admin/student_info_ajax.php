@@ -51,7 +51,7 @@ while(isset($_GET[$set.$num]))
 
 			while($row and $row['id_stud'] == $stud['id'])
 			{
-				$stud['classlist'][] = $row['classe'].$row['sez']." "
+				$stud['classlist'][$row['id_cl']] = $row['classe'].$row['sez']." "
 					.$row['anno']."/".($row['anno'] + 1);
 				$row = $ret->fetch_assoc();
 			}
