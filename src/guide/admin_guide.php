@@ -92,7 +92,8 @@ $none = get_privilege(NONE);
 	</p>
 	<p>
 		Per creare un nuovo utente cliccare su <span class="primarycolor">Aggiungi nuovo</span> e inserire le 
-		informazioni richieste, quindi premere su <span class="warningcolor">Aggiungi utente</span>. <b>NB: 
+		informazioni richieste, quindi premere su <span class="warningcolor">Aggiungi utente</span>. I voti 
+		assegnati all'utente equivalgono a quelli impostati per l'amministratore. <b>NB: 
 		questa azione aggiunge solamente l'utente al sistema ma non invia notifiche; le credenziali andranno 
 		comunicate all'utente</b> che sarà invitato a modificarle al primo accesso.
 	</p>

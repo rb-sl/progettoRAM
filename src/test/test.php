@@ -21,7 +21,6 @@ if(chk_auth(PROFESSOR))
 ?>
 
 <table class="table table-light table-striped marginunder">
-	<tr><thead><th>Nome test</th></thead></tr>
 <?php
 $test_st = prepare_stmt("SELECT id_test, nometest, fk_test AS favourite FROM TEST
 	LEFT JOIN PROF_TEST ON fk_test=id_test
@@ -75,7 +74,7 @@ if(chk_auth(ADMINISTRATOR))
 	<div id="cnv">
 	</div>
 
-	<table class="table table-light table-striped marginunder">
+	<table class="table table-light marginunder">
     	<tr>
         	<th>Voto</th>
            	<th>Percentuale assegnata</th>

@@ -27,7 +27,7 @@ $graph = graph_vals($_GET['id']);
    	<tr><td>Deviazione Standard: <span id="std"><?=number_format($data['std'], 2)?></span> <?=$test['simbolo']?></td></tr>	
 </table>
 
-<h3 style="margin-bottom:0px">
+<h3 class="nomargin">
 	Record positivo: 
 	<span id="best"><?=$records['best']?></span> 
 	<?=$test['simbolo']?>
