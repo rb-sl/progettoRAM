@@ -20,7 +20,7 @@ $unit_st->close();
 
 <h2>Gestione delle unità di misura</h2>
 
-<form action="/admin/unit_update.php" method="POST" class="tdiv">
+<form action="/admin/test/unit_update.php" method="POST" class="tdiv">
     <button type="button" id="newrow" class="btn btn-primary">Aggiungi nuova</button>
 
     <div class="inner">

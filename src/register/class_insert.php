@@ -12,7 +12,7 @@ $section = strtoupper($_POST['sez']);
 $chk_st = prepare_stmt("SELECT * FROM CLASSI 
 	JOIN SCUOLE ON fk_scuola=id_scuola 
 	WHERE classe=? AND sez=? AND anno=? AND fk_scuola=?");
-$chk_st->bind_param("isii", $_POST['cl'], $section, $_POST['anno'], $_SESSION['scuola']);
+$chk_st->bind_param("isii", $_POST['cl'], $section, $_POST['anno'], $_SESSION['school']);
 $chk = execute_stmt($chk_st);
 $chk_st->close();
 
@@ -28,7 +28,7 @@ if($chk->num_rows > 0)
 // New class creation
 $in_st = prepare_stmt("INSERT INTO CLASSI(classe, sez, anno, fk_prof, fk_scuola) 
 	VALUES(?, ?, ?, ?, ?)");
-$in_st->bind_param("isiii", $_POST['cl'], $section, $_POST['anno'], $_SESSION['id'], $_SESSION['scuola']);
+$in_st->bind_param("isiii", $_POST['cl'], $section, $_POST['anno'], $_SESSION['id'], $_SESSION['school']);
 execute_stmt($in_st);
 $in_st->close();
 

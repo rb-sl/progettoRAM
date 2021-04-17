@@ -30,6 +30,6 @@ else
     $_SESSION['alert'] = "Impossibile eliminare la classe di test: esistono ".$r['n']." test associati";
 }
 
-header("Location: /admin/test_class.php");
+header("Location: /admin/test/test_class.php");
 exit;
 ?>

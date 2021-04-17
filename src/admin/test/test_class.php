@@ -20,7 +20,7 @@ $unit_st->close();
 
 <h2>Gestione delle classi dei test</h2>
 
-<form action="/admin/test_class_update.php" method="POST" class="tdiv">
+<form action="/admin/test/test_class_update.php" method="POST" class="tdiv">
 	<button type="button" id="newrow" class="btn btn-primary">Aggiungi nuova</button>
 
 	<div class="inner">

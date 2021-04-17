@@ -14,7 +14,7 @@ if($ret->num_rows != 0)
 	$_SESSION['user'] = $row['user'];
 	$_SESSION['id'] = $row['id_prof'];
 	$_SESSION['priv'] = $row['priv'];
-	$_SESSION['scuola'] = $row['fk_scuola'];
+	$_SESSION['school'] = $row['fk_scuola'];
 
 	// Updates the login time
 	$up_st = prepare_stmt("UPDATE PROFESSORI SET last_login=NOW() WHERE id_prof=?");

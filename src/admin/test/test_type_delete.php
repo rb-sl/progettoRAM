@@ -30,6 +30,6 @@ else
     $_SESSION['alert'] = "Impossibile eliminare il tipo di test: esistono ".$r['n']." test associati";
 }
 
-header("Location: /admin/test_type.php");
+header("Location: /admin/test/test_type.php");
 exit;
 ?>

@@ -27,5 +27,5 @@ $up_st->close();
 		
 writelog("Studente $stud1 separato in $stud1 e $stud2");
 $_SESSION['alert'] = "Studente $stud1 separato in $stud1 e $stud2";
-header("Location: /admin/student_correction.php");
+header("Location: /admin/student/student_correction.php");
 ?>

@@ -10,7 +10,7 @@ $section = strtoupper($_POST['sez']);
 // Check of class uniqueness per year and school
 $chk_st = prepare_stmt("SELECT * FROM CLASSI JOIN SCUOLE ON fk_scuola=id_scuola 
 	WHERE classe=? AND sez=? AND anno=? AND fk_scuola=? AND id_cl<>?");
-$chk_st->bind_param("isiii", $_POST['cl'], $section, $_POST['anno'], $_SESSION['scuola'], $_GET['id']);
+$chk_st->bind_param("isiii", $_POST['cl'], $section, $_POST['anno'], $_SESSION['school'], $_GET['id']);
 $chk = execute_stmt($chk_st);
 $chk_st->close();
 

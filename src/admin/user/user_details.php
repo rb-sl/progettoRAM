@@ -21,7 +21,7 @@ show_premain("Profilo di ".$user['user']);
 
 <h2>
     Profilo di <?=$user['user']?>
-    <a href="/admin/users.php" class="btn btn-warning">Indietro</a>
+    <a href="/admin/user/users.php" class="btn btn-warning">Indietro</a>
 </h2>
 
 <form action="user_update.php?id=<?=$_GET['id']?>" method="POST" class="tdiv">

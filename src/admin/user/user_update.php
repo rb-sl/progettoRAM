@@ -17,7 +17,7 @@ $user = $ret->fetch_assoc();
 if(!can_downgrade($_GET['id']) and $_POST['priv'] < $user['priv'])
 {
     $_SESSION['alert'] = "Modifica dei privilegi dell'utente non autorizzata";
-    header("Location: /admin/users.php");
+    header("Location: /admin/user/users.php");
 }
 
 // If the privilege is not modified the updated is not carried out (in order to
@@ -31,5 +31,5 @@ if($_POST['priv'] != $user['priv'])
 }
 
 $_SESSION['alert'] = "Privilegi aggiornati correttamente";
-header("Location: /admin/users.php");
+header("Location: /admin/user/users.php");
 ?>

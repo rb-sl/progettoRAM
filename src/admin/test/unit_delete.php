@@ -30,6 +30,6 @@ else
     $_SESSION['alert'] = "Impossibile eliminare l'unità: esistono ".$r['n']." test associati";
 }
 
-header("Location: /admin/unit.php");
+header("Location: /admin/test/unit.php");
 exit;
 ?>

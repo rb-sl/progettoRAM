@@ -33,5 +33,5 @@ else
 
 $up_st->close();
 
-header("Location: /admin/student_correction.php");
+header("Location: /admin/student/student_correction.php");
 ?>

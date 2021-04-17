@@ -23,7 +23,7 @@ $dup_st = prepare_stmt("SELECT id_stud, cogs, noms, id_ist, classe, sez, anno FR
 	AND anno=? AND classe<=? AND fk_scuola=? 
 	GROUP BY id_stud 
 	HAVING(anno=MAX(anno))");
-$dup_st->bind_param("sssiii", $lastname, $firstname, $gender, $year, $class, $_SESSION['scuola']);
+$dup_st->bind_param("sssiii", $lastname, $firstname, $gender, $year, $class, $_SESSION['school']);
 
 $data = [];
 foreach($st as $k => $stud)

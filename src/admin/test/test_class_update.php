@@ -29,5 +29,5 @@ if(isset($_POST['col1']))
 }
 
 $_SESSION['alert'] = "Aggiornamento completato";
-header("Location: /admin/test_class.php");
+header("Location: /admin/test/test_class.php");
 ?>

@@ -40,9 +40,9 @@ $prom_st = prepare_stmt("SELECT C1.id_cl, C1.classe, C1.sez FROM
 	ORDER BY classe, sez");
 
 if(chk_auth(ADMINISTRATOR))
-	$prom_st->bind_param("iiii", $lastyear, $_SESSION['scuola'], $year, $_SESSION['scuola']);
+	$prom_st->bind_param("iiii", $lastyear, $_SESSION['school'], $year, $_SESSION['school']);
 else
-	$prom_st->bind_param("iiiii", $_SESSION['id'], $lastyear, $_SESSION['scuola'], $year, $_SESSION['scuola']);
+	$prom_st->bind_param("iiiii", $_SESSION['id'], $lastyear, $_SESSION['school'], $year, $_SESSION['school']);
 
 $ret = execute_stmt($prom_st);
 $prom_st->close();

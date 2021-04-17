@@ -27,7 +27,7 @@ $("#m_src").click(function() {
 	}
 
 	$.ajax({                            
-		url: "/admin/student_info_ajax.php",
+		url: "/admin/student/student_info_ajax.php",
 		data: "key=" + key + "&id1=" + $("#m_id1").val() + "&id2=" + $("#m_id2").val() 
 			+ "&name1=" + $("#m_name1").val() + "&surname1=" + $("#m_surname1").val()
 			+ "&name2=" + $("#m_name2").val() + "&surname2=" + $("#m_surname2").val(),
@@ -58,7 +58,7 @@ $("#s_src").click(function() {
 	}
 
 	$.ajax({                            
-		url: "/admin/student_info_ajax.php",
+		url: "/admin/student/student_info_ajax.php",
 		data: "key=" + key + "&id1=" + $("#s_id1").val() + "&name1=" + $("#s_name1").val() 
 			+ "&surname1=" + $("#s_surname1").val(),
 		dataType: "json",                
