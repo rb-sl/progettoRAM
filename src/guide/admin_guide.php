@@ -21,7 +21,7 @@ $none = get_privilege(NONE);
 		<ul class="nobul">
 			<li><a href="#log">Visualizzare i log di utilizzo</a></li>
 			<li><a href="#user">Visualizzare, aggiungere e modificare gli utenti</a></li>
-			<li><a href="#unit">Gestire le unità di misura nel sistema</a></li>
+			<li><a href="#testadm">Gestire le unità di misura, i tipi di dati e le classi dei test</a></li>
 			<li><a href="#proj">Modificare il testo della pagina Il progetto</a></li>
 			<li><a href="#motd">Modificare il testo mostrato in home page</a></li>
 			<li><a href="#studfix">Unire o separare profili degli studenti</a></li>
@@ -98,7 +98,7 @@ $none = get_privilege(NONE);
 		comunicate all'utente</b> che sarà invitato a modificarle al primo accesso.
 	</p>
 
-	<h4 id="unit">Gestire le unità di misura nel sistema</h4>
+	<h4 id="testadm">Gestire le unità di misura, i tipi di dati e le classi dei test</h4>
 	<p>
 		Cliccando su <span class="primarycolor">Gestione unità di misura</span> si accede alla lista delle
 		unità presenti nel sistema. È possibile premere su <span class="primarycolor">Aggiungi nuova</span>
@@ -107,8 +107,14 @@ $none = get_privilege(NONE);
 		sistema</b>. Al termine delle modifiche premere su <span class="primarycolor">Salva</span>.
 	</p>
 	<p>
-		È anche possibile cancellare un'unità di misura se non è utilizzata in nessun test tramite il
+		Un'unità di misura che non è utilizzata in nessun test può essere cancellata tramite il
 		pulsante <span class="dangercolor">Elimina</span>.
+	</p>
+	<p>
+		È anche possibile cliccare su <span class="primarycolor">Gestione tipi dei dati dei test</span>
+		(ovvero i tipi di dati proposti all'inserimento nel registro) o 
+		<span class="primarycolor">Gestione classi dei test</span> per modificare queste informazioni. Le
+		procedure sono analoghe a quelle descritte per le unità.
 	</p>
 
 	<h4 id="proj">Modificare il testo della pagina Il progetto</h4>

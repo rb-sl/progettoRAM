@@ -21,10 +21,10 @@ $unit_st->close();
 <h2>Gestione delle unità di misura</h2>
 
 <form action="/admin/unit_update.php" method="POST" class="tdiv">
-    <button type="button" id="newunit" class="btn btn-primary">Aggiungi nuova</button>
+    <button type="button" id="newrow" class="btn btn-primary">Aggiungi nuova</button>
 
     <div class="inner">
-        <table id="units" class="table table-light table-striped studtable">
+        <table id="datatable" class="table table-light table-striped studtable">
             <tr>
                 <th>Nome unità</th>
                 <th>Simbolo</th>
@@ -34,8 +34,8 @@ $unit_st->close();
 while($row = $ret->fetch_assoc())
 {
     echo "  <tr>
-                <td id='u_".$row['id_udm']."'>".$row['udm']."</td>
-                <td id='s_".$row['id_udm']."'>".$row['simbolo']."</td>
+                <td id='c1_".$row['id_udm']."'>".$row['udm']."</td>
+                <td id='c2_".$row['id_udm']."'>".$row['simbolo']."</td>
                 <td><div><button type='button' id='mod_".$row['id_udm']."' class='btn btn-warning btnmenu mod'>Modifica</button>"; 
 
 	if($row['n'] == 0)
@@ -52,6 +52,9 @@ while($row = $ret->fetch_assoc())
     <input type="submit" id="submit" class="btn btn-primary jQhidden" value="Salva">
 </form>
 
-<script src="/admin/js/unit.js"></script>
+<script>
+var col2type = "text"
+</script>
+<script src="/admin/js/tables.js"></script>
 
 <?php show_postmain(); ?>

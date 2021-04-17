@@ -9,8 +9,10 @@ show_premain();
 
 <p>
 	<a href="/admin/log.php" class="btn btn-secondary marginunder">Log di utilizzo</a><br>
-	<a href="/admin/users.php" class="btn btn-primary marginunder">Gestione utenti</a><br>
+	<a href="/admin/users.php" class="btn btn-info marginunder">Gestione utenti</a><br>
 	<a href="/admin/unit.php" class="btn btn-primary marginunder">Gestione unità di misura</a><br>
+	<a href="/admin/test_type.php" class="btn btn-primary marginunder">Gestione tipi dei dati dei test</a><br>
+	<a href="/admin/test_class.php" class="btn btn-primary marginunder">Gestione classi dei test</a><br>
 	<a href="/admin/project_modify.php" class="btn btn-info marginunder">Cambia descrizione del progetto</a><br>
 	<a href="/admin/announcement_modify.php" class="btn btn-info marginunder">Cambia annuncio in home page</a><br>
 	<a href="/admin/student_correction.php" class="btn btn-warning marginunder">Correzione profili degli studenti</a>

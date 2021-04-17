@@ -84,7 +84,7 @@ if(chk_auth(ADMINISTRATOR))
 		<ul class="nobul">
 			<li><a href="#log">Visualizzare i log di utilizzo</a></li>
 			<li><a href="#user">Visualizzare, aggiungere e modificare gli utenti</a></li>
-			<li><a href="#unit">Gestire le unità di misura nel sistema</a></li>
+			<li><a href="#testadm">Gestire le unità di misura, i tipi di dati e le classi dei test</a></li>
 			<li><a href="#proj">Modificare il testo della pagina Il progetto</a></li>
 			<li><a href="#motd">Modificare il testo mostrato in home page</a></li>
 			<li><a href="#studfix">Unire o separare profili degli studenti</a></li>
