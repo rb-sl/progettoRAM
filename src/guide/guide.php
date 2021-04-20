@@ -150,15 +150,39 @@ if(chk_auth(NONE))
 		<p>
 			Il Progetto RAM (Ricerca Attivit&agrave; Motorie) è un'applicazione sviluppata nell'A.S. 
 			2016/2017 all'ITIS G. Fauser di Novara come progetto di maturità. È stata poi successivamente integrata
-			per migliorarne le funzionalità, l'usabilità l'efficienza.
+			per migliorarne le funzionalità, l'usabilità e l'efficienza.
 		</p>
+		<p>
+			Vengono utilizzati cookie tecnici per fornire il servizio.
+		</p>
+
+		<h4>Codice sorgente</h4>
 		<p>
 			Il codice sorgente dell'applicazione è 
 			<a href="https://github.com/rb-sl/progettoRAM" target="_blank">disponibile su Github&#128279;</a>
 			insieme alla documentazione del progetto.
 		</p>
 
-		<h4 id="contacts">Contatti</h4>
+		<h4 id="contacts">Amministratori dell'applicazione</h4>
+<?php
+// Prints the administrator's contact information
+$priv = ADMINISTRATOR;
+$admins = prepare_stmt("SELECT * FROM PROFESSORI 
+	WHERE priv=?
+	ORDER BY granted_by ASC");
+$admins->bind_param("i", $priv);
+$ret = execute_stmt($admins);
+$admins->close();
+
+while($row = $ret->fetch_assoc())
+{	
+	echo "<p class='marginunder'>
+			<b>".$row['nomp']." ".$row['cogp']."</b><br>";
+	if($row['show_email'])
+		echo "E-mail: <a href='mailto:".$row['email']."'>".$row['email']."</a><br>";
+	echo $row['contact_info']."</p>";
+}
+?>
 	</div>
 </div>
 

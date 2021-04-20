@@ -53,8 +53,27 @@ while($row = $ret->fetch_assoc())
 				</select>
 			</td>
 		</tr>
-	</table> 
-
+	</table>
+<?php
+if(chk_auth(ADMINISTRATOR))
+{
+	if($prof['show_email'])
+		$chk = " checked";
+	else
+		$chk = "";
+?>
+	<div>
+		Ulteriori informazioni di contatto:<br>
+		<textarea name="contact"><?=$prof['contact_info']?></textarea>
+	</div>
+	
+	<div class="form-check flexrow">
+		<input id="showmail" class="form-check-input" type="checkbox" name="showmail" value="1"<?=$chk?>>
+		<label class="form-check-label" for="showmail">Mostra email nella guida</label>
+	</div>
+<?php
+}
+?>
 	<button type="button" id="btnpass" class="btn btn-warning marginunder">Modifica password</button><br>
 	<span id="pass" class="jQhidden">
     	<table class="marginunder">

@@ -6,15 +6,12 @@ session_start();
 const CONF_PATH = "C:\\xampp\\server_conf.json";
 const LOG_PATH = "C:\\xampp\\htdocs\\log\\";
 
+const JQUERY_PATH = "/libraries/ui/jquery-3.4.1.min.js";
+
 const BOOTSTRAP_CSS_PATH = "/libraries/ui/bootstrap/css/bootstrap.min.css";
 const BOOTSTRAP_JS_PATH = "/libraries/ui/bootstrap/js/bootstrap.min.js";
 
 const FITTY_PATH = "/libraries/ui/fitty/fitty.min.js";
-
-const JQUERY_PATH = "/libraries/ui/jquery-3.4.1.min.js";
-const JQUERY_UI_JS_PATH = "/libraries/ui/jquery-ui/jquery-ui.min.js";
-const JQUERY_UI_CSS_PATH = "/libraries/ui/jquery-ui/jquery-ui.min.css";
-
 const PLOTLY_PATH = "/libraries/plotly.min.js";
 
 // Constants for access control
@@ -200,20 +197,21 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
     	<meta charset="utf-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<!-- jQuery and jQuery UI -->
+		<!-- jQuery -->
         <script src="<?=JQUERY_PATH?>"></script>
-        <script src="<?=JQUERY_UI_JS_PATH?>"></script>
-        <link rel="stylesheet" href="<?=JQUERY_UI_CSS_PATH?>">
-		<script src="<?=FITTY_PATH?>"></script>
-
+		
 		<!-- Bootstrap and custom graphical elements -->
         <link rel="stylesheet" href="<?=BOOTSTRAP_CSS_PATH?>">
     	<script src="<?=BOOTSTRAP_JS_PATH?>"></script>
-        
-        <link rel="stylesheet" href="/libraries/ui/custom.css" type="text/css" media="all"> 
                 
-		<!-- Graph and custom scripts -->
+		<!-- Plots and table text width -->
         <script src="<?=PLOTLY_PATH?>"></script>
+		<script src="<?=FITTY_PATH?>"></script>
+
+		<!-- Custom CSS -->
+		<link rel="stylesheet" href="/libraries/ui/custom.css" type="text/css" media="all"> 
+        <link rel="stylesheet" href="/libraries/ui/custom.css" type="text/css" media="all"> 
+		<link rel="stylesheet" href="/libraries/ui/custom.css" type="text/css" media="all"> 
 <?php 
 	if($stat)
 	{
@@ -400,14 +398,11 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 // Shows the final static elements 
 function show_postmain()
 {
-?>
-				
+?>	
 			</main>
 		</div>
 		<footer>
-			<div id="container">
-				&nbsp;ITIS Fauser Novara - 2017
-			</div>
+			ITIS Fauser Novara - 2017
 		</footer>
 <?php
 	if(isset($_SESSION['alert']) and $_SESSION['alert'] != "")

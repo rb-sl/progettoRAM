@@ -24,8 +24,12 @@ $location = "/user/profile.php";
 // The query is built considering if the user wishes to update their password
 if(!empty($_POST['psw']))
 {
-	$up_st = prepare_stmt("UPDATE PROFESSORI SET user=?, nomp=?, cogp=?, email=?, fk_scuola=?, psw=MD5(?), lastpsw=CURDATE() WHERE id_prof=?");
-	$up_st->bind_param("ssssssi", $_POST['usr'], $_POST['nomp'], $_POST['cogp'], $_POST['email'], $_POST['school'], $_POST['psw'], $_SESSION['id']);
+	$up_st = prepare_stmt("UPDATE PROFESSORI SET user=?, nomp=?, cogp=?, email=?, 
+		contact_info=?, show_email=?, fk_scuola=?, psw=MD5(?), lastpsw=CURDATE() 
+		WHERE id_prof=?");
+	$up_st->bind_param("sssssiisi", $_POST['usr'], $_POST['nomp'], $_POST['cogp'], 
+		$_POST['email'], $_POST['contact'], $showmail,  $_POST['school'], 
+		$_POST['psw'], $_SESSION['id']);
   	
 	if($_SESSION['err'] == FIRST_ACCESS)
 	{
@@ -37,14 +41,25 @@ if(!empty($_POST['psw']))
 }
 else
 {
-	$up_st = prepare_stmt("UPDATE PROFESSORI SET user=?, nomp=?, cogp=?, email=?, fk_scuola=? WHERE id_prof=?");
-	$up_st->bind_param("sssssi", $_POST['usr'], $_POST['nomp'], $_POST['cogp'], $_POST['email'], $_POST['school'], $_SESSION['id']);
+	$up_st = prepare_stmt("UPDATE PROFESSORI SET user=?, nomp=?, cogp=?, email=?, 
+		contact_info=?, show_email=?, fk_scuola=? 
+		WHERE id_prof=?");
+	$up_st->bind_param("sssssiii", $_POST['usr'], $_POST['nomp'], $_POST['cogp'], 
+		$_POST['email'], $_POST['contact'], $showmail, $_POST['school'], 
+		$_SESSION['id']);
 }
+
+if(isset($_POST['showmail']))
+	$showmail = 1;
+else
+	$showmail = 0;
+
 $ret = execute_stmt($up_st);
 $up_st->close();
 
 // Update of the active username
 $_SESSION['user'] = $_POST['usr'];  
+$_SESSION['school'] = $_POST['school'];
            
 writelog("[Modifica profilo] ".$_SESSION['id']);
 header("Location: $location");
