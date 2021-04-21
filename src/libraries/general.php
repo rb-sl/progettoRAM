@@ -66,7 +66,7 @@ function chk_access($priv = NONE, $kill = true)
 		if(!$kill)
 			return false;
 
-		header('Location: /');
+		header("Location: /");
 		exit;
 	}
 
@@ -209,9 +209,7 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 		<script src="<?=FITTY_PATH?>"></script>
 
 		<!-- Custom CSS -->
-		<link rel="stylesheet" href="/libraries/ui/custom.css" type="text/css" media="all"> 
-        <link rel="stylesheet" href="/libraries/ui/custom.css" type="text/css" media="all"> 
-		<link rel="stylesheet" href="/libraries/ui/custom.css" type="text/css" media="all"> 
+		<link rel="stylesheet" href="/libraries/ui/custom.css" type="text/css" media="all">
 <?php 
 	if($stat)
 	{
@@ -358,7 +356,7 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 			<main class="<?=$margin." ".$widthcl?>">
 <?php
 	// Prints errors and stops the loading of the page
-	if(isset($_SESSION['err']) and $_SESSION['err'] != ""
+	if(isset($_SESSION['err']) and $_SESSION['err'] !== ""
 		and ($_SESSION['err'] != FIRST_ACCESS or basename($_SERVER['PHP_SELF']) != "profile.php"))
 		{
 			echo "<h3 class='dangercolor'>Accesso negato</h3>";
@@ -401,8 +399,11 @@ function show_postmain()
 ?>	
 			</main>
 		</div>
-		<footer>
-			ITIS Fauser Novara - 2017
+		<footer><a href="/guide/guide.php#code">
+			<div class="license">
+				<img src="/agpl.svg" alt="agpl license">
+			</div>
+			Applicazione rilasciata con licenza AGPLv3</a>
 		</footer>
 <?php
 	if(isset($_SESSION['alert']) and $_SESSION['alert'] != "")

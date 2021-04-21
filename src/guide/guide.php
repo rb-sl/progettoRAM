@@ -99,6 +99,10 @@ if(chk_auth(NONE))
 }
 ?>		
 		<li><a href="#info">Ulteriori informazioni e contatti</a></li>
+		<ul class="nobul">
+			<li><a href="#code">Codice sorgente</a></li>
+			<li><a href="#contacts">Amministratori dell'applicazione</a></li>
+		</ul>
 	</ul>
 
 	<h3 id="access">Registrazione e accesso</h3>
@@ -148,19 +152,20 @@ if(chk_auth(NONE))
 	<div class="section">
 		<h3 id="info">Ulteriori informazioni e contatti</h3>
 		<p>
-			Il Progetto RAM (Ricerca Attivit&agrave; Motorie) è un'applicazione sviluppata nell'A.S. 
-			2016/2017 all'ITIS G. Fauser di Novara come progetto di maturità. È stata poi successivamente integrata
-			per migliorarne le funzionalità, l'usabilità e l'efficienza.
+			Il Progetto RAM (Ricerca Attività Motorie) è un'applicazione originariamente sviluppata come 
+			progetto di maturità a favore dei docenti di Educazione Fisica. È stata poi completamente 
+			rinnovata e integrata per migliorarne le funzionalità, l'usabilità e l'efficienza.
 		</p>
 		<p>
 			Vengono utilizzati cookie tecnici per fornire il servizio.
 		</p>
 
-		<h4>Codice sorgente</h4>
+		<h4 id="code">Codice sorgente</h4>
 		<p>
 			Il codice sorgente dell'applicazione è 
 			<a href="https://github.com/rb-sl/progettoRAM" target="_blank">disponibile su Github&#128279;</a>
-			insieme alla documentazione del progetto.
+			insieme alla documentazione del progetto, ed è rilasciato con licenza 
+			<a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPLv3&#128279;</a>.
 		</p>
 
 		<h4 id="contacts">Amministratori dell'applicazione</h4>

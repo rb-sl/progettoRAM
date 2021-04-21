@@ -102,7 +102,7 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 		consiglia di scaricare l'immagine).
     </p>
 	<p>
-		<b>NB</b>: Vengono visualizzati solo i valori e i grafici dei test con almeno <?=CORRELATION_TRESH?>
+		<b>NB</b>: Vengono visualizzati solo i valori e i grafici dei test con almeno <?=CORRELATION_THRESH?>
 		valori affinché i risultati siano significativi.
 	</p>
 </div>

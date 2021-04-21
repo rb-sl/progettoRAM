@@ -53,12 +53,33 @@ footer {
 	position: absolute;
 	bottom: 0;
 	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 	height: 50px;
-	line-height: 50px;
 	background-color: #343a40;
+}
+footer * {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	height: 100%;
 	color: rgba(255, 255, 255, 0.5);
-	text-align: left;
-	padding-left: 10px;
+	text-align: left;	
+	text-decoration: none;
+	user-select: none;
+}
+footer > a:hover {
+	color: rgba(255, 255, 255, 0.5);
+}
+.license {	
+	margin-right: 5px;
+	background-color: rgba(255, 255, 255, 0.5);
+	width: max-content;
+}
+.license > img {
+	overflow: hidden;
+	padding: 1px;
 }
 
 /* ---------------------

@@ -54,7 +54,7 @@ Con indicate le corrette credenziali dell'account per l'accesso a MySQL.
 * `15 - PLOTLY_PATH`: Percorso al sorgente JS di PLOTLY
 
 ### [lib_stat.php](libraries/lib_stat.php)
-Nel file di libreria per la sezione statistica è possibile modificare la costante `CORRELATION_TRESH`, ovvero il numero di test considerato significativo per le statistiche.
+Nel file di libreria per la sezione statistica è possibile modificare la costante `CORRELATION_THRESH`, ovvero il numero di test considerato significativo per le statistiche.
 
 ## File in /
 

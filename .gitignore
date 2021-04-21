@@ -13,3 +13,5 @@ src/libraries/ui/jquery-ui/LICENSE.txt
 src/libraries/ui/jquery-ui/package.json
 src/libraries/plotly.min.js
 **/bootstrap/
+*.bak
+*.asta

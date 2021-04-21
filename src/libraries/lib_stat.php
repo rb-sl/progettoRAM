@@ -2,7 +2,7 @@
 // Collection of functions used in the statistical section
 
 // Number of test results after which the correlation is deemed significant
-const CORRELATION_TRESH = 30;
+const CORRELATION_THRESH = 30;
 
 // Constants for graphs
 const GRAPH_YEAR = 0;
@@ -796,7 +796,7 @@ function calc_r($id1, $stat1, $id2, $stat2, $cond = null)
 
 	// As r is not indicative with few data, only couples of tests 
 	// with	at least N values are considered
-    if($r['n'] > CORRELATION_TRESH)
+    if($r['n'] > CORRELATION_THRESH)
     {
     	// Calculation of the correlation coefficient as
     	// sum((x - avg(x)) * (y - avg(y)) / ((n-1) * std(x) * std(y))
@@ -819,7 +819,7 @@ function calc_r($id1, $stat1, $id2, $stat2, $cond = null)
 // Function to get tests with a significant number of result (for correlation)
 function get_test_correlation($cond = null)
 {	
-	$threshold = CORRELATION_TRESH;
+	$threshold = CORRELATION_THRESH;
 	$test_st = prepare_stmt("SELECT id_test, nometest, pos FROM TEST 
 		WHERE id_test IN (SELECT fk_test FROM PROVE GROUP BY fk_test HAVING COUNT(*) > ?) 
 		ORDER BY nometest");
