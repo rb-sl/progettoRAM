@@ -1,4 +1,21 @@
 <?php
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Collection of functions related to the administrative section
 
 // Symbol for unordered lists
@@ -11,31 +28,31 @@ const ORDEREDLIST = "#";
 function get_privilege($priv)
 {
 	switch($priv)
-    {
-        case ADMINISTRATOR: 
-            $ret['text'] = "Amministratore";
-            $ret['color'] = "primarybg";
-            break;
-        case PROFESSOR_GRANTS: 
-            $ret['text'] = "Professore (modifica test)";
-            $ret['color'] = "infobg";
-            break;
-        case PROFESSOR: 
-            $ret['text'] = "Professore";
-            $ret['color'] = "successbg";
-            break;
-        case RESEARCH: 
-            $ret['text'] = "Ricerca";
-            $ret['color'] = "warningbg";
-            break;
-        case NONE:
+	{
+		case ADMINISTRATOR: 
+			$ret['text'] = "Amministratore";
+			$ret['color'] = "primarybg";
+			break;
+		case PROFESSOR_GRANTS: 
+			$ret['text'] = "Professore (modifica test)";
+			$ret['color'] = "infobg";
+			break;
+		case PROFESSOR: 
+			$ret['text'] = "Professore";
+			$ret['color'] = "successbg";
+			break;
+		case RESEARCH: 
+			$ret['text'] = "Ricerca";
+			$ret['color'] = "warningbg";
+			break;
+		case NONE:
 			$ret['text'] = "Nessuno";
-            $ret['color'] = "dangerbg";
-            break;
+			$ret['color'] = "dangerbg";
+			break;
 		default:
 			$ret = null;
 			break;
-    }
+	}
 	return $ret;
 }
 
@@ -48,8 +65,8 @@ function can_downgrade($id)
 	// Query to retrieve the users whose status can be downgraded by the current one
 	$dgrade_st = prepare_stmt("SELECT priv, granted_by FROM PROFESSORI WHERE id_prof=?");
 	$dgrade_st->bind_param("i", $rec_id);
-    $response = downgrade_rec($id);
-    $dgrade_st->close();
+	$response = downgrade_rec($id);
+	$dgrade_st->close();
 
 	return $response;	
 }
@@ -80,10 +97,10 @@ function compile_text($text)
 {
 	// Stack of current nesting of ul/ol
 	$list_stack = [];
-    // Line number for errors
-    $num = 1;
+	// Line number for errors
+	$num = 1;
 
-    $compiled = "";
+	$compiled = "";
 
 	// Takes a line from the text
 	$line = strtok($text, "\n");	
@@ -96,12 +113,12 @@ function compile_text($text)
 		$line = trim($line, " ");
 
 		// If the line is a title the header is set
-        // An error is thrown if there is only the opening tag
+		// An error is thrown if there is only the opening tag
 		if($line[0] == "<")
-		    if(strpos($line, ">") !== false)
-			    $line = preg_replace("/<(.*?)>/", "<h3>$1</h3>", $line);
-            else
-                return array($num, "Errore di titolo");
+			if(strpos($line, ">") !== false)
+				$line = preg_replace("/<(.*?)>/", "<h3>$1</h3>", $line);
+			else
+				return array($num, "Errore di titolo");
 		// If the line is part of a list
 		else if($line[0] == UNORDEREDLIST or $line[0] == ORDEREDLIST)
 		{
@@ -156,7 +173,7 @@ function compile_text($text)
 			$line = "<p>$line</p>";
 		}
 		
-        // If the new line is not in a list any previous list is closed 
+		// If the new line is not in a list any previous list is closed 
 		if(count($cur_list) == 0 and count($list_stack) > 0)
 		{
 			while($r = array_pop($list_stack))
@@ -173,9 +190,9 @@ function compile_text($text)
 		
 		// Fetches a new line to analyze
 		$line = strtok("\n");
-        $num++;
+		$num++;
 	}
 
-    return $compiled;
+	return $compiled;
 }
 ?>

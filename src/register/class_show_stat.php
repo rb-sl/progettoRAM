@@ -1,4 +1,21 @@
 <?php 
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Page to show statistical data about a class
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
@@ -20,10 +37,10 @@ $color = get_color_prc();
 <div>
 	<a href="class_show.php?id=<?=$_GET['id']?>" class="btn btn-primary marginunder">Registro della classe</a>
 	<h3>
-    	Visualizzazione classe:
+		Visualizzazione classe:
 		<select id="vis" class="form-control trigger">
-        	<option value="prc">Valori percentili</option>
-    		<option value="std">Valori standard</option>
+			<option value="prc">Valori percentili</option>
+			<option value="std">Valori standard</option>
    	 		<option value="gr">Voti</option>
 		</select>
 	</h3>
@@ -31,13 +48,13 @@ $color = get_color_prc();
 
 <div class="tdiv">
 	<div class="inner">
-    	<table class="table table-light table-striped">
-      		<tr id="thr" class="dat">
-            	<td class="topleft leftfix topfix">
-                	<button type="button" id="btnstat" class="btn btn-secondary btnmenu overpad">Medie e Mediane</button>
-                	<br>
-                	<button type="button" id="btncol" class="btn btn-secondary btnmenu overpad">Colori</button>
-            	</td>
+		<table class="table table-light table-striped">
+	  		<tr id="thr" class="dat">
+				<td class="topleft leftfix topfix">
+					<button type="button" id="btnstat" class="btn btn-secondary btnmenu overpad">Medie e Mediane</button>
+					<br>
+					<button type="button" id="btncol" class="btn btn-secondary btnmenu overpad">Colori</button>
+				</td>
 <?php
 // Header construction
 $ret = get_test($_GET['id']);
@@ -69,17 +86,17 @@ foreach($am['med'] as $idt => $med)
 // Prints the table header and information on average and median values
 echo $test['row']."
 		<td class='col topfix r_stat evenrow jQhidden'>Media totale</td>
-        <td id='tavg' class='col topfix r_stat jcol evenrow jQhidden' vcolor='#".(isset($am['tavg']['color']) ? $am['tavg']['color'] : "")."'>"
+		<td id='tavg' class='col topfix r_stat jcol evenrow jQhidden' vcolor='#".(isset($am['tavg']['color']) ? $am['tavg']['color'] : "")."'>"
 			.(isset($am['tavg']['val']) ? number_format($am['tavg']['val'], 5) : "-")."</td>
 	</tr>
 	<tr class='dat r_stat jQhidden'>
-    	<td class='leftfix evenrow'>Medie</td>$rowavg
-        <td rowspan='2' id='med1' class='col r_stat oddrow jQhidden'>Medie<br>studenti</td>
-        <td rowspan='2' id='med2' class='col r_stat oddrow jQhidden'>Mediane<br>studenti</td>
-    </tr>
+		<td class='leftfix evenrow'>Medie</td>$rowavg
+		<td rowspan='2' id='med1' class='col r_stat oddrow jQhidden'>Medie<br>studenti</td>
+		<td rowspan='2' id='med2' class='col r_stat oddrow jQhidden'>Mediane<br>studenti</td>
+	</tr>
 	<tr class='dat r_stat jQhidden'>
-    	<td class='leftfix oddrow'>Mediane</td>$rowmed
-    </tr>";
+		<td class='leftfix oddrow'>Mediane</td>$rowmed
+	</tr>";
 
 $cstud = col_stud();
 foreach($cstud as $idist => $stud)
@@ -88,18 +105,18 @@ foreach($cstud as $idist => $stud)
 	
 	foreach($test['id'] as $idt)
 	{
-    	echo "<td id='$idist"."_$idt' class='jdat jcol r_$idist c_$idt'";
+		echo "<td id='$idist"."_$idt' class='jdat jcol r_$idist c_$idt'";
 		if(isset($rstud['val'][$idist][$idt]))
 		{
 			if(isset($rstud['data'][$idist][$idt]) and $rstud['data'][$idist][$idt] != "0000-00-00")
 				echo "title='".$rstud['data'][$idist][$idt]."'";
 
-        	echo " vcolor='#".$rstud['color'][$idist][$idt]."'>"
+			echo " vcolor='#".$rstud['color'][$idist][$idt]."'>"
 				.$rstud['val'][$idist][$idt]."</td>";
 		}
 		else 
-        	echo ">-</td>";
-    }
+			echo ">-</td>";
+	}
 
 	if(isset($am['savg'][$idist]))
 	{

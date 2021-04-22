@@ -1,4 +1,21 @@
 <?php
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Test parameters visualization
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 chk_access(RESEARCH);
@@ -29,52 +46,52 @@ show_premain($test['nometest']);
 
 <table class="table table-light table-striped marginunder">
 	<tr>
-    	<td>Classe del test:</td>
-    	<td class="halfwidth"><?=$test['nomec']?></td>
+		<td>Classe del test:</td>
+		<td class="halfwidth"><?=$test['nomec']?></td>
 	</tr>
 	<tr>
-    	<td>Unità di misura:</td>
-    	<td><?=$test['udm']?></td>
+		<td>Unità di misura:</td>
+		<td><?=$test['udm']?></td>
 	</tr>
 	<tr>
-    	<td>Valori migliori:</td>
-    	<td><?=$test['pos']?>
+		<td>Valori migliori:</td>
+		<td><?=$test['pos']?>
 		</td>
 	</tr>
 	<tr>
-    	<td>Tipo di valori:</td>
-    	<td><?=$test['nomet']?></td>
+		<td>Tipo di valori:</td>
+		<td><?=$test['nomet']?></td>
 	</tr>
 	<tr>
-    	<td>Sensibilità del test:</td>
-    	<td><?=$test['passo']." ".$test['simbolo']?></td>
+		<td>Sensibilità del test:</td>
+		<td><?=$test['passo']." ".$test['simbolo']?></td>
 	</tr>
 	<tr>
-    	<th colspan="2" class="textcenter">Informazioni aggiuntive</th>
+		<th colspan="2" class="textcenter">Informazioni aggiuntive</th>
 	</tr>
 	<tr>
-    	<td>Posizione:</td>
-    	<td><?=($test['posiz'] ? $test['posiz'] : "-")?></td>
+		<td>Posizione:</td>
+		<td><?=($test['posiz'] ? $test['posiz'] : "-")?></td>
 	</tr>
 	<tr>
-    	<td>Materiale aggiuntivo:</td>
-    	<td><?=($test['equip'] ? $test['equip'] : "-")?></td>
+		<td>Materiale aggiuntivo:</td>
+		<td><?=($test['equip'] ? $test['equip'] : "-")?></td>
 	</tr>
 	<tr>
-    	<td>Esecuzione:</td>
-    	<td><?=($test['esec'] ? $test['esec'] : "-")?></td>
+		<td>Esecuzione:</td>
+		<td><?=($test['esec'] ? $test['esec'] : "-")?></td>
 	</tr>
 	<tr>
-	    <td>Consigli:</td>
-	    <td><?=($test['cons'] ? $test['cons'] : "-")?></td>
+		<td>Consigli:</td>
+		<td><?=($test['cons'] ? $test['cons'] : "-")?></td>
 	</tr>
 	<tr>
-	    <td>Limite:</td>
-	    <td><?=($test['limite'] ? $test['limite'] : "-")?></td>
+		<td>Limite:</td>
+		<td><?=($test['limite'] ? $test['limite'] : "-")?></td>
 	</tr>
 	<tr>
-	    <td>Valutazione:</td>
-	    <td><?=$test['valut']?></td>
+		<td>Valutazione:</td>
+		<td><?=$test['valut']?></td>
 	</tr>
 </table>
 

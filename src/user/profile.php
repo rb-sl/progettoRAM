@@ -1,4 +1,21 @@
 <?php 
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Front end page to let users modify their information
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 connect();
@@ -76,17 +93,17 @@ if(chk_auth(ADMINISTRATOR))
 ?>
 	<button type="button" id="btnpass" class="btn btn-warning marginunder">Modifica password</button><br>
 	<span id="pass" class="jQhidden">
-    	<table class="marginunder">
+		<table class="marginunder">
 			<tr>
 				<td class="textright">Nuova password:&nbsp;</td>
 				<td><input class="form-control psw" type="password" id="psw" name="psw"></td>
 			</tr>
-      		<tr>
+	  		<tr>
 				<td class="textright">Conferma password:&nbsp;</td>
 				<td><input class="form-control psw" type="password" id="cpsw"></td>
 			</tr>
-    	</table>
-    	<span id="err" class="dangercolor"></span>
+		</table>
+		<span id="err" class="dangercolor"></span>
   	</span>
 	
   	<input type="submit" id="submit" class="btn btn-primary" id="submit" value="Aggiorna"><br>

@@ -1,3 +1,20 @@
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Javascript / jQuery functions connected to show_classe.php 
 
 // Ajax function to receive and output the list of tests not yet
@@ -92,7 +109,7 @@ function unitAjax(test) {
 
 	return d;
 }
-    
+
 // Requests the unit on change of the new test 
 $(document).on("change", "#test", function() {
 	var data = unitAjax($("#test").val());
@@ -102,7 +119,7 @@ $(document).on("change", "#test", function() {
 
 	resizeText();
 });
-    
+
 // Function to enable the update of table values by double-clicking on them
 $(document).on("dblclick", ".jdat", function() {
 	if($(this).html().indexOf("input") === -1) {

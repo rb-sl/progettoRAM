@@ -1,5 +1,22 @@
 <?php 
-// Page to show the data of a class
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
+// Page to show the register of a class
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
@@ -25,11 +42,11 @@ show_premain("Registro ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno
 	<button type="button" id="btnadd" class="btn btn-warning btnmenu">Aggiungi test</button>
 	<button type="button" id="btncan" class="btn btn-danger btnmenu jQhidden">Annulla</button>
 	<input type="submit" id="btncar" class="btn btn-warning btnmenu jQhidden" value="Salva">
-     
+	 
 	<div class="tdiv">
   		<div id="tos" class="inner">
-    		<table id="tts" class="table table-light table-striped">
-      			<tr id="thr" class="dat">
+			<table id="tts" class="table table-light table-striped">
+	  			<tr id="thr" class="dat">
 					<td class="topleft topfix leftfix">
 						<button type="button" id="btnstat" class="btn btn-secondary overpad">Medie e mediane</button>
 					</td>
@@ -73,7 +90,7 @@ echo "</tr>
 		<td class='leftfix evenrow'>Medie:</td>
 		$ravg
 	</tr>
-    <tr class='dat r_stat jQhidden'>
+	<tr class='dat r_stat jQhidden'>
 		<td class='leftfix oddrow'>Mediane:</td>
 		$rmed
 	</tr>";
@@ -84,16 +101,16 @@ foreach($rstud as $idist => $tds)
 	echo $tds['strow'];
 	foreach($idtest as $idt)
    	{
-    	echo "<td id='$idist"."_$idt' class='jdat r_$idist c_$idt'";
+		echo "<td id='$idist"."_$idt' class='jdat r_$idist c_$idt'";
    		if(isset($tds[$idt]))
-       		echo $tds[$idt];
-    	echo "></td>";
+	   		echo $tds[$idt];
+		echo "></td>";
    	}
 	echo "</tr>\n";
 }
 ?>
 			</table>
-    	</div>
+		</div>
 	</div>
 </form>
 

@@ -1,4 +1,21 @@
 <?php
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // This file contains a collection of functions used in the register section of
 // the application
 
@@ -87,15 +104,15 @@ function col_stud()
 		if($i % 2 == 0)
   			$cl = "evenrow";
   		else
-    		$cl = "oddrow";
+			$cl = "oddrow";
 
 		$rstud[$row['id_ist']]['strow'] = "<tr id='tr".$row['id_ist']."' class='dat tdr'>
-    		<td id='st".$row['id_ist']."' class='leftfix $cl'>
-        		<div><a href='student_show.php?id=".$row['id_stud']
+			<td id='st".$row['id_ist']."' class='leftfix $cl'>
+				<div><a href='student_show.php?id=".$row['id_stud']
 					."' class='resizetext' title=\"".quoteHTML($row['cogs']." ".$row['noms'])
 					." (".strtoupper($row['sesso']).")\" tabindex='-1'>".$row['cogs']." "
 					.(isset($row['noms'][0]) ? $row['noms'][0]."." : "")."</a></div>
-        	</td>";
+			</td>";
 		$i++;
 	}
 	
@@ -124,7 +141,7 @@ function col_class($stud)
 		if($i % 2 == 0)
   			$cl = "evenrow";
   		else
-    		$cl = "oddrow";
+			$cl = "oddrow";
 
 		if($row['fk_prof'] == $_SESSION['id'] or $_SESSION['id'] == 0)
 		{
@@ -922,7 +939,7 @@ function is_accettable($test, $val)
 	// The test is not performed if less than 10 values are present in the DB
 	// and the value is accepted
 	if($row['n'] < 10)
-    	return 1;
+		return 1;
 	
 	// Construction of the interval bounds
 	$int['sup'] = $row['avg'] + 10 * $row['std'];
@@ -945,7 +962,7 @@ function show_cl_form($cl = 0, $sez = "", $year = null)
 	$c4 = "";
 	$c5 = "";
 	switch($cl)
-    {
+	{
 		case 0:
 			$nc = "<option selected disabled></option>";
 			break;
@@ -968,20 +985,20 @@ function show_cl_form($cl = 0, $sez = "", $year = null)
 
 	// Construction of the year if not given
 	if($year === null)
-    {
-    	$year = date('Y');
+	{
+		$year = date('Y');
 		if(date("m") < 8)
 			$year--;
-    }
+	}
 
 	echo "Classe: 
 		<select id='cl' class='form-control' name='cl' required>
-    		$nc
-    		<option value='1'$c1>Prima</option>
-    		<option value='2'$c2>Seconda</option>
-    		<option value='3'$c3>Terza</option>
-    		<option value='4'$c4>Quarta</option>
-    		<option value='5'$c5>Quinta</option>
+			$nc
+			<option value='1'$c1>Prima</option>
+			<option value='2'$c2>Seconda</option>
+			<option value='3'$c3>Terza</option>
+			<option value='4'$c4>Quarta</option>
+			<option value='5'$c5>Quinta</option>
   		</select> 
   	Sezione: <input type='text' id='sez' class='smalltext' name='sez' value='".quoteHTML($sez)."' required>
   	Anno: <input  type='text' id='a1' class='textright smalltext' name='anno' value='$year' required>/<span id='flwa1'>".($year + 1)."</span>";

@@ -1,4 +1,21 @@
 <?php
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Main page for tests, allows to show users the tests and update grades
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 chk_access(RESEARCH);
@@ -63,10 +80,10 @@ if(chk_auth(ADMINISTRATOR))
 	$r = execute_stmt($pr_st);
 	
   	while($p = $r->fetch_assoc())
-    	echo "<option value='".$p['id_prof']."'"
+		echo "<option value='".$p['id_prof']."'"
 			.($p['id_prof'] == $_SESSION['id'] ? " selected" : "")
 			.">".$p['user']."</option>";
-    echo "</select>";
+	echo "</select>";
 }
 ?></h2>
 
@@ -75,11 +92,11 @@ if(chk_auth(ADMINISTRATOR))
 	</div>
 
 	<table class="table table-light marginunder">
-    	<tr>
-        	<th>Voto</th>
-           	<th>Percentuale assegnata</th>
-           	<th colspan="3" class="thirdwidth">Range percentili</th>
-       	</tr>
+		<tr>
+			<th>Voto</th>
+		   	<th>Percentuale assegnata</th>
+		   	<th colspan="3" class="thirdwidth">Range percentili</th>
+	   	</tr>
 <?php
 // Prints the table for grades
 $grade_st = prepare_stmt("SELECT * FROM VALUTAZIONI JOIN VOTI ON fk_voto=id_voto WHERE fk_prof=? ORDER BY voto ASC");
@@ -96,22 +113,22 @@ while($row = $ret->fetch_assoc())
 
 	echo "<tr>
 			<td id='x_$v10' style='background-color:#".$row['color']."'>".$row['voto']."</td>
-    		<td><input type='number' min='0' id='p_$v10' class='range halfwidth textright' 
+			<td><input type='number' min='0' id='p_$v10' class='range halfwidth textright' 
 				value='".($row['perc'] - $prev)."' name='perc[".$row['id_voto']."]'>%</td> 
-            <td id='i$v10'>$prev</td>
+			<td id='i$v10'>$prev</td>
 			<td>&rarr;</td>
 			<td id='f$v10'>".$row['perc']."</td>
-        </tr>";
+		</tr>";
 
 	$prev = $row['perc'];
 }	
 ?>
 		<tr>
-        	<th class="borderover">Totale:</th>
-        	<td class="err sum borderover"><?=$prev?></td>
-        	<td class="err borderover">0</td><td class="err borderover">&rarr;</td><td class="err borderover sum"><?=$prev?></td>
-    	</tr>
-    </table>
+			<th class="borderover">Totale:</th>
+			<td class="err sum borderover"><?=$prev?></td>
+			<td class="err borderover">0</td><td class="err borderover">&rarr;</td><td class="err borderover sum"><?=$prev?></td>
+		</tr>
+	</table>
 	<input type="submit" id="aggv" class="btn btn-warning" value="Aggiorna tabella voti">
 </form>
 

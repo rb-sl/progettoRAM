@@ -1,4 +1,21 @@
 <?php
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Frontend page to display ststistical correlation between tests
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
@@ -40,18 +57,18 @@ foreach($test as $idcol => $namecol)
 	foreach($test as $idrow => $namerow)
 		// Due to the matrix's simmetry, only the lower half is calculated,
 		// taking advantage of the lexicographical order in the query
-    	if($namerow <= $namecol)
-        {
-            $r = calc_r($idcol, $stats[$idcol], $idrow, $stats[$idrow]);
-        	
-        	if($r['r'] != "-")
-            	$cl = "point clcbl";
-        	else
-            	$cl = "";
-        
+		if($namerow <= $namecol)
+		{
+			$r = calc_r($idcol, $stats[$idcol], $idrow, $stats[$idrow]);
+			
+			if($r['r'] != "-")
+				$cl = "point clcbl";
+			else
+				$cl = "";
+		
 			// The matrix is built simmetrically
-        	$tab[$idrow][$idcol] = "<td id='m$idrow"."_$idcol' class='squaredat r_$idcol $cl gr' vcolor='".$r['color']."' title='n=".$r['n']."'>".$r['r']."</td>";
-        	$tab[$idcol][$idrow] = "<td id='m$idcol"."_$idrow' class='squaredat r_$idrow $cl gr' vcolor='".$r['color']."' title='n=".$r['n']."'>".$r['r']."</td>";
+			$tab[$idrow][$idcol] = "<td id='m$idrow"."_$idcol' class='squaredat r_$idcol $cl gr' vcolor='".$r['color']."' title='n=".$r['n']."'>".$r['r']."</td>";
+			$tab[$idcol][$idrow] = "<td id='m$idcol"."_$idrow' class='squaredat r_$idrow $cl gr' vcolor='".$r['color']."' title='n=".$r['n']."'>".$r['r']."</td>";
 		}
 
 	$i++;
@@ -63,7 +80,7 @@ echo "</tr>";
 foreach($tab as $id => $row)
 {
 	foreach($row as $x => $cell)
-    	echo $cell;
+		echo $cell;
 	echo "</tr>";
 }
 ?>	

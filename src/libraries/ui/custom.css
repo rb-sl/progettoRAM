@@ -1,3 +1,22 @@
+/* 
+ * Copyright 2021 Roberto Basla
+ * 
+ * This file is part of progettoRAM.
+ * 
+ * progettoRAM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * progettoRAM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
 /*
  * CSS file for the application, all rules are reported
  * here  
@@ -133,7 +152,7 @@ nav {
 		display: block;
 	}
 	/* Centers the elements inside the statistical menu */
-    #myNavbar2 {
+	#myNavbar2 {
 		text-align: center !important;
 	}
 	/* Cancels the main's displacement due to floating elements */
@@ -346,8 +365,8 @@ td, th {
 .privdiv {
 	display: inline-block; 
 	width: -webkit-calc(100% - 25px);
-    width: -moz-calc(100% - 25px);
-    width: calc(100% - 25px);
+	width: -moz-calc(100% - 25px);
+	width: calc(100% - 25px);
 }
 .boxdiv {
 	display: inline-block; 
@@ -367,13 +386,13 @@ td, th {
  */
 /* Container div, darkens the page */
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 3;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 3;
 }
 /* Canvas in the overlay */
 .overcanvas {
@@ -441,7 +460,7 @@ td, th {
  * -----------------------
  */
 .nobul {
-    list-style-type: none;
+	list-style-type: none;
 }
 .bordermenu {
 	border: 1px solid grey;
@@ -579,11 +598,11 @@ input[type="number"] {
  * -------------------
  */
 #login-dp{
-    border: 1px solid #333;
-    min-width: 250px;
-    padding: 14px 14px 0;
-    overflow: hidden;
-    background-color: #343a40;
+	border: 1px solid #333;
+	min-width: 250px;
+	padding: 14px 14px 0;
+	overflow: hidden;
+	background-color: #343a40;
 }
 #login-dp .form-group, .top-bot-margin {
 	margin-bottom: 10px;
@@ -664,11 +683,11 @@ input[type="number"] {
 label {
 	margin: 0 !important;
 	-webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 /* Specific to worpress-bound systems */

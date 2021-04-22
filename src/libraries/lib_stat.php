@@ -1,4 +1,21 @@
 <?php
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Collection of functions used in the statistical section
 
 // Number of test results after which the correlation is deemed significant
@@ -14,7 +31,7 @@ const GRAPH_TEST = 3;
 function arr_avg($vals, $dec = 0)
 {
 	if(sizeof($vals))
-    {
+	{
 		$s = array_sum($vals);
 		return number_format($s / sizeof($vals), $dec);
 	}
@@ -34,9 +51,9 @@ function arr_med($vals, $dec = 0)
 	// To align with array indices, in the even case 1 is subtracted from the found
 	// place, while in the odd case floor is used in place of ceil
 	if($size % 2 == 0)
-    	return number_format(($vals[$size / 2 - 1] + $vals[$size / 2]) / 2, $dec);
+		return number_format(($vals[$size / 2 - 1] + $vals[$size / 2]) / 2, $dec);
 	else
-    	return number_format($vals[floor($size / 2)], $dec);	
+		return number_format($vals[floor($size / 2)], $dec);	
 }
 
 // Construction of additional restrictions based on GET data
@@ -47,20 +64,20 @@ function cond_builder()
 	// Constuction of the class list
 	$cond['class'] = "";
 	for($i = 1; $i <= 5; $i++)
-    	if(isset($_GET['c'.$i]))
-       		$cond['class'] .= ", $i";
+		if(isset($_GET['c'.$i]))
+	   		$cond['class'] .= ", $i";
 		else
 			$base_cond = false;
 
 	// Construction of the gender list
 	$cond['sex'] = "";
 	if(isset($_GET['m']))
-    	$cond['sex'] .= ", 'm'";
+		$cond['sex'] .= ", 'm'";
 	else
 		$base_cond = false;
 
 	if(isset($_GET['f']))
-    	$cond['sex'] .= ", 'f'";
+		$cond['sex'] .= ", 'f'";
 	else
 		$base_cond = false;
 	
@@ -76,7 +93,7 @@ function cond_builder()
 	if(isset($_GET['rstr']))
 	{
 		$base_cond = false;
-    	$cond['prof'] = "AND fk_prof=?";
+		$cond['prof'] = "AND fk_prof=?";
 	}
 	else
 		$cond['prof'] = "";
@@ -410,11 +427,11 @@ function get_records($id, $cond = null)
 
 		if($rcp['fk_prof'] == $_SESSION['id'] or chk_auth(ADMINISTRATOR))
   		{
-    		$rcr['list'] .= "<a href='/register/class_show.php?id=".$rcp['id_cl']."'>";
-    		$fl = "</a>";
+			$rcr['list'] .= "<a href='/register/class_show.php?id=".$rcp['id_cl']."'>";
+			$fl = "</a>";
   		}
   		else
-    		$fl = "";
+			$fl = "";
 
 		$rcr['list'] .= $rcp['classe'].$rcp['sez']." ".$rcp['anno']."/".($rcp['anno'] + 1)."$fl</td></tr>";
 	}
@@ -584,7 +601,7 @@ function graph_vals($id, $cond = null)
 
 	$graph['vals'] = [];
 	while($row = $ret->fetch_assoc())
-    	$graph['vals'][] = $row['valore'];
+		$graph['vals'][] = $row['valore'];
 
 	return $graph;
 }
@@ -630,10 +647,10 @@ function graph_prc($id, $cond = null)
 	$graph['lbls'] = [];
 
 	if($test['n'] == 0)
-    	return $graph;   
+		return $graph;   
 
 	// Preparation of the query, whose order is defined by the test
-    if($test['pos'] == "Maggiori")
+	if($test['pos'] == "Maggiori")
 		$order = "ASC";
 	else
 		$order = "DESC";
@@ -669,12 +686,12 @@ function graph_prc($id, $cond = null)
 
 	$i = 1;
 	while($val = $retvals->fetch_assoc())
-    {
-    	$graph['lbls'][] = number_format(($i / $test['n']) * 100, 2);
-    	$graph['vals'][] = $val['valore'];
-    	
-    	$i++;
-    }
+	{
+		$graph['lbls'][] = number_format(($i / $test['n']) * 100, 2);
+		$graph['vals'][] = $val['valore'];
+		
+		$i++;
+	}
 	
 	return $graph;
 }
@@ -733,7 +750,7 @@ function graph_multibox($id, $group, $cond = null)
 	$val_st->close();
 
 	while($row = $ret->fetch_assoc())
-    	$graph[$row[$field]][] = $row['valore'];
+		$graph[$row[$field]][] = $row['valore'];
 	
 	return $graph;
 }
@@ -796,20 +813,20 @@ function calc_r($id1, $stat1, $id2, $stat2, $cond = null)
 
 	// As r is not indicative with few data, only couples of tests 
 	// with	at least N values are considered
-    if($r['n'] > CORRELATION_THRESH)
-    {
-    	// Calculation of the correlation coefficient as
-    	// sum((x - avg(x)) * (y - avg(y)) / ((n-1) * std(x) * std(y))
+	if($r['n'] > CORRELATION_THRESH)
+	{
+		// Calculation of the correlation coefficient as
+		// sum((x - avg(x)) * (y - avg(y)) / ((n-1) * std(x) * std(y))
 		// From "Introduction to probability and statistics for engineers and scientists"
 		// By Sheldon M. Ross
-    	$s = 0;
-    	while($row = $retvals->fetch_assoc())
+		$s = 0;
+		while($row = $retvals->fetch_assoc())
 			$s += ($row['v1'] - $stat1['avg']) * ($row['v2'] - $stat2['avg']);
 
-        $r['r'] = number_format($s / (($r['n'] - 1) * $stat1['std'] * $stat2['std']), 5);
-    }
-    else
-      	$r['r'] = "-";
+		$r['r'] = number_format($s / (($r['n'] - 1) * $stat1['std'] * $stat2['std']), 5);
+	}
+	else
+	  	$r['r'] = "-";
 
 	$r['color'] = correlation_color($r['r']);
 

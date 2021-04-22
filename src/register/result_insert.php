@@ -1,4 +1,21 @@
 <?php 
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Script to insert test results
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
@@ -7,7 +24,7 @@ connect();
 
 // Results insert or update
 $in_st = prepare_stmt("INSERT INTO PROVE(fk_test, fk_ist, valore, data) 
-    VALUES(?, ?, ?, CURDATE()) ON DUPLICATE KEY UPDATE valore=?, data=CURDATE()");
+	VALUES(?, ?, ?, CURDATE()) ON DUPLICATE KEY UPDATE valore=?, data=CURDATE()");
 $in_st->bind_param("iidd", $test, $instance, $value, $value);
 
 // Deletion of empty results
@@ -21,29 +38,29 @@ $delete = 0;
 // New test's results insert
 if(isset($_POST['ntest']))
 {
-    $test = $_POST['test'];
-    foreach($_POST['ntest'] as $instance => $value)
-        if($value)
-        {
-            execute_stmt($in_st);
-            $insert++;
-        }
+	$test = $_POST['test'];
+	foreach($_POST['ntest'] as $instance => $value)
+		if($value)
+		{
+			execute_stmt($in_st);
+			$insert++;
+		}
 }
 
 // Old results updates - if a value is empty it is deleted
 if(isset($_POST['pr']))
-    foreach($_POST['pr'] as $test => $s)
-        foreach($s as $instance => $value)
-            if(is_numeric($value))
-            {
-                execute_stmt($in_st);
-                $modify++;
-            }
-            else
-            {
-                execute_stmt($del_st);
-                $delete++;
-            }
+	foreach($_POST['pr'] as $test => $s)
+		foreach($s as $instance => $value)
+			if(is_numeric($value))
+			{
+				execute_stmt($in_st);
+				$modify++;
+			}
+			else
+			{
+				execute_stmt($del_st);
+				$delete++;
+			}
 
 $in_st->close();
 $del_st->close();

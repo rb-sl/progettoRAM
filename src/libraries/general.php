@@ -1,4 +1,21 @@
 <?php
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Main library of the application, contains functions useful to many scripts
 session_start();
 
@@ -110,13 +127,13 @@ function connect()
 {
 	global $mysqli;
 	$conf = get_server_conf();
-    $mysqli = new mysqli("localhost", $conf->dbuser, $conf->dbpass, $conf->dbname);
+	$mysqli = new mysqli("localhost", $conf->dbuser, $conf->dbpass, $conf->dbname);
 	if ($mysqli->connect_errno) 
-    {
-    	echo "Connection error ".$mysqli->connect_errno.": ".$mysqli->connect_error;
-    	writelog("[conn_err] ".$mysqli->connect_errno.": ".$mysqli->connect_error);
+	{
+		echo "Connection error ".$mysqli->connect_errno.": ".$mysqli->connect_error;
+		writelog("[conn_err] ".$mysqli->connect_errno.": ".$mysqli->connect_error);
 		show_postmain();
-        exit();
+		exit();
 	}
 }  
 
@@ -168,7 +185,7 @@ function execute_stmt($stmt)
 		echo "Execute failed: (".$stmt->errno.") ".$stmt->error."<br>";
 
 	$res = $stmt->get_result();
-    if($stmt->errno !== 0)
+	if($stmt->errno !== 0)
 		echo "Getting result set failed: (".$stmt->errno.") ".$stmt->error."<br>";
 		
 	return $res;
@@ -194,18 +211,18 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 <!DOCTYPE html> 
 <html> 
 	<head> 
-    	<meta charset="utf-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<!-- jQuery -->
-        <script src="<?=JQUERY_PATH?>"></script>
+		<script src="<?=JQUERY_PATH?>"></script>
 		
 		<!-- Bootstrap and custom graphical elements -->
-        <link rel="stylesheet" href="<?=BOOTSTRAP_CSS_PATH?>">
-    	<script src="<?=BOOTSTRAP_JS_PATH?>"></script>
-                
+		<link rel="stylesheet" href="<?=BOOTSTRAP_CSS_PATH?>">
+		<script src="<?=BOOTSTRAP_JS_PATH?>"></script>
+				
 		<!-- Plots and table text width -->
-        <script src="<?=PLOTLY_PATH?>"></script>
+		<script src="<?=PLOTLY_PATH?>"></script>
 		<script src="<?=FITTY_PATH?>"></script>
 
 		<!-- Custom CSS -->
@@ -221,7 +238,7 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 		<title><?=$title?>Progetto RAM</title>
 	</head> 
   	
-    <body> 
+	<body> 
   		<div id="wrapper">
 		  	<div class="navcontainer">
 				<nav id="nav1" class="navbar-expand-lg navbar navbar-dark bg-dark big-topfix">
@@ -271,7 +288,7 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 	{
 ?> 
   										<li>
-      										<a href="/user/profile.php" class="btn btn-warning">Profilo</a>
+	  										<a href="/user/profile.php" class="btn btn-warning">Profilo</a>
 <?php
 		if($_SESSION["priv"] == ADMINISTRATOR)
 		{
@@ -410,14 +427,14 @@ function show_postmain()
 	{
 ?>
 		<script>
-    		$(function() {
-    			$(document).ready(function() {
-    				alert("<?=addslashes($_SESSION['alert'])?>");
+			$(function() {
+				$(document).ready(function() {
+					alert("<?=addslashes($_SESSION['alert'])?>");
   				});
   	  		});
 		</script>
 <?php
-    	$_SESSION['alert'] = "";
+		$_SESSION['alert'] = "";
 	}
 ?>
 	</body> 

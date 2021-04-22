@@ -1,4 +1,21 @@
 <?php 
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Page to show statistical data about a student
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
@@ -34,11 +51,11 @@ $color = get_color_prc();
 
 <div>
 	<a href="student_show.php?id=<?=$_GET['id']?>" class="btn btn-primary marginunder">Mostra valori</a> 
-    <h3>
-    	Visualizzazione dati:
+	<h3>
+		Visualizzazione dati:
 		<select id="vis" class="form-control trigger">
-        	<option value="prc">Valori percentili</option>
-    		<option value="std">Valori standard</option>
+			<option value="prc">Valori percentili</option>
+			<option value="std">Valori standard</option>
    	 		<option value="gr">Voti</option>
 		</select>
 	</h3>
@@ -46,13 +63,13 @@ $color = get_color_prc();
 
 <div class="tdiv">
 	<div class="inner">
-    	<table class="table table-light table-striped">
-      		<tr id="thr" class="dat">
-            	<td class="topleft leftfix topfix">
-                	<button type="button" id="btnstat" class="btn btn-secondary btnmenu overpad">Medie e Mediane</button>
-                	<br>
-                	<button type="button" id="btncol" class="btn btn-secondary btnmenu overpad">Colori</button>
-            	</td>
+		<table class="table table-light table-striped">
+	  		<tr id="thr" class="dat">
+				<td class="topleft leftfix topfix">
+					<button type="button" id="btnstat" class="btn btn-secondary btnmenu overpad">Medie e Mediane</button>
+					<br>
+					<button type="button" id="btncol" class="btn btn-secondary btnmenu overpad">Colori</button>
+				</td>
 <?php
 $ret = get_test($_GET['id'], true);
 
@@ -60,11 +77,11 @@ $test['row'] = "";
 $test['id'] = [];
 while($row = $ret->fetch_assoc())
 {
-    $test['id'][] = $row['id_test'];
-    $test['pos'][$row['id_test']] = $row['pos'];
+	$test['id'][] = $row['id_test'];
+	$test['pos'][$row['id_test']] = $row['pos'];
 	$test['name'][$row['id_test']] = $row['nometest'];
 
-    $test['row'] .= "<td id='test".$row['id_test']."' class='col topfix'>".$row['nometest']."</td>";
+	$test['row'] .= "<td id='test".$row['id_test']."' class='col topfix'>".$row['nometest']."</td>";
 }
 
 // Constuction of the table's body with percentile values
@@ -81,17 +98,17 @@ foreach($am['med'] as $idt => $med)
 	$rowmed .= "<td id='mt$idt' class='jcol jtmed borderunder' vcolor='#".$med['color']."'>".$med['val']."</td>";
 
 echo $test['row']."
-    <td class='col topfix r_stat evenrow jQhidden'>Media totale</td>
-    <td id='tavg' class='col topfix r_stat jcol evenrow jQhidden' vcolor='#".(isset($am['tavg']['color']) ? $am['tavg']['color'] : "")."'>"
-        .(isset($am['tavg']['val']) ? number_format($am['tavg']['val'], 5) : "-")."</td>
+	<td class='col topfix r_stat evenrow jQhidden'>Media totale</td>
+	<td id='tavg' class='col topfix r_stat jcol evenrow jQhidden' vcolor='#".(isset($am['tavg']['color']) ? $am['tavg']['color'] : "")."'>"
+		.(isset($am['tavg']['val']) ? number_format($am['tavg']['val'], 5) : "-")."</td>
 </tr>
 <tr class='dat r_stat jQhidden'>
-    <td class='leftfix evenrow'>Medie</td>$rowavg
-    <td rowspan='2' id='med1' class='col r_stat oddrow jQhidden'>Medie<br>classi</td>
-    <td rowspan='2' id='med2' class='col r_stat oddrow jQhidden'>Mediane<br>classi</td>
+	<td class='leftfix evenrow'>Medie</td>$rowavg
+	<td rowspan='2' id='med1' class='col r_stat oddrow jQhidden'>Medie<br>classi</td>
+	<td rowspan='2' id='med2' class='col r_stat oddrow jQhidden'>Mediane<br>classi</td>
 </tr>
 <tr class='dat r_stat jQhidden'>
-    <td class='leftfix oddrow'>Mediane</td>$rowmed
+	<td class='leftfix oddrow'>Mediane</td>$rowmed
 </tr>";
 
 $options = "";
@@ -108,12 +125,12 @@ foreach($rclass as $idcl => $class)
 			if(isset($rstud['data'][$idcl][$idt]) and $rstud['data'][$idcl][$idt] != "0000-00-00")
 				echo "title='".$rstud['data'][$idcl][$idt]."'";
 
-        	echo " vcolor='#".$rstud['color'][$idcl][$idt]."'>"
+			echo " vcolor='#".$rstud['color'][$idcl][$idt]."'>"
 				.$rstud['val'][$idcl][$idt]."</td>";
 		}
 		else 
-        	echo ">-</td>";
-    }
+			echo ">-</td>";
+	}
 
 	if(isset($am['savg'][$idcl]))
 	{

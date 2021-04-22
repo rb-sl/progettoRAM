@@ -1,4 +1,21 @@
 <?php
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Frontend for test update
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 chk_access(PROFESSOR_GRANTS);
@@ -46,31 +63,31 @@ echo "<a href='./test_delete.php?id=".$_GET['id']."' ".confirm("Il test ".$test[
 	</h2>
 	<table class="table table-light table-striped">
 		<tr>
-    		<td>Tipo di test:</td>
-    		<td class="halfwidth">
-        		<select name="class" class="form-control" required>
+			<td>Tipo di test:</td>
+			<td class="halfwidth">
+				<select name="class" class="form-control" required>
 <?php
 while($row = $ctest->fetch_assoc())
 {
 	echo "<option value='".$row['id_cltest']."'";
 	if($row['id_cltest'] == $test['fk_cltest'])
-    	echo " selected='selected'";
+		echo " selected='selected'";
 	echo ">".$row['nomec']."</option>";
 }
 ?>
-        		</select>
-    		</td>
+				</select>
+			</td>
 		</tr>
 		<tr>
-    		<td>Unità di misura:</td>
-    		<td>
-    			<select name="unit" class="form-control" required>
+			<td>Unità di misura:</td>
+			<td>
+				<select name="unit" class="form-control" required>
 <?php
 while($row = $retunit->fetch_assoc())
 {
 	echo "<option value='".$row['id_udm']."'";
 	if($row['id_udm'] == $test['fk_udm'])
-    	echo " selected='selected'";
+		echo " selected='selected'";
 	echo ">".$row['udm']."</option>";
 }       
 
@@ -85,54 +102,54 @@ else
 	$m = " selected='selected'";
 }
 ?>
-    			</select>
-    		</td>
+				</select>
+			</td>
 		</tr>
 		<tr>
-	    	<td>Valori migliori:</td>
-    		<td>
-        		<select name="positive" class="form-control" required>
-            		<option value="Maggiori" <?=$g?>>Maggiori</option>
-            		<option value="Minori" <?=$m?>>Minori</option>
-        		</select>
+			<td>Valori migliori:</td>
+			<td>
+				<select name="positive" class="form-control" required>
+					<option value="Maggiori" <?=$g?>>Maggiori</option>
+					<option value="Minori" <?=$m?>>Minori</option>
+				</select>
 			</td>
-    	</tr>
+		</tr>
 		<tr>
-	    	<td>Tipo di valori:</td>
-    		<td>
-        		<select name="type" class="form-control" required>
+			<td>Tipo di valori:</td>
+			<td>
+				<select name="type" class="form-control" required>
 <?php
 while($row=$ttest->fetch_assoc())
 {
 	echo "<option value='".$row['id_tipot']."'";
 	if($row['id_tipot'] == $test['fk_tipot'])
-    	echo " selected='selected'";
+		echo " selected='selected'";
 	echo ">".$row['nomet']."</option>";
 }
 ?>
-        		</select>
-    		</td>
+				</select>
+			</td>
 		</tr>
 	</table>
 	<div>
-    	<h3>Informazioni aggiuntive</h3>
-    	Posizione:<br>
-    	<textarea class="txt" name="position"><?=$test['posiz']?></textarea>
-    	<br>
-    	Materiale aggiuntivo:<br>
-    	<textarea class="txt" name="equipment"><?=$test['equip']?></textarea>
-    	<br>
-    	Esecuzione:<br>
-    	<textarea class="txt" name="execution"><?=$test['esec']?></textarea>
-    	<br>
-    	Consigli:<br>
-    	<textarea class="txt" name="suggestions"><?=$test['cons']?></textarea>
-    	<br>
-    	Limite:<br>
-    	<textarea class="txt" name="limit"><?=$test['limite']?></textarea>
-    	<br>
-    	Valutazione:<br>
-    	<textarea class="txt" name="grading" required><?=$test['valut']?></textarea>
+		<h3>Informazioni aggiuntive</h3>
+		Posizione:<br>
+		<textarea class="txt" name="position"><?=$test['posiz']?></textarea>
+		<br>
+		Materiale aggiuntivo:<br>
+		<textarea class="txt" name="equipment"><?=$test['equip']?></textarea>
+		<br>
+		Esecuzione:<br>
+		<textarea class="txt" name="execution"><?=$test['esec']?></textarea>
+		<br>
+		Consigli:<br>
+		<textarea class="txt" name="suggestions"><?=$test['cons']?></textarea>
+		<br>
+		Limite:<br>
+		<textarea class="txt" name="limit"><?=$test['limite']?></textarea>
+		<br>
+		Valutazione:<br>
+		<textarea class="txt" name="grading" required><?=$test['valut']?></textarea>
 	</div>
 	<input type="submit" id="submit" class="btn btn-warning marginunder" value="Aggiorna valori test">
 </form>

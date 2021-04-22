@@ -1,106 +1,123 @@
 <?php
+// Copyright 2021 Roberto Basla
+
+// This file is part of progettoRAM.
+
+// progettoRAM is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// progettoRAM is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+
+// You should have received a copy of the GNU Affero General Public License
+// along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
+
 // Guide for the statistics section, to be included in guide.php
 chk_access(RESEARCH);
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 ?>
 
 <div id="statdiv" class="section">
-    <h3 id="stat">Statistica</h3>
-    
-    <p>
-        La sezione statistica permette di visualizzare ed elaborare dati aggregati sulle
-        prove dei test ed è caratterizzata dalla presenza del <a href="#menustat">menu 
-        statistico</a> (per modificare la popolazione i cui dati vengono elaborati)
-        e da diversi tipi di <a href="#graph">grafici</a>.<br>
-        È possibile:
-        <ul class="nobul">
-            <li><a href="#genstat">Visualizzare statistiche generali</a></li>
-            <li><a href="#statt">Visualizzare le statistiche dei test</a></li>
-            <li><a href="#correlation">Studiare la correlazione dei test</a></li>
-        </ul>
-    </p>
-    
-    <h4 id="genstat">Visualizzare statistiche generali</h4>
-    <p>
-        Nella pagina principale della sezione sono disponibili informazioni generali 
-        sull'applicazione; i grafici a torta descrivono la suddivisione delle prove 
-        in base a:
-        <ul>
-            <li>Test effettuati</li>
-            <li>Sesso degli studenti</li>
-            <li>Classe di appartenenza</li>
-            <li>Anno</li>
-        </ul>
-    </p>
+	<h3 id="stat">Statistica</h3>
+	
+	<p>
+		La sezione statistica permette di visualizzare ed elaborare dati aggregati sulle
+		prove dei test ed è caratterizzata dalla presenza del <a href="#menustat">menu 
+		statistico</a> (per modificare la popolazione i cui dati vengono elaborati)
+		e da diversi tipi di <a href="#graph">grafici</a>.<br>
+		È possibile:
+		<ul class="nobul">
+			<li><a href="#genstat">Visualizzare statistiche generali</a></li>
+			<li><a href="#statt">Visualizzare le statistiche dei test</a></li>
+			<li><a href="#correlation">Studiare la correlazione dei test</a></li>
+		</ul>
+	</p>
+	
+	<h4 id="genstat">Visualizzare statistiche generali</h4>
+	<p>
+		Nella pagina principale della sezione sono disponibili informazioni generali 
+		sull'applicazione; i grafici a torta descrivono la suddivisione delle prove 
+		in base a:
+		<ul>
+			<li>Test effettuati</li>
+			<li>Sesso degli studenti</li>
+			<li>Classe di appartenenza</li>
+			<li>Anno</li>
+		</ul>
+	</p>
 
-    <h4 id="statt">Visualizzare le statistiche dei test</h4>
-    <p>
-        Selezionando il nome di un test dalla lista nella pagina principale è possibile 
-        visualizzarne alcune statistiche. In particolare:
-        <ul>
-            <li>
-                Numero totale di prove
-                </li>
-            <li>
-                <a href="https://it.wikipedia.org/wiki/Media_(statistica)#Media_aritmetica" 
-                    target="_blank">Media&#128279;</a>
-            </li>
-            <li>
-                <a href="https://it.wikipedia.org/wiki/Mediana_(statistica)" 
-                    target="_blank">Mediana&#128279;</a>
-            </li>
-            <li>
-                <a href="https://it.wikipedia.org/wiki/Scarto_quadratico_medio" 
-                    target="_blank">Deviazione standard&#128279;</a>
-            </li>
-            <li>
-                Record positivi (con classe e anno) e negativi
-            </li>
-        </ul>
-        È poi possibile visualizzare alcuni grafici secondo le opzioni:
-        <ul>
-            <li>
-                <b>Valori</b>: genera un <a href="#histogram">istogramma</a> in base ai dati
-            </li>
-            <li>
-                <b>Box plot</b>: mostra alcune statistiche aggregate in un <a href="#boxplot">diagramma 
-                a scatole e baffi</a>.
-            </li>
-            <li>
-                <b>Box plot (Anni)</b>: un box plot con i dati suddivisi per anno
-            </li>
-            <li>
-                <b>Box plot (Classi)</b>: un box plot con i dati suddivisi per classe
-            </li>
-            <li>
-                <b>Box plot (Sesso)</b>: un box plot con i dati suddivisi per sesso
-            </li>
-            <li>
-                <b>Valori percentili</b>: diagramma che mostra l'andamento dei percentili dei dati
-            </li>
-        </ul>
-    </p>
+	<h4 id="statt">Visualizzare le statistiche dei test</h4>
+	<p>
+		Selezionando il nome di un test dalla lista nella pagina principale è possibile 
+		visualizzarne alcune statistiche. In particolare:
+		<ul>
+			<li>
+				Numero totale di prove
+				</li>
+			<li>
+				<a href="https://it.wikipedia.org/wiki/Media_(statistica)#Media_aritmetica" 
+					target="_blank">Media&#128279;</a>
+			</li>
+			<li>
+				<a href="https://it.wikipedia.org/wiki/Mediana_(statistica)" 
+					target="_blank">Mediana&#128279;</a>
+			</li>
+			<li>
+				<a href="https://it.wikipedia.org/wiki/Scarto_quadratico_medio" 
+					target="_blank">Deviazione standard&#128279;</a>
+			</li>
+			<li>
+				Record positivi (con classe e anno) e negativi
+			</li>
+		</ul>
+		È poi possibile visualizzare alcuni grafici secondo le opzioni:
+		<ul>
+			<li>
+				<b>Valori</b>: genera un <a href="#histogram">istogramma</a> in base ai dati
+			</li>
+			<li>
+				<b>Box plot</b>: mostra alcune statistiche aggregate in un <a href="#boxplot">diagramma 
+				a scatole e baffi</a>.
+			</li>
+			<li>
+				<b>Box plot (Anni)</b>: un box plot con i dati suddivisi per anno
+			</li>
+			<li>
+				<b>Box plot (Classi)</b>: un box plot con i dati suddivisi per classe
+			</li>
+			<li>
+				<b>Box plot (Sesso)</b>: un box plot con i dati suddivisi per sesso
+			</li>
+			<li>
+				<b>Valori percentili</b>: diagramma che mostra l'andamento dei percentili dei dati
+			</li>
+		</ul>
+	</p>
 
-    <h4 id="correlation">Studiare la correlazione dei test</h4>
-    <p>
-        Premendo il pulsante <span class="primarycolor">Correlazione campionaria</span> nella pagina principale
-        della sezione si raggiunge una pagina dedicata allo studio della 
-        <a href="https://it.wikipedia.org/wiki/Correlazione_(statistica)" target="_blank">correlazione&#128279;</a> 
-        tra i test in base alle prove.
-    </p>
-    <p>
-        La prima parte della pagina mostra una tabella che riporta gli 
-        <a href="https://it.wikipedia.org/wiki/Indice_di_correlazione_di_Pearson" target="_blank">indici di 
-        correlazione di Pearson</a> per ogni coppia di test. Per evidenziare i rapporti di correlazione tra i test
-        premere il pulsante <span class="primarycolor">Colori</span>; a colore più scuro corrisponde una maggiore
-        correlazione (positiva o negativa a seconda del segno).
-    </p>
-    <p>
-        È poi possibile, per ogni coppia di test, visualizzare il <a href="#scatter">diagramma di dispersione</a>
-        delle prove, premendo su una cella contenente un dato. I diagrammi sono riportati anche nella matrice 
+	<h4 id="correlation">Studiare la correlazione dei test</h4>
+	<p>
+		Premendo il pulsante <span class="primarycolor">Correlazione campionaria</span> nella pagina principale
+		della sezione si raggiunge una pagina dedicata allo studio della 
+		<a href="https://it.wikipedia.org/wiki/Correlazione_(statistica)" target="_blank">correlazione&#128279;</a> 
+		tra i test in base alle prove.
+	</p>
+	<p>
+		La prima parte della pagina mostra una tabella che riporta gli 
+		<a href="https://it.wikipedia.org/wiki/Indice_di_correlazione_di_Pearson" target="_blank">indici di 
+		correlazione di Pearson</a> per ogni coppia di test. Per evidenziare i rapporti di correlazione tra i test
+		premere il pulsante <span class="primarycolor">Colori</span>; a colore più scuro corrisponde una maggiore
+		correlazione (positiva o negativa a seconda del segno).
+	</p>
+	<p>
+		È poi possibile, per ogni coppia di test, visualizzare il <a href="#scatter">diagramma di dispersione</a>
+		delle prove, premendo su una cella contenente un dato. I diagrammi sono riportati anche nella matrice 
 		di dispersione nella seconda parte della pagina (in caso sia troppo grande per la visualizzazione si
 		consiglia di scaricare l'immagine).
-    </p>
+	</p>
 	<p>
 		<b>NB</b>: Vengono visualizzati solo i valori e i grafici dei test con almeno <?=CORRELATION_THRESH?>
 		valori affinché i risultati siano significativi.
