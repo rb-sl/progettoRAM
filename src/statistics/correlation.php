@@ -40,13 +40,13 @@ $testlist = $testinfo['list'];
 				<th class="topleft leftfix topfix">
 					<button id="btncol" class="btn overpad btnmenu btn-secondary">Colori</button>
 				</th>
-
 <?php
 open_rvals_stmt();
 $i = 0;
+$tab = [];
 foreach($test as $idcol => $namecol)
 {
-	echo "<th id='test$idcol' pos='".$positive[$idcol]."' class='col topfix'>$namecol</th>\n";
+	echo "<th id='test$idcol' positive_values='".$positive[$idcol]."' class='col topfix'>$namecol</th>\n";
 
 	if($i % 2 == 0)
 		$color = "evenrow";
@@ -97,7 +97,7 @@ foreach($tab as $id => $row)
 </div>
 
 <script>
-var splomWH = <?=($i * 130)?>;
+var splomWH = <?=(max(500, $i * 130))?>;
 
 var testInfo =
 <?php

@@ -23,8 +23,8 @@ connect();
 
 // Check on username uniqueness; if the username is already taken,
 // the update fails and the user is asked to repeat the procedure
-$chk_st = prepare_stmt("SELECT * FROM PROFESSORI WHERE user=? AND id_prof<>?");
-$chk_st->bind_param("si", $_POST['usr'], $_SESSION['id']);
+$chk_st = prepare_stmt("SELECT * FROM user WHERE username=? AND user_id<>?");
+$chk_st->bind_param("si", $_POST['user'], $_SESSION['id']);
 $chk = execute_stmt($chk_st);
 $chk_st->close();
 
@@ -38,15 +38,20 @@ if($chk->num_rows > 0)
 $_SESSION['alert'] = "Aggiornamento avvenuto con successo";
 $location = "/user/profile.php";
 
+if(isset($_POST['school']) and $_POST['school'] !== "")
+	$school = $_POST['school'];
+else
+	$school = null;
+
 // The query is built considering if the user wishes to update their password
-if(!empty($_POST['psw']))
+if(!empty($_POST['password']))
 {
-	$up_st = prepare_stmt("UPDATE PROFESSORI SET user=?, nomp=?, cogp=?, email=?, 
-		contact_info=?, show_email=?, fk_scuola=?, psw=MD5(?), lastpsw=CURDATE() 
-		WHERE id_prof=?");
-	$up_st->bind_param("sssssiisi", $_POST['usr'], $_POST['nomp'], $_POST['cogp'], 
-		$_POST['email'], $_POST['contact'], $showmail,  $_POST['school'], 
-		$_POST['psw'], $_SESSION['id']);
+	$up_st = prepare_stmt("UPDATE user SET username=?, firstname=?, lastname=?, email=?, 
+		contact_info=?, show_email=?, school_fk=?, password=MD5(?), last_password=CURDATE() 
+		WHERE user_id=?");
+	$up_st->bind_param("sssssiisi", $_POST['user'], $_POST['firstname'], $_POST['lastname'], 
+		$_POST['email'], $_POST['contact'], $showmail,  $school, 
+		$_POST['password'], $_SESSION['id']);
   	
 	if($_SESSION['err'] == FIRST_ACCESS)
 	{
@@ -58,11 +63,11 @@ if(!empty($_POST['psw']))
 }
 else
 {
-	$up_st = prepare_stmt("UPDATE PROFESSORI SET user=?, nomp=?, cogp=?, email=?, 
-		contact_info=?, show_email=?, fk_scuola=? 
-		WHERE id_prof=?");
-	$up_st->bind_param("sssssiii", $_POST['usr'], $_POST['nomp'], $_POST['cogp'], 
-		$_POST['email'], $_POST['contact'], $showmail, $_POST['school'], 
+	$up_st = prepare_stmt("UPDATE user SET username=?, firstname=?, lastname=?, email=?, 
+		contact_info=?, show_email=?, school_fk=? 
+		WHERE user_id=?");
+	$up_st->bind_param("sssssiii", $_POST['user'], $_POST['firstname'], $_POST['lastname'], 
+		$_POST['email'], $_POST['contact'], $showmail, $school, 
 		$_SESSION['id']);
 }
 
@@ -75,7 +80,7 @@ $ret = execute_stmt($up_st);
 $up_st->close();
 
 // Update of the active username
-$_SESSION['user'] = $_POST['usr'];  
+$_SESSION['username'] = $_POST['user'];  
 $_SESSION['school'] = $_POST['school'];
 
 writelog("[Modifica profilo] ".$_SESSION['id']);

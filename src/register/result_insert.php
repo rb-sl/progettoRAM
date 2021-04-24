@@ -23,12 +23,12 @@ chk_access(PROFESSOR);
 connect();
 
 // Results insert or update
-$in_st = prepare_stmt("INSERT INTO PROVE(fk_test, fk_ist, valore, data) 
-	VALUES(?, ?, ?, CURDATE()) ON DUPLICATE KEY UPDATE valore=?, data=CURDATE()");
+$in_st = prepare_stmt("INSERT INTO results(test_fk, instance_fk, value, date) 
+	VALUES(?, ?, ?, CURDATE()) ON DUPLICATE KEY UPDATE value=?, date=CURDATE()");
 $in_st->bind_param("iidd", $test, $instance, $value, $value);
 
 // Deletion of empty results
-$del_st = prepare_stmt("DELETE FROM PROVE WHERE fk_test=? AND fk_ist=?");
+$del_st = prepare_stmt("DELETE FROM results WHERE test_fk=? AND instance_fk=?");
 $del_st->bind_param("ii", $test, $instance);
 
 $insert = 0;

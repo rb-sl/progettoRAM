@@ -26,15 +26,15 @@ if(!chk_access(PROFESSOR, false))
 }
 connect();
 
-$prom_st = prepare_stmt("SELECT classe, sez, anno FROM CLASSI WHERE id_cl=?");
+$prom_st = prepare_stmt("SELECT class, section, class_year FROM class WHERE class_id=?");
 $prom_st->bind_param("i", $_GET['toprom']);
 $ret = execute_stmt($prom_st);
 $prom_st->close();
 
 $newclass = $ret->fetch_assoc();
-$data['cl'] = $newclass['classe'] + 1;
-$data['sez'] = $newclass['sez'];
-$data['anno'] = $newclass['anno'] + 1;
+$data['cl'] = $newclass['class'] + 1;
+$data['section'] = $newclass['section'];
+$data['class_year'] = $newclass['class_year'] + 1;
 $data['list'] = build_chk_table($_GET['toprom'], true);
 
 echo json_encode($data);

@@ -24,8 +24,8 @@ connect();
 $stud1 = $_POST['stud0'];
 
 // Creation of the new student
-$in_st = prepare_stmt("INSERT INTO STUDENTI(noms, cogs, sesso)  
-	SELECT noms, cogs, sesso FROM STUDENTI WHERE id_stud=?");
+$in_st = prepare_stmt("INSERT INTO student(firstname, lastname, gender)  
+	SELECT firstname, lastname, gender FROM student WHERE student_id=?");
 $in_st->bind_param("i", $stud1);
 execute_stmt($in_st);
 $in_st->close();
@@ -33,7 +33,7 @@ $in_st->close();
 $stud2 = $mysqli->insert_id;
 
 // Update for instances to be moved to the new student
-$up_st = prepare_stmt("UPDATE ISTANZE SET fk_stud=? WHERE fk_stud=? AND fk_cl=?");
+$up_st = prepare_stmt("UPDATE instance SET student_fk=? WHERE student_fk=? AND class_fk=?");
 $up_st->bind_param("iii", $stud2, $stud1, $class);
 
 foreach($_POST['split'] as $class => $val)

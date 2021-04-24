@@ -34,7 +34,7 @@ else
 
 // Instances are moved to the student to be kept, while the other
 // will be deleted by the trigger
-$up_st = prepare_stmt("UPDATE ISTANZE SET fk_stud=? WHERE fk_stud=?");
+$up_st = prepare_stmt("UPDATE instance SET student_fk=? WHERE student_fk=?");
 $up_st->bind_param("ii", $keepid, $delid);
 execute_stmt($up_st);
 

@@ -24,7 +24,7 @@ connect();
 // New type insert
 if(isset($_POST['newrow1']) and $_POST['newrow1'] != "")
 {
-	$in_st = prepare_stmt("INSERT INTO TIPOTEST(nomet, passo) 
+	$in_st = prepare_stmt("INSERT INTO datatype(datatype_name, step) 
 		VALUES (?, ?)");
 	$in_st->bind_param("ss", $_POST['newrow1'], $_POST['newrow2']);
 	execute_stmt($in_st);
@@ -36,8 +36,8 @@ if(isset($_POST['newrow1']) and $_POST['newrow1'] != "")
 // Update of old test types 
 if(isset($_POST['col1']))
 {
-	$up_st = prepare_stmt("UPDATE TIPOTEST SET nomet=?, passo=? 
-	WHERE id_tipot=?");
+	$up_st = prepare_stmt("UPDATE datatype SET datatype_name=?, step=? 
+	WHERE datatype_id=?");
 	$up_st->bind_param("ssi", $name, $step, $id);
 
 	foreach($_POST['col1'] as $id => $name)
@@ -50,5 +50,5 @@ if(isset($_POST['col1']))
 }
 
 $_SESSION['alert'] = "Aggiornamento completato";
-header("Location: /admin/test/test_type.php");
+header("Location: /admin/test/datatype.php");
 ?>

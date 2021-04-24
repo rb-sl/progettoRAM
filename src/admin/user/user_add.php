@@ -30,19 +30,19 @@ show_premain();
 	<table class="marginunder">
 		<tr>
 			<td>Nome utente:</td>
-			<td><input type="text" class="form-control" name="usr" required></td>
+			<td><input type="text" class="form-control" name="user" required></td>
 		</tr>
 		<tr>
 			<td>Password default:</td>
-			<td><input type="text" class="form-control" name="psw" required></td>
+			<td><input type="text" class="form-control" name="password" required></td>
 		</tr>
 		<tr>
 			<td>Nome:</td>
-			<td><input type="text" class="form-control" name="nom" required></td>
+			<td><input type="text" class="form-control" name="firstname" required></td>
 		</tr>
 		<tr>
 			<td>Cognome:</td>
-			<td><input type="text" class="form-control" name="cog" required></td>
+			<td><input type="text" class="form-control" name="lastname" required></td>
 		</tr>
 		<tr>
 			<td>E-mail:</td>
@@ -51,14 +51,14 @@ show_premain();
 		<tr>
 			<td>Scuola:</td>
 			<td>
-				<select name="sc" class="form-control" required>
+				<select id="school" name="school" class="form-control">
 					<option></option>
 <?php
-$school_st = prepare_stmt("SELECT * FROM SCUOLE ORDER BY nomescuola");
+$school_st = prepare_stmt("SELECT * FROM school ORDER BY school_name");
 $ret = execute_stmt($school_st);
 $school_st->close();
 while($row = $ret->fetch_assoc())
-	echo "<option value='".$row['id_scuola']."'>".$row['nomescuola']."</option>";
+	echo "<option value='".$row['school_id']."'>".$row['school_name']."</option>";
 ?>
 	  			</select>
 	  		</td>
@@ -66,7 +66,7 @@ while($row = $ret->fetch_assoc())
 		<tr>
 			<td>Privilegi di accesso</td>
 			<td>
-				<select name="priv" class="form-control" required>
+				<select id="privileges" name="privileges" class="form-control" required>
 					<option selected disabled></option>
 					<option value="<?=ADMINISTRATOR?>">Amministratore</option>
 					<option value="<?=PROFESSOR_GRANTS?>">Professore (modifica test)</option>
@@ -78,5 +78,16 @@ while($row = $ret->fetch_assoc())
   	</table>
  	<input type="submit" class="btn btn-warning" value="Aggiungi utente">
 </form>
+
+<script>
+$("#privileges").change(function() {
+	if($(this).val() <= <?=PROFESSOR?>) {
+		$("#school").attr("required", true);
+	}
+	else {
+		$("#school").removeAttr("required");
+	}
+});
+</script>
 
 <?php show_postmain(); ?>

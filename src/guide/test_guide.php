@@ -20,15 +20,15 @@
 chk_access(RESEARCH);
 
 // Statements to retrieve from the database the lists of elements
-$tstty_st = prepare_stmt("SELECT nomet FROM TIPOTEST ORDER BY nomet");
+$tstty_st = prepare_stmt("SELECT datatype_name FROM datatype ORDER BY datatype_name");
 $tstt = execute_stmt($tstty_st);
 $tstty_st->close();
 
-$stscl_st = prepare_stmt("SELECT nomec FROM CLTEST ORDER BY nomec");
+$stscl_st = prepare_stmt("SELECT testtype_name FROM testtype ORDER BY testtype_name");
 $ctst = execute_stmt($stscl_st);
 $stscl_st->close();
 
-$unit_st = prepare_stmt("SELECT udm FROM UNITA ORDER BY udm");
+$unit_st = prepare_stmt("SELECT unit_name FROM unit ORDER BY unit_name");
 $unit = execute_stmt($unit_st);
 $unit_st->close();
 ?>
@@ -64,7 +64,7 @@ if(chk_auth(PROFESSOR))
 				<ul>
 <?php
 while($row = $ctst->fetch_assoc())
-	echo "<li>".$row['nomec']."</li>\n";
+	echo "<li>".$row['testtype_name']."</li>\n";
 ?>
 				</ul>
 			</li>
@@ -73,7 +73,7 @@ while($row = $ctst->fetch_assoc())
 				<ul>
 <?php
 while($row = $unit->fetch_assoc())
-	echo "<li>".$row['udm']."</li>\n";
+	echo "<li>".$row['unit_name']."</li>\n";
 ?>              
 				</ul>
 			</li>
@@ -87,7 +87,7 @@ while($row = $unit->fetch_assoc())
 				<ul>
 <?php
 while($row = $tstt->fetch_assoc())
-	echo "<li>".$row['nomet']."</li>\n";
+	echo "<li>".$row['datatype_name']."</li>\n";
 ?>                 	
 				</ul>
 			</li>

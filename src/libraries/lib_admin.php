@@ -25,9 +25,9 @@ const ORDEREDLIST = "#";
 
 // Function to get the text and color associated to a
 // privilege level
-function get_privilege($priv)
+function get_privilege($privileges)
 {
-	switch($priv)
+	switch($privileges)
 	{
 		case ADMINISTRATOR: 
 			$ret['text'] = "Amministratore";
@@ -63,7 +63,7 @@ function can_downgrade($id)
 	global $rec_id;
 
 	// Query to retrieve the users whose status can be downgraded by the current one
-	$dgrade_st = prepare_stmt("SELECT priv, granted_by FROM PROFESSORI WHERE id_prof=?");
+	$dgrade_st = prepare_stmt("SELECT privileges, granted_by FROM user WHERE user_id=?");
 	$dgrade_st->bind_param("i", $rec_id);
 	$response = downgrade_rec($id);
 	$dgrade_st->close();
@@ -84,7 +84,7 @@ function downgrade_rec($cur_id)
 	$rec_id = $cur_id;
 	$dg = execute_stmt($dgrade_st);
 	$row = $dg->fetch_assoc();
-	if($row['priv'] > 0 or $row['granted_by'] == $_SESSION['id'])
+	if($row['privileges'] > 0 or $row['granted_by'] == $_SESSION['id'])
 		return true;
 	else if($row['granted_by'] === null)
 		return false;

@@ -22,7 +22,7 @@
 var i = 1;
 	
 // Modifies the following year when modifying the first
-$(".anno").keyup(function() {
+$(".class_year").keyup(function() {
 	if($(this).val().length == 4) {
 		$("#update").removeClass("btn-success");
 		$("#update").addClass("btn-warning");
@@ -49,9 +49,9 @@ $("#clpr").change(function() {
 			}
 
 			$("#cl").val(data.cl);
-			$("#sez").val(data.sez);
-			$("#a1").val(data.anno);
-			$("#flwa1").text(parseInt(data.anno) + 1);
+			$("#section").val(data.section);
+			$("#year1").val(data.class_year);
+			$("#year2").text(parseInt(data.class_year) + 1);
 			
 			$("#divpro").html(data.list);
 		},
@@ -72,10 +72,10 @@ $("#tabadd").on("keyup change", ".last", function() {
 			+ "<td><input type='text' id='c" + i + "' class='last n" + i + "' name='lcst[" + i + "]' placeholder='Cognome'></td> "
 			+ "<td><input type='text' id='nm" + i + "' class='n" + i + "' name='nst[" + i + "]' placeholder='Nome'></td> "
 			+ "<td class='containerflex'><div class='form-check'>"
-				+ "<input type='radio' id='m" + i + "' class='n" + i + " form-check-input' name='sesso[" + i + "]' value='m'>"
+				+ "<input type='radio' id='m" + i + "' class='n" + i + " form-check-input' name='gender[" + i + "]' value='m'>"
 				+ "<label class='form-check-label' for='m" + i + "'>M</label>"
 			+ "</div><div class='form-check'>"
-				+ "<input type='radio' id='f" + i + "' class='n" + i + " form-check-input' name='sesso[" + i + "]' value='f'>"
+				+ "<input type='radio' id='f" + i + "' class='n" + i + " form-check-input' name='gender[" + i + "]' value='f'>"
 				+ "<label class='form-check-label' for='f" + i + "'>F</label>"
 			+ "</div>"); 
 
@@ -133,13 +133,13 @@ $("#frm").on("submit", function(e) {
 			tmp = {};
 			count = $(this).attr("id").substring(1);
 		
-			tmp.cogs = $(this).val();
-			tmp.noms = $("#nm" + count).val();
+			tmp.lastname = $(this).val();
+			tmp.firstname = $("#nm" + count).val();
 		
 			if($("#m" + count).is(":checked"))
-				tmp.sesso = "M";
+				tmp.gender = "M";
 			else
-				tmp.sesso = "F";
+				tmp.gender = "F";
 		
 			get.push(tmp);
 		
@@ -149,7 +149,7 @@ $("#frm").on("submit", function(e) {
 		// Synchronous ajax request to block the insert on possible duplicates
 		$.ajax({
 			url: "/register/student_duplicate_ajax.php",
-			data: "cl={\"classe\":\"" + $("#cl").val() + "\",\"anno\":\"" + $("#a1").val() + "\"}&st=" + JSON.stringify(get),
+			data: "cl={\"class\":\"" + $("#cl").val() + "\",\"class_year\":\"" + $("#year1").val() + "\"}&st=" + JSON.stringify(get),
 			async: false,
 			dataType: "json",
 			success: function(data) {
@@ -162,16 +162,16 @@ $("#frm").on("submit", function(e) {
 					var toprint = "";
 					
 					$.each(data, function(i) {
-						toprint += "<tr class='borderover'><td>" + data[i].cogs + " " 
-							+ data[i].noms + " (" + data[i].sesso + ")</td><td class='textleft'>";
+						toprint += "<tr class='borderover'><td>" + data[i].lastname + " " 
+							+ data[i].firstname + " (" + data[i].gender + ")</td><td class='textleft'>";
 
 						$.each(data[i].list, function(k) {
 							toprint += "<label>" + data[i].list[k] + "</label><br>";
 						});
 
 						toprint += "<div class='form-check'>"
-							+ "<input type='radio' id='new' class='form-check-input'  name='ext[" + data[i].cogs + "_" 
-							+ data[i].noms + "_" + data[i].sesso + "]' value='new'>"
+							+ "<input type='radio' id='new' class='form-check-input'  name='ext[" + data[i].lastname + "_" 
+							+ data[i].firstname + "_" + data[i].gender + "]' value='new'>"
 							+ "<label class='form-check-label' for='new'>Nuovo</label>"
 							+ "</div>"
 							+ "</td></tr>";

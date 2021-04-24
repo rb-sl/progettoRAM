@@ -21,17 +21,31 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 chk_access(PROFESSOR_GRANTS);
 connect();
 
-$chk_st = prepare_stmt("SELECT COUNT(*) AS n FROM PROVE WHERE fk_test=?");
+// If the test does not exist an error is shown to the user
+$test_st = prepare_stmt("SELECT * FROM test WHERE test_id=?");
+$test_st->bind_param("i", $_GET['id']);
+
+$rettest = execute_stmt($test_st);
+$test_st->close();
+
+if($rettest->num_rows == 0)
+{
+	$_SESSION['alert'] = "Errore: Test inesistente";
+	header("Location: /test/test.php");
+	exit;
+}
+
+// If some results are present the deletion is blocked
+$chk_st = prepare_stmt("SELECT COUNT(*) AS n FROM results WHERE test_fk=?");
 $chk_st->bind_param("i", $_GET['id']);
 $ret = execute_stmt($chk_st);
 $chk_st->close();
 
 $r = $ret->fetch_assoc();
 
-// If some results are present the deletion is blocked
 if($r['n'] === 0)
 {
-	$del_st = prepare_stmt("DELETE FROM TEST WHERE id_test=?");
+	$del_st = prepare_stmt("DELETE FROM test WHERE test_id=?");
 	$del_st->bind_param("i", $_GET['id']);
 	execute_stmt($del_st);
 	$del_st->close();

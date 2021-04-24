@@ -188,18 +188,18 @@ if(chk_auth(NONE))
 		<h4 id="contacts">Amministratori dell'applicazione</h4>
 <?php
 // Prints the administrator's contact information
-$priv = ADMINISTRATOR;
-$admins = prepare_stmt("SELECT * FROM PROFESSORI 
-	WHERE priv=?
+$privileges = ADMINISTRATOR;
+$admins = prepare_stmt("SELECT * FROM user 
+	WHERE privileges=?
 	ORDER BY granted_by ASC");
-$admins->bind_param("i", $priv);
+$admins->bind_param("i", $privileges);
 $ret = execute_stmt($admins);
 $admins->close();
 
 while($row = $ret->fetch_assoc())
 {	
 	echo "<p class='marginunder'>
-			<b>".$row['nomp']." ".$row['cogp']."</b><br>";
+			<b>".$row['firstname']." ".$row['lastname']."</b><br>";
 	if($row['show_email'])
 		echo "E-mail: <a href='mailto:".$row['email']."'>".$row['email']."</a><br>";
 	echo $row['contact_info']."</p>";

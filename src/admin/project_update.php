@@ -36,7 +36,7 @@ if(is_array($compiled))
 
 unset($_SESSION['project_text']);
 
-$up_st = prepare_stmt("UPDATE ADMINDATA SET project_text=?, project_compiled=?");
+$up_st = prepare_stmt("UPDATE admindata SET project_text=?, project_compiled=?");
 $up_st->bind_param("ss", $_POST['project'], $compiled);
 execute_stmt($up_st);
 $up_st->close();

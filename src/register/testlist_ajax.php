@@ -27,12 +27,12 @@ connect();
 
 // Statement to find tests in the favourite list of the user
 // not yet done by the class
-$test_st = prepare_stmt("SELECT id_test, nometest FROM TEST
-	JOIN PROF_TEST ON fk_test=id_test
-	WHERE id_test NOT IN (
-		SELECT DISTINCT(fk_test) FROM PROVE JOIN ISTANZE ON fk_ist=id_ist WHERE fk_cl=?
-	) AND fk_prof=? 
-	ORDER BY nometest");
+$test_st = prepare_stmt("SELECT test_id, test_name FROM test
+	JOIN favourites ON test_fk=test_id
+	WHERE test_id NOT IN (
+		SELECT DISTINCT(test_fk) FROM results JOIN instance ON instance_fk=instance_id WHERE class_fk=?
+	) AND user_fk=? 
+	ORDER BY test_name");
 $test_st->bind_param("ii", $_GET['id'], $_SESSION['id']);
 $ret = execute_stmt($test_st);
 $test_st->close();
@@ -40,8 +40,8 @@ $test_st->close();
 $data = [];
 while($row = $ret->fetch_assoc())
 {
-	$buff['id'] = $row['id_test'];
-	$buff['name'] = $row['nometest'];
+	$buff['id'] = $row['test_id'];
+	$buff['name'] = $row['test_name'];
 	$data[] = $buff;
 }         
 echo json_encode($data);

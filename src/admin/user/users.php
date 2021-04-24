@@ -43,29 +43,29 @@ show_premain("Gestione utenti");
 				<th class="col"></th>
 			</tr>
 <?php
-$user_st = prepare_stmt("SELECT * FROM PROFESSORI 
-	LEFT JOIN SCUOLE ON fk_scuola=id_scuola 
-	ORDER BY priv, last_login DESC, user");
+$user_st = prepare_stmt("SELECT * FROM user 
+	LEFT JOIN school ON school_fk=school_id 
+	ORDER BY privileges, last_login DESC, username");
 $ret = execute_stmt($user_st);
 $user_st->close();
 
 while($row = $ret->fetch_assoc())
 {
-	$priv = get_privilege($row['priv']);
+	$privileges = get_privilege($row['privileges']);
 
 	echo "<tr>
-			<td class='col'>".$row['user']."</td>
-			<td class='col'>".$row['cogp']."</td>
-			<td class='col'>".$row['nomescuola']."</td>
+			<td class='col'>".$row['username']."</td>
+			<td class='col'>".$row['lastname']."</td>
+			<td class='col'>".$row['school_name']."</td>
 			<td class='col'>".$row['last_login']."</td>
 			<td class='col'>
-				<div class='boxdiv'><div class='colorbox ".$priv['color']."'></div></div>
-				<div class='privdiv'>".$priv['text']."</div>
+				<div class='boxdiv'><div class='colorbox ".$privileges['color']."'></div></div>
+				<div class='privdiv'>".$privileges['text']."</div>
 			</td>
 			<td class='col'>";
 
-	if($row['id_prof'] != $_SESSION['id'])
-		echo "<a href='user_details.php?id=".$row['id_prof']."' class='btn btn-info'>Dettagli</a>";
+	if($row['user_id'] != $_SESSION['id'])
+		echo "<a href='user_details.php?id=".$row['user_id']."' class='btn btn-info'>Dettagli</a>";
 			
 	echo "</td>
 		</tr>";

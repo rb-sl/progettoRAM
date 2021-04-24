@@ -56,16 +56,16 @@ $stats = get_general_stats();
 
 <table class="table table-light table-striped">
 <?php
-$test_st = prepare_stmt("SELECT id_test, nometest, COUNT(*) AS n 
-	FROM TEST JOIN PROVE ON fk_test=id_test 
-	GROUP BY nometest 
+$test_st = prepare_stmt("SELECT test_id, test_name, COUNT(*) AS n 
+	FROM test JOIN results ON test_fk=test_id 
+	GROUP BY test_name 
 	HAVING(COUNT(*)>0) 
-	ORDER BY nometest");
+	ORDER BY test_name");
 $test_r = execute_stmt($test_st);
 $test_st->close();
 
 while($row = $test_r->fetch_assoc())
-	echo "<tr><td><a href='test_stats.php?id=".$row['id_test']."'>".$row['nometest']."</a></td></tr>";
+	echo "<tr><td><a href='test_stats.php?id=".$row['test_id']."'>".$row['test_name']."</a></td></tr>";
 ?>
 </table>
 

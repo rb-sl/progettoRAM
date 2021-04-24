@@ -25,11 +25,11 @@ connect();
 // (or is an administrator)
 if(!chk_auth(ADMINISTRATOR))
 {
-	$chk_st = prepare_stmt("SELECT * FROM STUDENTI
-		JOIN ISTANZE ON fk_stud=id_stud
-		JOIN CLASSI ON fk_cl=id_cl 
-		WHERE id_stud=?
-		AND fk_prof=?");
+	$chk_st = prepare_stmt("SELECT * FROM student
+		JOIN instance ON student_fk=student_id
+		JOIN class ON class_fk=class_id 
+		WHERE student_id=?
+		AND user_fk=?");
 	$chk_st->bind_param("ii", $_GET['id'], $_SESSION['id']);
 
 	$ret = execute_stmt($chk_st);
@@ -42,11 +42,11 @@ if(!chk_auth(ADMINISTRATOR))
 	}
 }
 
-$lastname = maiuscolo($_POST['cogs']);
-$firstname = maiuscolo($_POST['noms']);
+$lastname = maiuscolo($_POST['lastname']);
+$firstname = maiuscolo($_POST['firstname']);
 
-$up_st = prepare_stmt("UPDATE STUDENTI SET cogs=?, noms=?, sesso=? WHERE id_stud=?");
-$up_st->bind_param("sssi", $lastname, $firstname, $_POST['sesso'], $_GET['id']);
+$up_st = prepare_stmt("UPDATE student SET lastname=?, firstname=?, gender=? WHERE student_id=?");
+$up_st->bind_param("sssi", $lastname, $firstname, $_POST['gender'], $_GET['id']);
 execute_stmt($up_st);
 $up_st->close();
 

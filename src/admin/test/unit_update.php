@@ -24,7 +24,7 @@ connect();
 // New unit insert
 if(isset($_POST['newrow1']) and $_POST['newrow1'] != "")
 {
-	$in_st = prepare_stmt("INSERT INTO UNITA(udm, simbolo) 
+	$in_st = prepare_stmt("INSERT INTO unit(unit_name, symbol) 
 		VALUES (?, ?)");
 	$in_st->bind_param("ss", $_POST['newrow1'], $_POST['newrow2']);
 	execute_stmt($in_st);
@@ -36,8 +36,8 @@ if(isset($_POST['newrow1']) and $_POST['newrow1'] != "")
 // Update of old units 
 if(isset($_POST['col1']))
 {
-	$up_st = prepare_stmt("UPDATE UNITA SET udm=?, simbolo=? 
-	WHERE id_udm=?");
+	$up_st = prepare_stmt("UPDATE unit SET unit_name=?, symbol=? 
+	WHERE unit_id=?");
 	$up_st->bind_param("ssi", $name, $symbol, $id);
 
 	foreach($_POST['col1'] as $id => $name)

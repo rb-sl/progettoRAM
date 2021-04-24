@@ -115,7 +115,7 @@ function draw_graph_val(vals) {
 
 	var layout = {
 		height: "600",
-		title: $("#nomet").html() + " - Valori"
+		title: $("#datatype_name").html() + " - Valori"
 	};
 
 	Plotly.newPlot("cnv", plotData, layout, {responsive: true});
@@ -135,7 +135,7 @@ function draw_graph_box(vals) {
 
 	var layout = {
 		height: "600",
-		title: $("#nomet").html() + " - Box plot",
+		title: $("#datatype_name").html() + " - Box plot",
 		yaxis: {
 			visible: false
 		}
@@ -165,7 +165,7 @@ function draw_graph_multibox(graph, plotType) {
 
 	var layout = {
 		height: "600",
-		title: $("#nomet").html() + " - " + $("#graph option:selected").html()
+		title: $("#datatype_name").html() + " - " + $("#graph option:selected").html()
 	};
 
 	Plotly.newPlot("cnv", data, layout, {responsive: true});
@@ -184,7 +184,7 @@ function draw_graph_prc(lbls, vals) {
 
 	var layout = {
 		height: "600",
-		title: $("#nomet").html() + " - Valori percentili"
+		title: $("#datatype_name").html() + " - Valori percentili"
 	};
 
 	Plotly.newPlot("cnv", plotData, layout, {responsive: true});

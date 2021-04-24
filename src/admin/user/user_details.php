@@ -22,22 +22,22 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_admin.php";
 chk_access(0);
 connect();
 
-$user_st = prepare_stmt("SELECT * FROM PROFESSORI 
-	LEFT JOIN SCUOLE ON fk_scuola=id_scuola 
-	WHERE id_prof=?");
+$user_st = prepare_stmt("SELECT * FROM user 
+	LEFT JOIN school ON school_fk=school_id 
+	WHERE user_id=?");
 $user_st->bind_param("i", $_GET['id']);
 $ret = execute_stmt($user_st);
 $user_st->close();
 
 $user = $ret->fetch_assoc();
 
-$dg = can_downgrade($user['id_prof']);
+$dg = can_downgrade($user['user_id']);
 
-show_premain("Profilo di ".$user['user']);
+show_premain("Profilo di ".$user['username']);
 ?>
 
 <h2>
-	Profilo di <?=$user['user']?>
+	Profilo di <?=$user['username']?>
 	<a href="/admin/user/users.php" class="btn btn-warning">Indietro</a>
 </h2>
 
@@ -46,11 +46,11 @@ show_premain("Profilo di ".$user['user']);
 		<table class="table table-light table-striped marginunder">
 			<tr>
 				<td class="col">Cognome</td>
-				<td class="col"><?=$user['cogp']?></td>
+				<td class="col"><?=$user['lastname']?></td>
 			</tr>
 			<tr>
 				<td class="col">Nome</td>
-				<td class="col"><?=$user['nomp']?></td>
+				<td class="col"><?=$user['firstname']?></td>
 			</tr>
 			<tr>
 				<td class="col">E-mail</td>
@@ -58,25 +58,25 @@ show_premain("Profilo di ".$user['user']);
 			</tr>
 			<tr>
 				<td class="col">Scuola</td>
-				<td class="col"><?=$user['nomescuola']?></td>
+				<td class="col"><?=$user['school_name']?></td>
 			</tr>
 			<tr>
 				<td class="col">Privilegi</td>
 				<td class="col">
-					<select class="form-control" name="priv">
+					<select class="form-control" name="privileges">
 <?php
 // Options to change the privilege level are shown only in 
-// upgrade if the user is not the original granter
-$end = $dg ? NONE : $user['priv'];
+// upgrade if the username is not the original granter
+$end = $dg ? NONE : $user['privileges'];
 for($i = 0; $i <= $end; $i++)
 {
-	$priv = get_privilege($i);
-	if($priv != null)
+	$privileges = get_privilege($i);
+	if($privileges != null)
 	{
 		echo "<option value='$i'";
-		if($user['priv'] == $i)
+		if($user['privileges'] == $i)
 			echo " selected";
-		echo ">".$priv['text']."</option>";
+		echo ">".$privileges['text']."</option>";
 	}
 }
 ?>

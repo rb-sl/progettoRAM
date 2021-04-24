@@ -23,9 +23,9 @@ connect();
 show_premain("Aggiungi test");
 
 // Preparing statements for selects
-$test_st = prepare_stmt("SELECT * FROM TIPOTEST ORDER BY nomet");
-$clt_st = prepare_stmt("SELECT * FROM CLTEST ORDER BY nomec");
-$unit_st = prepare_stmt("SELECT * FROM UNITA ORDER BY udm");
+$test_st = prepare_stmt("SELECT * FROM datatype ORDER BY datatype_name");
+$clt_st = prepare_stmt("SELECT * FROM testtype ORDER BY testtype_name");
+$unit_st = prepare_stmt("SELECT * FROM unit ORDER BY unit_name");
 ?>
 
 <h2>Aggiungi nuovo test</h2>
@@ -44,7 +44,7 @@ $ctest = execute_stmt($clt_st);
 $clt_st->close();
 
 while($row = $ctest->fetch_assoc())
-	echo "<option value='".$row['id_cltest']."'>".$row['nomec']."</option>";
+	echo "<option value='".$row['testtype_id']."'>".$row['testtype_name']."</option>";
 ?>
 				</select>
 			</td>
@@ -59,7 +59,7 @@ $retunita = execute_stmt($unit_st);
 $unit_st->close();
 
 while($row = $retunita->fetch_assoc())
-	echo "<option value='".$row['id_udm']."'>".$row['udm']."</option>";
+	echo "<option value='".$row['unit_id']."'>".$row['unit_name']."</option>";
 ?>
 				</select>
 			</td>
@@ -69,8 +69,8 @@ while($row = $retunita->fetch_assoc())
 			<td>
 				<select name="positive"  class="form-control" required>
 					<option selected="selected" disabled>
-					<option value="Maggiori">Maggiori</option>
-					<option value="Minori">Minori</option>
+					<option value="<?=GREATER?>">Maggiori</option>
+					<option value="<?=LOWER?>">Minori</option>
 				</select>
 			</td>
 		</tr>
@@ -84,7 +84,7 @@ $ttest = execute_stmt($test_st);
 $test_st->close();
 
 while($row = $ttest->fetch_assoc())
-	echo "<option value='".$row['id_tipot']."'>".$row['nomet']."</option>";
+	echo "<option value='".$row['datatype_id']."'>".$row['datatype_name']."</option>";
 ?>
 				</select>
 			</td>

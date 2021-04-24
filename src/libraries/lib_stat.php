@@ -70,14 +70,14 @@ function cond_builder()
 			$base_cond = false;
 
 	// Construction of the gender list
-	$cond['sex'] = "";
+	$cond['gender'] = "";
 	if(isset($_GET['m']))
-		$cond['sex'] .= ", 'm'";
+		$cond['gender'] .= ", 'm'";
 	else
 		$base_cond = false;
 
 	if(isset($_GET['f']))
-		$cond['sex'] .= ", 'f'";
+		$cond['gender'] .= ", 'f'";
 	else
 		$base_cond = false;
 	
@@ -93,10 +93,10 @@ function cond_builder()
 	if(isset($_GET['rstr']))
 	{
 		$base_cond = false;
-		$cond['prof'] = "AND fk_prof=?";
+		$cond['user'] = "AND user_fk=?";
 	}
 	else
-		$cond['prof'] = "";
+		$cond['user'] = "";
 
 	// If all base elements are selected there 
 	// is no need to restrict results
@@ -112,7 +112,7 @@ function get_general_stats($cond = null)
 	$ret = [];
 
 	// Number of students
-	$count_st = prepare_stmt("SELECT COUNT(*) AS n FROM STUDENTI");
+	$count_st = prepare_stmt("SELECT COUNT(*) AS n FROM student");
 	$ret_s = execute_stmt($count_st);
 	$count_st->close();
 
@@ -120,7 +120,7 @@ function get_general_stats($cond = null)
 	$ret['stud_tot'] = $count_s['n'];
 
 	// Number of tests
-	$count_st = prepare_stmt("SELECT COUNT(*) AS n FROM PROVE");
+	$count_st = prepare_stmt("SELECT COUNT(*) AS n FROM results");
 	$ret_r = execute_stmt($count_st);
 	$count_st->close();
 
@@ -132,18 +132,18 @@ function get_general_stats($cond = null)
 	if($cond)
 	{
 		$classlist = $cond['class'];
-		$genderlist = $cond['sex'];
-		$prof = $cond['prof'];
+		$genderlist = $cond['gender'];
+		$user = $cond['user'];
 
 		// Restricted students' numbers
-		$count_st = prepare_stmt("SELECT COUNT(DISTINCT(id_stud)) AS n FROM STUDENTI
-			JOIN ISTANZE ON fk_stud=id_stud
-			JOIN CLASSI ON fk_cl=id_cl
-			WHERE anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof");
-		if($prof != "")
+		$count_st = prepare_stmt("SELECT COUNT(DISTINCT(student_id)) AS n FROM student
+			JOIN instance ON student_fk=student_id
+			JOIN class ON class_fk=class_id
+			WHERE class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user");
+		if($user != "")
 			$count_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
 		else
 			$count_st->bind_param("ii", $cond['year1'], $cond['year2']);
@@ -151,19 +151,23 @@ function get_general_stats($cond = null)
 		$ret_s = execute_stmt($count_st);
 		$count_st->close();
 		$count_s = $ret_s->fetch_assoc();
+		
 		$ret['stud_num'] = $count_s['n'];
-		$ret['stud_perc'] = number_format($ret['stud_num'] / $ret['stud_tot'] * 100, 2);
-
+		if($ret['stud_tot'] == 0)
+			$ret['stud_perc'] = 100;
+		else
+			$ret['stud_perc'] = number_format($ret['stud_num'] / $ret['stud_tot'] * 100, 2);
+	
 		// Restricted results' numbers
-		$count_st = prepare_stmt("SELECT COUNT(*) AS n FROM PROVE
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN STUDENTI ON fk_stud=id_stud
-			JOIN CLASSI ON fk_cl=id_cl
-			WHERE anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof");
-		if($prof != "")
+		$count_st = prepare_stmt("SELECT COUNT(*) AS n FROM results
+			JOIN instance ON instance_fk=instance_id
+			JOIN student ON student_fk=student_id
+			JOIN class ON class_fk=class_id
+			WHERE class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user");
+		if($user != "")
 			$count_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
 		else
 			$count_st->bind_param("ii", $cond['year1'], $cond['year2']);
@@ -172,7 +176,10 @@ function get_general_stats($cond = null)
 		$count_st->close();
 		$count_r = $ret_r->fetch_assoc();
 		$ret['res_num'] = $count_r['n'];
-		$ret['res_perc'] = number_format($ret['res_num'] / $ret['res_tot'] * 100, 2);
+		if($ret['res_tot'] == 0)
+			$ret['res_perc'] = 100;
+		else
+			$ret['res_perc'] = number_format($ret['res_num'] / $ret['res_tot'] * 100, 2);
 	}
 
 	return $ret;	
@@ -184,58 +191,58 @@ function misc_graph($cond = null)
 	if($cond)
 	{
 		$classlist = $cond['class'];
-		$genderlist = $cond['sex'];
-		$prof = $cond['prof'];
+		$genderlist = $cond['gender'];
+		$user = $cond['user'];
 
 		// Statement to get the number of results for each test
-		$test_st = prepare_stmt("SELECT nometest, COUNT(*) AS n FROM PROVE 
-			JOIN TEST ON fk_test=id_test
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN STUDENTI ON fk_stud=id_stud 
-			JOIN CLASSI ON fk_cl=id_cl 
-			WHERE anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof
-			GROUP BY id_test 
+		$test_st = prepare_stmt("SELECT test_name, COUNT(*) AS n FROM results 
+			JOIN test ON test_fk=test_id
+			JOIN instance ON instance_fk=instance_id
+			JOIN student ON student_fk=student_id 
+			JOIN class ON class_fk=class_id 
+			WHERE class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user
+			GROUP BY test_id 
 			ORDER BY n");
 
 		// Statement to get the number of results for each student's gender
-		$stud_st = prepare_stmt("SELECT sesso, COUNT(*) AS n FROM PROVE 
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN STUDENTI ON fk_stud=id_stud
-			JOIN CLASSI ON fk_cl=id_cl 
-			WHERE anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof
-			GROUP BY sesso");
+		$stud_st = prepare_stmt("SELECT gender, COUNT(*) AS n FROM results 
+			JOIN instance ON instance_fk=instance_id
+			JOIN student ON student_fk=student_id
+			JOIN class ON class_fk=class_id 
+			WHERE class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user
+			GROUP BY gender");
 
 		// Statement to get the number of results for each class number
-		$class_st = prepare_stmt("SELECT classe, COUNT(*) AS n FROM PROVE
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl 
-			JOIN STUDENTI ON fk_stud=id_stud 
-			WHERE anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof
-			GROUP BY classe 
-			ORDER BY classe ASC");
+		$class_st = prepare_stmt("SELECT class, COUNT(*) AS n FROM results
+			JOIN instance ON instance_fk=instance_id
+			JOIN class ON class_fk=class_id 
+			JOIN student ON student_fk=student_id 
+			WHERE class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user
+			GROUP BY class 
+			ORDER BY class ASC");
 
 		// Statement to get the number of results for each year
-		$year_st = prepare_stmt("SELECT anno, COUNT(*) AS n FROM PROVE
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl 
-			JOIN STUDENTI ON fk_stud=id_stud 
-			WHERE anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof
-			GROUP BY anno 
-			ORDER BY anno ASC");
+		$year_st = prepare_stmt("SELECT class_year, COUNT(*) AS n FROM results
+			JOIN instance ON instance_fk=instance_id
+			JOIN class ON class_fk=class_id 
+			JOIN student ON student_fk=student_id 
+			WHERE class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user
+			GROUP BY class_year 
+			ORDER BY class_year ASC");
 
-		if($prof != "")
+		if($user != "")
 		{
 			$test_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
 			$stud_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
@@ -253,30 +260,30 @@ function misc_graph($cond = null)
 	else
 	{
 		// Statement to get the number of results for each test
-		$test_st = prepare_stmt("SELECT nometest, COUNT(*) AS n FROM PROVE 
-			JOIN TEST ON fk_test=id_test
-			GROUP BY id_test 
+		$test_st = prepare_stmt("SELECT test_name, COUNT(*) AS n FROM results 
+			JOIN test ON test_fk=test_id
+			GROUP BY test_id 
 			ORDER BY n");
 
 		// Statement to get the number of results for each student's gender
-		$stud_st = prepare_stmt("SELECT sesso, COUNT(*) AS n FROM PROVE 
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN STUDENTI ON fk_stud=id_stud 
-			GROUP BY sesso");
+		$stud_st = prepare_stmt("SELECT gender, COUNT(*) AS n FROM results 
+			JOIN instance ON instance_fk=instance_id
+			JOIN student ON student_fk=student_id 
+			GROUP BY gender");
 
 		// Statement to get the number of results for each class number
-		$class_st = prepare_stmt("SELECT classe, COUNT(*) AS n FROM PROVE
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl 
-			GROUP BY classe 
-			ORDER BY classe ASC");
+		$class_st = prepare_stmt("SELECT class, COUNT(*) AS n FROM results
+			JOIN instance ON instance_fk=instance_id
+			JOIN class ON class_fk=class_id 
+			GROUP BY class 
+			ORDER BY class ASC");
 
 		// Statement to get the number of results for each year
-		$year_st = prepare_stmt("SELECT anno, COUNT(*) AS n FROM PROVE
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl 
-			GROUP BY anno 
-			ORDER BY anno ASC");
+		$year_st = prepare_stmt("SELECT class_year, COUNT(*) AS n FROM results
+			JOIN instance ON instance_fk=instance_id
+			JOIN class ON class_fk=class_id 
+			GROUP BY class_year 
+			ORDER BY class_year ASC");
 	}
 
 	// Number of results divided by test
@@ -288,7 +295,7 @@ function misc_graph($cond = null)
 	while($row = $ret_t->fetch_assoc())
 	{
 		$ret['test']['vals'][] = $row['n'];
-		$ret['test']['lbls'][] = $row['nometest'];
+		$ret['test']['lbls'][] = $row['test_name'];
 	}
 
 	// Number of results divided by students' gender
@@ -300,7 +307,7 @@ function misc_graph($cond = null)
 	while($row = $ret_s->fetch_assoc())
 	{
 		$ret['stud']['vals'][] = $row['n'];
-		$ret['stud']['lbls'][] = $row['sesso'];
+		$ret['stud']['lbls'][] = $row['gender'];
 	}
 
 	// Number of results divided by class
@@ -312,7 +319,7 @@ function misc_graph($cond = null)
 	while($row = $ret_c->fetch_assoc())
 	{
 		$ret['class']['vals'][] = $row['n'];
-		$ret['class']['lbls'][] = $row['classe'];
+		$ret['class']['lbls'][] = $row['class'];
 	}
 
 	// Number of results divided by year
@@ -324,7 +331,7 @@ function misc_graph($cond = null)
 	while($row = $ret_y->fetch_assoc())
 	{
 		$ret['year']['vals'][] = $row['n'];
-		$ret['year']['lbls'][] = $row['anno']."/".($row['anno']+1);
+		$ret['year']['lbls'][] = $row['class_year']."/".($row['class_year']+1);
 	}
 
 	return $ret;
@@ -336,35 +343,35 @@ function get_records($id, $cond = null)
 	if($cond)
 	{
 		$classlist = $cond['class'];
-		$genderlist = $cond['sex'];
-		$prof = $cond['prof'];
+		$genderlist = $cond['gender'];
+		$user = $cond['user'];
 
-		$rec_st = prepare_stmt("SELECT passo, pos, MAX(valore) AS max, MIN(valore) AS min 
-			FROM PROVE JOIN TEST ON fk_test=id_test
-			JOIN TIPOTEST ON fk_tipot=id_tipot
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl 
-			JOIN STUDENTI ON fk_stud=id_stud 
-			WHERE id_test=?
-			AND anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof");
+		$rec_st = prepare_stmt("SELECT step, positive_values, MAX(value) AS max, MIN(value) AS min 
+			FROM results JOIN test ON test_fk=test_id
+			JOIN datatype ON datatype_fk=datatype_id
+			JOIN instance ON instance_fk=instance_id
+			JOIN class ON class_fk=class_id 
+			JOIN student ON student_fk=student_id 
+			WHERE test_id=?
+			AND class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user");
 		
-		$class_st = prepare_stmt("SELECT nomescuola, id_cl, classe, sez, anno, fk_prof 
-			FROM PROVE JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl
-			JOIN SCUOLE ON fk_scuola=id_scuola
-			JOIN STUDENTI ON fk_stud=id_stud
-			WHERE fk_test=? 
-			AND valore=?
-			AND anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof 
-			ORDER BY anno ASC");
+		$class_st = prepare_stmt("SELECT school_name, class_id, class, section, class_year, user_fk 
+			FROM results JOIN instance ON instance_fk=instance_id
+			JOIN class ON class_fk=class_id
+			JOIN school ON school_fk=school_id
+			JOIN student ON student_fk=student_id
+			WHERE test_fk=? 
+			AND value=?
+			AND class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user 
+			ORDER BY class_year ASC");
 
-		if($prof != "")
+		if($user != "")
 		{ 
 			$rec_st->bind_param("iiii", $id, $cond['year1'], $cond['year2'], $_SESSION['id']);
 			$class_st->bind_param("idiii", $id, $best, $cond['year1'], $cond['year2'], $_SESSION['id']);
@@ -377,19 +384,19 @@ function get_records($id, $cond = null)
 	}
 	else
 	{
-		$rec_st = prepare_stmt("SELECT passo, pos, MAX(valore) AS max, MIN(valore) AS min 
-		FROM PROVE JOIN TEST ON fk_test=id_test
-		JOIN TIPOTEST ON fk_tipot=id_tipot
-		WHERE id_test=?");
+		$rec_st = prepare_stmt("SELECT step, positive_values, MAX(value) AS max, MIN(value) AS min 
+		FROM results JOIN test ON test_fk=test_id
+		JOIN datatype ON datatype_fk=datatype_id
+		WHERE test_id=?");
 		$rec_st->bind_param("i", $id);
 
-		$class_st = prepare_stmt("SELECT nomescuola, id_cl, classe, sez, anno, fk_prof 
-			FROM PROVE JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl
-			JOIN SCUOLE ON fk_scuola=id_scuola
-			WHERE fk_test=? 
-			AND valore=? 
-			ORDER BY anno ASC");
+		$class_st = prepare_stmt("SELECT school_name, class_id, class, section, class_year, user_fk 
+			FROM results JOIN instance ON instance_fk=instance_id
+			JOIN class ON class_fk=class_id
+			JOIN school ON school_fk=school_id
+			WHERE test_fk=? 
+			AND value=? 
+			ORDER BY class_year ASC");
 		$class_st->bind_param("id", $id, $best);
 	}
 
@@ -397,7 +404,7 @@ function get_records($id, $cond = null)
 	$rec_st->close();
 
 	$record = $ret->fetch_assoc();
-	if($record['pos'] == "Maggiori")
+	if($record['positive_values'] == GREATER)
 	{
 		$rcr['best'] = $record['max'];
 		$rcr['worst'] = $record['min'];
@@ -414,7 +421,7 @@ function get_records($id, $cond = null)
 	$ret = execute_stmt($class_st);	
 	
 	// Float results are formatted
-	if($rcr['best'] and $record['passo'] < 1)
+	if($rcr['best'] and $record['step'] < 1)
 	{
 		$rcr['best'] = number_format($rcr['best'], 2);
 		$rcr['worst'] = number_format($rcr['worst'], 2);
@@ -423,17 +430,17 @@ function get_records($id, $cond = null)
 	$rcr['list'] = "<table id='tbest' class='table table-light table-striped'>";
 	while($rcp = $ret->fetch_assoc())
 	{
-		$rcr['list'] .= "<tr><td class='rcr'>".$rcp['nomescuola']."</td><td class='rcr'>";
+		$rcr['list'] .= "<tr><td class='rcr'>".$rcp['school_name']."</td><td class='rcr'>";
 
-		if($rcp['fk_prof'] == $_SESSION['id'] or chk_auth(ADMINISTRATOR))
+		if($rcp['user_fk'] == $_SESSION['id'] or chk_auth(ADMINISTRATOR))
   		{
-			$rcr['list'] .= "<a href='/register/class_show.php?id=".$rcp['id_cl']."'>";
+			$rcr['list'] .= "<a href='/register/class_show.php?id=".$rcp['class_id']."'>";
 			$fl = "</a>";
   		}
   		else
 			$fl = "";
 
-		$rcr['list'] .= $rcp['classe'].$rcp['sez']." ".$rcp['anno']."/".($rcp['anno'] + 1)."$fl</td></tr>";
+		$rcr['list'] .= $rcp['class'].$rcp['section']." ".$rcp['class_year']."/".($rcp['class_year'] + 1)."$fl</td></tr>";
 	}
 	$rcr['list'] .= "</table>";
 
@@ -446,51 +453,51 @@ function get_stats($idtest, $cond = null, $get_median = true)
 	if($cond)
 	{
 		$classlist = $cond['class'];
-		$genderlist = $cond['sex'];
-		$prof = $cond['prof'];
+		$genderlist = $cond['gender'];
+		$user = $cond['user'];
 
-		$stat_st = prepare_stmt("SELECT COUNT(valore) as n, AVG(valore) AS avg, STD(valore) AS std
-			FROM PROVE 
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN STUDENTI ON fk_stud=id_stud 
-			JOIN CLASSI ON fk_cl=id_cl 
-			WHERE fk_test=?
-			AND anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof");
+		$stat_st = prepare_stmt("SELECT COUNT(value) as n, AVG(value) AS avg, STD(value) AS std
+			FROM results 
+			JOIN instance ON instance_fk=instance_id
+			JOIN student ON student_fk=student_id 
+			JOIN class ON class_fk=class_id 
+			WHERE test_fk=?
+			AND class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user");
 		
 		if($get_median)
 		{
-			$even_st = prepare_stmt("SELECT AVG(valore) AS med FROM (
-					SELECT valore 
-					FROM PROVE JOIN ISTANZE ON fk_ist=id_ist
-					JOIN STUDENTI ON fk_stud=id_stud 
-					JOIN CLASSI ON fk_cl=id_cl 
-					WHERE fk_test=? 
-					AND anno BETWEEN ? AND ?
-					AND classe IN (0 $classlist)
-					AND sesso IN ('x' $genderlist)
-					$prof
-					ORDER BY valore ASC 
+			$even_st = prepare_stmt("SELECT AVG(value) AS med FROM (
+					SELECT value 
+					FROM results JOIN instance ON instance_fk=instance_id
+					JOIN student ON student_fk=student_id 
+					JOIN class ON class_fk=class_id 
+					WHERE test_fk=? 
+					AND class_year BETWEEN ? AND ?
+					AND class IN (0 $classlist)
+					AND gender IN ('x' $genderlist)
+					$user
+					ORDER BY value ASC 
 					LIMIT ?, 2
 				) AS P");
 			
 			// Query to get the median if the number of results is odd
-			$odd_st = prepare_stmt("SELECT valore AS med FROM PROVE 
-				JOIN ISTANZE ON fk_ist=id_ist
-				JOIN STUDENTI ON fk_stud=id_stud 
-				JOIN CLASSI ON fk_cl=id_cl 
-				WHERE fk_test=? 
-				AND anno BETWEEN ? AND ?
-				AND classe IN (0 $classlist)
-				AND sesso IN ('x' $genderlist)
-				$prof
-				ORDER BY valore ASC 
+			$odd_st = prepare_stmt("SELECT value AS med FROM results 
+				JOIN instance ON instance_fk=instance_id
+				JOIN student ON student_fk=student_id 
+				JOIN class ON class_fk=class_id 
+				WHERE test_fk=? 
+				AND class_year BETWEEN ? AND ?
+				AND class IN (0 $classlist)
+				AND gender IN ('x' $genderlist)
+				$user
+				ORDER BY value ASC 
 				LIMIT ?, 1");
 		}
 
-		if($prof != "")
+		if($user != "")
 		{
 			$stat_st->bind_param("iiii", $idtest, $cond['year1'], $cond['year2'], $_SESSION['id']);
 			if($get_median)
@@ -511,28 +518,28 @@ function get_stats($idtest, $cond = null, $get_median = true)
 	}
 	else
 	{
-		$stat_st = prepare_stmt("SELECT COUNT(valore) as n, AVG(valore) AS avg, STD(valore) AS std
-			FROM PROVE
-			WHERE fk_test=?");
+		$stat_st = prepare_stmt("SELECT COUNT(value) as n, AVG(value) AS avg, STD(value) AS std
+			FROM results
+			WHERE test_fk=?");
 		$stat_st->bind_param("i", $idtest);
 
 		if($get_median)
 		{
 			// Query to get the median if the number of results is even
-			$even_st = prepare_stmt("SELECT AVG(valore) AS med FROM (
-					SELECT valore 
-					FROM PROVE 
-					WHERE fk_test=? 
-					ORDER BY valore ASC 
+			$even_st = prepare_stmt("SELECT AVG(value) AS med FROM (
+					SELECT value 
+					FROM results 
+					WHERE test_fk=? 
+					ORDER BY value ASC 
 					LIMIT ?, 2
 				) AS P");
 			$even_st->bind_param("ii", $idtest, $offset);
 
 			// Query to get the median if the number of results is odd
-			$odd_st = prepare_stmt("SELECT valore AS med
-				FROM PROVE 
-				WHERE fk_test=? 
-				ORDER BY valore ASC 
+			$odd_st = prepare_stmt("SELECT value AS med
+				FROM results 
+				WHERE test_fk=? 
+				ORDER BY value ASC 
 				LIMIT ?, 1");
 			$odd_st->bind_param("ii", $idtest, $offset);
 		}
@@ -572,28 +579,28 @@ function graph_vals($id, $cond = null)
 	if($cond)
 	{
 		$classlist = $cond['class'];
-		$genderlist = $cond['sex'];
-		$prof = $cond['prof'];
+		$genderlist = $cond['gender'];
+		$user = $cond['user'];
 
-		$val_st = prepare_stmt("SELECT valore FROM PROVE
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN STUDENTI ON fk_stud=id_stud 
-			JOIN CLASSI ON fk_cl=id_cl  
-			WHERE fk_test=? 
-			AND anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof
-			ORDER BY valore ASC");
+		$val_st = prepare_stmt("SELECT value FROM results
+			JOIN instance ON instance_fk=instance_id
+			JOIN student ON student_fk=student_id 
+			JOIN class ON class_fk=class_id  
+			WHERE test_fk=? 
+			AND class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user
+			ORDER BY value ASC");
 
-		if($prof != "")
+		if($user != "")
 			$val_st->bind_param("iiii", $id, $cond['year1'], $cond['year2'], $_SESSION['id']);
 		else
 			$val_st->bind_param("iii", $id, $cond['year1'], $cond['year2']);
 	}
 	else
 	{
-		$val_st = prepare_stmt("SELECT valore FROM PROVE WHERE fk_test=? ORDER BY valore ASC");
+		$val_st = prepare_stmt("SELECT value FROM results WHERE test_fk=? ORDER BY value ASC");
 		$val_st->bind_param("i", $id);
 	}
 	$ret = execute_stmt($val_st);
@@ -601,7 +608,7 @@ function graph_vals($id, $cond = null)
 
 	$graph['vals'] = [];
 	while($row = $ret->fetch_assoc())
-		$graph['vals'][] = $row['valore'];
+		$graph['vals'][] = $row['value'];
 
 	return $graph;
 }
@@ -612,30 +619,30 @@ function graph_prc($id, $cond = null)
 	if($cond)
 	{
 		$classlist = $cond['class'];
-		$genderlist = $cond['sex'];
-		$prof = $cond['prof'];
+		$genderlist = $cond['gender'];
+		$user = $cond['user'];
 
-		$count_st = prepare_stmt("SELECT COUNT(*) AS n, pos FROM PROVE 
-			JOIN TEST ON fk_test=id_test 
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN STUDENTI ON fk_stud=id_stud 
-			JOIN CLASSI ON fk_cl=id_cl  
-			WHERE id_test=?
-			AND anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof");
+		$count_st = prepare_stmt("SELECT COUNT(*) AS n, positive_values FROM results 
+			JOIN test ON test_fk=test_id 
+			JOIN instance ON instance_fk=instance_id
+			JOIN student ON student_fk=student_id 
+			JOIN class ON class_fk=class_id  
+			WHERE test_id=?
+			AND class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user");
 
-		if($prof != "")
+		if($user != "")
 			$count_st->bind_param("iiii", $id, $cond['year1'], $cond['year2'], $_SESSION['id']);
 		else
 			$count_st->bind_param("iii", $id, $cond['year1'], $cond['year2']);
 	}
 	else
 	{
-		$count_st = prepare_stmt("SELECT COUNT(*) AS n, pos FROM PROVE 
-			JOIN TEST ON fk_test=id_test 
-			WHERE id_test=?");
+		$count_st = prepare_stmt("SELECT COUNT(*) AS n, positive_values FROM results 
+			JOIN test ON test_fk=test_id 
+			WHERE test_id=?");
 		$count_st->bind_param("i", $id);
 	}
 
@@ -650,34 +657,34 @@ function graph_prc($id, $cond = null)
 		return $graph;   
 
 	// Preparation of the query, whose order is defined by the test
-	if($test['pos'] == "Maggiori")
+	if($test['positive_values'] == GREATER)
 		$order = "ASC";
 	else
 		$order = "DESC";
 	
 	if($cond)
 	{
-		$val_st = prepare_stmt("SELECT valore FROM PROVE 
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN STUDENTI ON fk_stud=id_stud 
-			JOIN CLASSI ON fk_cl=id_cl  
-			WHERE fk_test=?
-			AND anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof
-			ORDER BY valore $order");
+		$val_st = prepare_stmt("SELECT value FROM results 
+			JOIN instance ON instance_fk=instance_id
+			JOIN student ON student_fk=student_id 
+			JOIN class ON class_fk=class_id  
+			WHERE test_fk=?
+			AND class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user
+			ORDER BY value $order");
 		
-		if($prof != "")
+		if($user != "")
 			$val_st->bind_param("iiii", $id, $cond['year1'], $cond['year2'], $_SESSION['id']);
 		else
 			$val_st->bind_param("iii", $id, $cond['year1'], $cond['year2']);
 	}
 	else
 	{
-		$val_st = prepare_stmt("SELECT valore FROM PROVE 
-			WHERE fk_test=?
-			ORDER BY valore $order");
+		$val_st = prepare_stmt("SELECT value FROM results 
+			WHERE test_fk=?
+			ORDER BY value $order");
 		$val_st->bind_param("i", $id);
 	}
 
@@ -688,7 +695,7 @@ function graph_prc($id, $cond = null)
 	while($val = $retvals->fetch_assoc())
 	{
 		$graph['lbls'][] = number_format(($i / $test['n']) * 100, 2);
-		$graph['vals'][] = $val['valore'];
+		$graph['vals'][] = $val['value'];
 		
 		$i++;
 	}
@@ -703,46 +710,46 @@ function graph_multibox($id, $group, $cond = null)
 	switch($group)
 	{
 		case GRAPH_CLASS:
-			$field = "classe";
+			$field = "class";
 			break;
 		case GRAPH_GENDER:
-			$field = "sesso";
+			$field = "gender";
 			break;
 		case GRAPH_YEAR:
-			$field = "anno";
+			$field = "class_year";
 			break;
 	}
 
 	if($cond)
 	{
 		$classlist = $cond['class'];
-		$genderlist = $cond['sex'];
-		$prof = $cond['prof'];
+		$genderlist = $cond['gender'];
+		$user = $cond['user'];
 
-		$val_st = prepare_stmt("SELECT $field, valore FROM PROVE
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl
-			JOIN STUDENTI ON fk_stud=id_stud 
-			WHERE fk_test=?
-			AND anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof
-			ORDER BY $field, valore ASC");
+		$val_st = prepare_stmt("SELECT $field, value FROM results
+			JOIN instance ON instance_fk=instance_id
+			JOIN class ON class_fk=class_id
+			JOIN student ON student_fk=student_id 
+			WHERE test_fk=?
+			AND class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user
+			ORDER BY $field, value ASC");
 		
-		if($prof != "")
+		if($user != "")
 			$val_st->bind_param("iiii", $id, $cond['year1'], $cond['year2'], $_SESSION['id']);
 		else
 			$val_st->bind_param("iii", $id, $cond['year1'], $cond['year2']);
 	}
 	else
 	{
-		$val_st = prepare_stmt("SELECT $field, valore FROM PROVE
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl
-			JOIN STUDENTI ON fk_stud=id_stud 
-			WHERE fk_test=?
-			ORDER BY $field, valore ASC");
+		$val_st = prepare_stmt("SELECT $field, value FROM results
+			JOIN instance ON instance_fk=instance_id
+			JOIN class ON class_fk=class_id
+			JOIN student ON student_fk=student_id 
+			WHERE test_fk=?
+			ORDER BY $field, value ASC");
 		$val_st->bind_param("i", $id);
 	}
 
@@ -750,7 +757,7 @@ function graph_multibox($id, $group, $cond = null)
 	$val_st->close();
 
 	while($row = $ret->fetch_assoc())
-		$graph[$row[$field]][] = $row['valore'];
+		$graph[$row[$field]][] = $row['value'];
 	
 	return $graph;
 }
@@ -767,31 +774,31 @@ function open_rvals_stmt($cond = null)
 	if($cond)
 	{
 		$classlist = $cond['class'];
-		$genderlist = $cond['sex'];
-		$prof = $cond['prof'];
+		$genderlist = $cond['gender'];
+		$user = $cond['user'];
 
-		$rval_st = prepare_stmt("SELECT P1.valore AS v1, P2.valore AS v2
-			FROM PROVE AS P1 JOIN PROVE AS P2 ON P1.fk_ist=P2.fk_ist
-			JOIN ISTANZE ON P1.fk_ist=id_ist
-			JOIN STUDENTI ON fk_stud=id_stud 
-			JOIN CLASSI ON fk_cl=id_cl 
-			WHERE P1.fk_test=? AND P2.fk_test=?
-			AND anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof");
+		$rval_st = prepare_stmt("SELECT P1.value AS v1, P2.value AS v2
+			FROM results AS P1 JOIN results AS P2 ON P1.instance_fk=P2.instance_fk
+			JOIN instance ON P1.instance_fk=instance_id
+			JOIN student ON student_fk=student_id 
+			JOIN class ON class_fk=class_id 
+			WHERE P1.test_fk=? AND P2.test_fk=?
+			AND class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user");
 
-		if($prof != "")
+		if($user != "")
 			$rval_st->bind_param("iiiii", $r_id1, $r_id2, $cond['year1'], $cond['year2'], $_SESSION['id']);
 		else
 			$rval_st->bind_param("iiii", $r_id1, $r_id2, $cond['year1'], $cond['year2']);
 	}
 	else
 	{
-		$rval_st = prepare_stmt("SELECT P1.valore AS v1, P2.valore AS v2
-			FROM PROVE AS P1 JOIN PROVE AS P2 ON P1.fk_ist=P2.fk_ist
-			WHERE P1.fk_test=?
-			AND P2.fk_test=?");
+		$rval_st = prepare_stmt("SELECT P1.value AS v1, P2.value AS v2
+			FROM results AS P1 JOIN results AS P2 ON P1.instance_fk=P2.instance_fk
+			WHERE P1.test_fk=?
+			AND P2.test_fk=?");
 		$rval_st->bind_param("ii", $r_id1, $r_id2);
 	}
 
@@ -837,20 +844,27 @@ function calc_r($id1, $stat1, $id2, $stat2, $cond = null)
 function get_test_correlation($cond = null)
 {	
 	$threshold = CORRELATION_THRESH;
-	$test_st = prepare_stmt("SELECT id_test, nometest, pos FROM TEST 
-		WHERE id_test IN (SELECT fk_test FROM PROVE GROUP BY fk_test HAVING COUNT(*) > ?) 
-		ORDER BY nometest");
+	$test_st = prepare_stmt("SELECT test_id, test_name, positive_values FROM test 
+		WHERE test_id IN (SELECT test_fk FROM results GROUP BY test_fk HAVING COUNT(*) > ?) 
+		ORDER BY test_name");
 	$test_st->bind_param("i", $threshold);
 	$res = execute_stmt($test_st);
 	$test_st->close();
 
+	$ret['names'] = [];
+	$ret['positive'] = [];
+	$ret['statistics'] = [];
 	$ret['list'] = "-1";
+
+	if($res->num_rows == 0)
+		return $ret;
+	
 	while($row = $res->fetch_assoc())
 	{
-		$ret['names'][$row['id_test']] = $row['nometest'];
-		$ret['positive'][$row['id_test']] = $row['pos'];
-		$ret['statistics'][$row['id_test']] = get_stats($row['id_test'], $cond);
-		$ret['list'] .= ", ".$row['id_test'];
+		$ret['names'][$row['test_id']] = $row['test_name'];
+		$ret['positive'][$row['test_id']] = $row['positive_values'];
+		$ret['statistics'][$row['test_id']] = get_stats($row['test_id'], $cond);
+		$ret['list'] .= ", ".$row['test_id'];
 	}
 	return $ret;
 }
@@ -859,43 +873,43 @@ function get_test_correlation($cond = null)
 function test_graph($testlist, $cond = null)
 {
 	// Gets each test's unit
-	$unit_st = prepare_stmt("SELECT nometest, simbolo FROM TEST
-		JOIN UNITA ON fk_udm=id_udm
-		WHERE id_test IN($testlist)");
+	$unit_st = prepare_stmt("SELECT test_name, symbol FROM test
+		JOIN unit ON unit_fk=unit_id
+		WHERE test_id IN($testlist)");
 	$unit_r = execute_stmt($unit_st);
 	$unit_st->close();
 	while($row = $unit_r->fetch_assoc())
-		$unit[$row['nometest']] = $row['simbolo'];
+		$unit[$row['test_name']] = $row['symbol'];
 
 	// Builds the query to get all results for given tests
 	if($cond)
 	{
 		$classlist = $cond['class'];
-		$genderlist = $cond['sex'];
-		$prof = $cond['prof'];
+		$genderlist = $cond['gender'];
+		$user = $cond['user'];
 
-		$splom_st = prepare_stmt("SELECT nometest, fk_ist, valore FROM PROVE 
-			JOIN TEST ON fk_test=id_test
-			JOIN ISTANZE ON fk_ist=id_ist
-			JOIN CLASSI ON fk_cl=id_cl
-			JOIN STUDENTI ON fk_stud=id_stud 
-			WHERE fk_test IN ($testlist)
-			AND anno BETWEEN ? AND ?
-			AND classe IN (0 $classlist)
-			AND sesso IN ('x' $genderlist)
-			$prof
-			ORDER BY fk_ist, nometest");
+		$splom_st = prepare_stmt("SELECT test_name, instance_fk, value FROM results 
+			JOIN test ON test_fk=test_id
+			JOIN instance ON instance_fk=instance_id
+			JOIN class ON class_fk=class_id
+			JOIN student ON student_fk=student_id 
+			WHERE test_fk IN ($testlist)
+			AND class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user
+			ORDER BY instance_fk, test_name");
 
-		if($prof != "")
+		if($user != "")
 			$splom_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
 		else
 			$splom_st->bind_param("ii", $cond['year1'], $cond['year2']);
 	}
 	else
 	{
-		$splom_st = prepare_stmt("SELECT nometest, fk_ist, valore 
-			FROM PROVE JOIN TEST ON fk_test=id_test
-			WHERE fk_test IN ($testlist) ORDER BY fk_ist, nometest");
+		$splom_st = prepare_stmt("SELECT test_name, instance_fk, value 
+			FROM results JOIN test ON test_fk=test_id
+			WHERE test_fk IN ($testlist) ORDER BY instance_fk, test_name");
 	}
 	
 	$splomret = execute_stmt($splom_st);
@@ -905,14 +919,14 @@ function test_graph($testlist, $cond = null)
 	while($splomrow = $splomret->fetch_assoc())
 	{
 		// Builds a table such as
-		// id_ist | id_test | val
+		// instance_id | test_id | val
 		// with empty val entries if needed
-		$splom[$splomrow['nometest']][$splomrow['fk_ist']] = $splomrow['valore'];
+		$splom[$splomrow['test_name']][$splomrow['instance_fk']] = $splomrow['value'];
 
-		if($previnst != $splomrow['fk_ist'])
+		if($previnst != $splomrow['instance_fk'])
 		{
-			$previnst = $splomrow['fk_ist'];
-			$instances[] = $splomrow['fk_ist'];
+			$previnst = $splomrow['instance_fk'];
+			$instances[] = $splomrow['instance_fk'];
 		}
 	}
 

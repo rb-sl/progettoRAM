@@ -23,21 +23,21 @@ connect();
 show_premain("Tipi dei dati per test");
 
 // Gets the system's test types and the number of associated tests
-$unit_st = prepare_stmt("SELECT id_tipot, nomet, passo, (
-		SELECT COUNT(*) AS n FROM TIPOTEST
-		JOIN TEST ON fk_tipot=id_tipot
-		WHERE id_tipot=T.id_tipot
-	) AS n FROM TIPOTEST AS T
-	LEFT JOIN TEST ON fk_tipot=id_tipot
-	GROUP BY id_tipot 
-	ORDER BY nomet");
+$unit_st = prepare_stmt("SELECT datatype_id, datatype_name, step, (
+		SELECT COUNT(*) AS n FROM datatype
+		JOIN test ON datatype_fk=datatype_id
+		WHERE datatype_id=T.datatype_id
+	) AS n FROM datatype AS T
+	LEFT JOIN test ON datatype_fk=datatype_id
+	GROUP BY datatype_id 
+	ORDER BY datatype_name");
 $ret = execute_stmt($unit_st);
 $unit_st->close();
 ?>
 
 <h2>Gestione dei tipi di dati dei test</h2>
 
-<form action="/admin/test/test_type_update.php" method="POST" class="tdiv">
+<form action="/admin/test/datatype_update.php" method="POST" class="tdiv">
 	<button type="button" id="newrow" class="btn btn-primary">Aggiungi nuovo</button>
 
 	<div class="inner">
@@ -51,17 +51,17 @@ $unit_st->close();
 while($row = $ret->fetch_assoc())
 {
 	echo "  <tr>
-				<td id='c1_".$row['id_tipot']."'>".$row['nomet']."</td>
-				<td id='c2_".$row['id_tipot']."'>".$row['passo']."</td>
+				<td id='c1_".$row['datatype_id']."'>".$row['datatype_name']."</td>
+				<td id='c2_".$row['datatype_id']."'>".$row['step']."</td>
 				<td>
 					<div>
-						<button type='button' id='mod_".$row['id_tipot']."' class='btn btn-warning btnmenu mod'>
+						<button type='button' id='mod_".$row['datatype_id']."' class='btn btn-warning btnmenu mod'>
 							Modifica
 						</button>"; 
 
 	if($row['n'] == 0)
-		echo "<a href='test_type_delete.php?id=".$row['id_tipot']."' class='btn btn-danger btnmenu'"
-			.confirm("Il tipo di test ".$row['nomet']." passo ".$row['passo']." sarà eliminato").">Elimina</a>";
+		echo "<a href='datatype_delete.php?id=".$row['datatype_id']."' class='btn btn-danger btnmenu'"
+			.confirm("Il tipo di test ".$row['datatype_name']." passo ".$row['step']." sarà eliminato").">Elimina</a>";
 
 	echo  "         </div>
 				</td>

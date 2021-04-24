@@ -22,7 +22,7 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_admin.php";
 
 $admin = get_privilege(ADMINISTRATOR);
 $prof_g = get_privilege(PROFESSOR_GRANTS);
-$prof = get_privilege(PROFESSOR);
+$user = get_privilege(PROFESSOR);
 $research = get_privilege(RESEARCH);
 $none = get_privilege(NONE);
 ?>
@@ -83,10 +83,10 @@ $none = get_privilege(NONE);
 			</li>
 			<li>
 				<div class="boxdiv">
-					<div class="colorbox <?=$prof['color']?>">
+					<div class="colorbox <?=$user['color']?>">
 					</div>
 				</div>
-				<b><?=$prof['text']?></b>: l'utente può accedere alle funzioni di 
+				<b><?=$user['text']?></b>: l'utente può accedere alle funzioni di 
 				registro e statistica
 			</li>
 			<li>

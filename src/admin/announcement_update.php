@@ -46,7 +46,7 @@ if($compiled != "")
 else
 	$compiled = null;
 
-$up_st = prepare_stmt("UPDATE ADMINDATA SET index_text=?, index_compiled=?");
+$up_st = prepare_stmt("UPDATE admindata SET index_text=?, index_compiled=?");
 $up_st->bind_param("ss", $_POST['announcement'], $compiled);
 execute_stmt($up_st);
 $up_st->close();

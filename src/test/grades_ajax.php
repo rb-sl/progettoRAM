@@ -21,7 +21,7 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 chk_access(PROFESSOR);
 connect();
 
-$gr_st = prepare_stmt("SELECT * FROM VALUTAZIONI JOIN VOTI ON fk_voto=id_voto WHERE fk_prof=?");
+$gr_st = prepare_stmt("SELECT * FROM grading JOIN grade ON grade_fk=grade_id WHERE user_fk=?");
 $gr_st->bind_param("i", $_GET['idprof']);
 
 $ret = execute_stmt($gr_st);
@@ -29,7 +29,7 @@ $gr_st->close();
 
 $data = [];
 while($row = $ret->fetch_assoc())
-	$data[$row['voto'] * 10] = $row['perc'];
+	$data[$row['grade'] * 10] = $row['percentile'];
 
 echo json_encode($data);
 ?>

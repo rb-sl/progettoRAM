@@ -22,32 +22,41 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 chk_access(RESEARCH);
 connect();
 
-$test_st = prepare_stmt("SELECT * FROM TEST JOIN UNITA ON fk_udm=id_udm WHERE id_test=?");
+$test_st = prepare_stmt("SELECT * FROM test JOIN unit ON unit_fk=unit_id WHERE test_id=?");
 $test_st->bind_param("i", $_GET['id']);
 $ret = execute_stmt($test_st);
 $test_st->close();
 
+// If no test is returned the loading is blocked and
+// an error is shown
+if($ret->num_rows == 0)
+{
+	$_SESSION['alert'] = "Id test non valido";
+	header("Location: /statistics/statistics.php");
+	exit;
+}
+
 $test = $ret->fetch_assoc();
-show_premain("Statistiche ".$test['nometest'], true);
+show_premain("Statistiche ".$test['test_name'], true);
 
 $data = get_stats($_GET['id']);
 $records = get_records($_GET['id']);
 $graph = graph_vals($_GET['id']);
 ?>
 
-<h2>Statistiche <span id="nomet"><?=$test['nometest']?></span></h2>
+<h2>Statistiche <span id="datatype_name"><?=$test['test_name']?></span></h2>
 
 <table class="table table-light table-striped marginunder">
    	<tr><td>Numero totale di prove: <span id="n"><?=$data['n']?></span></td>
-   	<tr><td>Media: <span id="avg"><?=number_format($data['avg'], 2)?></span> <?=$test['simbolo']?></td></tr>
-	<tr><td>Mediana: <span id="med"><?=number_format($data['med'], 2)?></span> <?=$test['simbolo']?></td></tr>
-   	<tr><td>Deviazione Standard: <span id="std"><?=number_format($data['std'], 2)?></span> <?=$test['simbolo']?></td></tr>	
+   	<tr><td>Media: <span id="avg"><?=number_format($data['avg'], 2)?></span> <?=$test['symbol']?></td></tr>
+	<tr><td>Mediana: <span id="med"><?=number_format($data['med'], 2)?></span> <?=$test['symbol']?></td></tr>
+   	<tr><td>Deviazione Standard: <span id="std"><?=number_format($data['std'], 2)?></span> <?=$test['symbol']?></td></tr>	
 </table>
 
 <h3 class="nomargin">
 	Record positivo: 
 	<span id="best"><?=$records['best']?></span> 
-	<?=$test['simbolo']?>
+	<?=$test['symbol']?>
 </h3>
 
 <?=$records['list']?>
@@ -55,7 +64,7 @@ $graph = graph_vals($_GET['id']);
 <h3 class="section">
 	Record negativo: 
 	<span id="worst"><?=$records['worst']?></span>
-	<?=$test['simbolo']?>
+	<?=$test['symbol']?>
 </h3>
 
 <h3>

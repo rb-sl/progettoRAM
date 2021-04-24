@@ -27,20 +27,20 @@ connect();
 
 if($_GET['key'] == "id")
 {
-	$src_st = prepare_stmt("SELECT * FROM STUDENTI
-		JOIN ISTANZE ON fk_stud=id_stud
-		JOIN CLASSI ON fk_cl=id_cl
-		WHERE id_stud=?");
+	$src_st = prepare_stmt("SELECT * FROM student
+		JOIN instance ON student_fk=student_id
+		JOIN class ON class_fk=class_id
+		WHERE student_id=?");
 	$src_st->bind_param("i", $id);
 	$set = "id";
 }
 else
 {
-	$src_st = prepare_stmt("SELECT * FROM STUDENTI
-		JOIN ISTANZE ON fk_stud=id_stud
-		JOIN CLASSI ON fk_cl=id_cl
-		WHERE noms=?
-		AND cogs=?");
+	$src_st = prepare_stmt("SELECT * FROM student
+		JOIN instance ON student_fk=student_id
+		JOIN class ON class_fk=class_id
+		WHERE firstname=?
+		AND lastname=?");
 	$src_st->bind_param("ss", $firstname, $lastname);
 	$set = "surname";
 }
@@ -61,15 +61,15 @@ while(isset($_GET[$set.$num]))
 		while($row)
 		{
 			$stud = [];
-			$stud['id'] = $row['id_stud'];
-			$stud['name'] = $row['noms'];
-			$stud['surname'] = $row['cogs'];
-			$stud['gender'] = $row['sesso'];
+			$stud['id'] = $row['student_id'];
+			$stud['name'] = $row['firstname'];
+			$stud['surname'] = $row['lastname'];
+			$stud['gender'] = $row['gender'];
 
-			while($row and $row['id_stud'] == $stud['id'])
+			while($row and $row['student_id'] == $stud['id'])
 			{
-				$stud['classlist'][$row['id_cl']] = $row['classe'].$row['sez']." "
-					.$row['anno']."/".($row['anno'] + 1);
+				$stud['classlist'][$row['class_id']] = $row['class'].$row['section']." "
+					.$row['class_year']."/".($row['class_year'] + 1);
 				$row = $ret->fetch_assoc();
 			}
 

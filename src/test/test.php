@@ -39,10 +39,10 @@ if(chk_auth(PROFESSOR))
 
 <table class="table table-light table-striped marginunder">
 <?php
-$test_st = prepare_stmt("SELECT id_test, nometest, fk_test AS favourite FROM TEST
-	LEFT JOIN PROF_TEST ON fk_test=id_test
-	AND (fk_prof=? OR fk_prof IS NULL)
-	ORDER BY nometest");
+$test_st = prepare_stmt("SELECT test_id, test_name, test_fk AS favourite FROM test
+	LEFT JOIN favourites ON test_fk=test_id
+	AND (user_fk=? OR user_fk IS NULL)
+	ORDER BY test_name");
 $test_st->bind_param("i", $_SESSION['id']);
 $rettest = execute_stmt($test_st);
 $test_st->close();
@@ -54,7 +54,7 @@ while($rowt = $rettest->fetch_assoc())
 	else
 		$class = "";
 
-	echo "<tr><td><a href='test_show.php?id=".$rowt['id_test']."'$class>".$rowt['nometest']."</a></td></tr>";
+	echo "<tr><td><a href='test_show.php?id=".$rowt['test_id']."'$class>".$rowt['test_name']."</a></td></tr>";
 }
 ?>
 </table>
@@ -76,13 +76,13 @@ if(chk_auth(ADMINISTRATOR))
 {
 	echo "di <select class='form-control' id='slp' name='slp'>";
 
-	$pr_st = prepare_stmt("SELECT * FROM PROFESSORI ORDER BY user");
+	$pr_st = prepare_stmt("SELECT * FROM user ORDER BY username");
 	$r = execute_stmt($pr_st);
 	
   	while($p = $r->fetch_assoc())
-		echo "<option value='".$p['id_prof']."'"
-			.($p['id_prof'] == $_SESSION['id'] ? " selected" : "")
-			.">".$p['user']."</option>";
+		echo "<option value='".$p['user_id']."'"
+			.($p['user_id'] == $_SESSION['id'] ? " selected" : "")
+			.">".$p['username']."</option>";
 	echo "</select>";
 }
 ?></h2>
@@ -99,7 +99,7 @@ if(chk_auth(ADMINISTRATOR))
 	   	</tr>
 <?php
 // Prints the table for grades
-$grade_st = prepare_stmt("SELECT * FROM VALUTAZIONI JOIN VOTI ON fk_voto=id_voto WHERE fk_prof=? ORDER BY voto ASC");
+$grade_st = prepare_stmt("SELECT * FROM grading JOIN grade ON grade_fk=grade_id WHERE user_fk=? ORDER BY grade ASC");
 $grade_st->bind_param("i", $_SESSION['id']);
 
 $prev = 0;   
@@ -109,18 +109,18 @@ $traces = "";
 $ret = execute_stmt($grade_st);
 while($row = $ret->fetch_assoc())
 {
-	$v10 = $row['voto'] * 10;
+	$v10 = $row['grade'] * 10;
 
 	echo "<tr>
-			<td id='x_$v10' style='background-color:#".$row['color']."'>".$row['voto']."</td>
+			<td id='x_$v10' style='background-color:#".$row['color']."'>".$row['grade']."</td>
 			<td><input type='number' min='0' id='p_$v10' class='range halfwidth textright' 
-				value='".($row['perc'] - $prev)."' name='perc[".$row['id_voto']."]'>%</td> 
+				value='".($row['percentile'] - $prev)."' name='percentile[".$row['grade_id']."]'>%</td> 
 			<td id='i$v10'>$prev</td>
 			<td>&rarr;</td>
-			<td id='f$v10'>".$row['perc']."</td>
+			<td id='f$v10'>".$row['percentile']."</td>
 		</tr>";
 
-	$prev = $row['perc'];
+	$prev = $row['percentile'];
 }	
 ?>
 		<tr>

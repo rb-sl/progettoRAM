@@ -29,11 +29,11 @@ show_premain("Modifica test preferiti");
 	<input type="submit" id="submit" class="btn btn-primary" value="Aggiorna" disabled> 
 	<div class="fullwidth">
 <?php
-$test_st = prepare_stmt("SELECT id_test, nometest, posiz, equip, 
-	esec, cons, limite, valut, fk_test AS favourite FROM TEST
-	LEFT JOIN PROF_TEST ON fk_test=id_test
-	AND (fk_prof=? OR fk_prof IS NULL)
-	ORDER BY nometest");
+$test_st = prepare_stmt("SELECT test_id, test_name, position, equipment, 
+	execution, suggestions, test_limit, assessment, test_fk AS favourite FROM test
+	LEFT JOIN favourites ON test_fk=test_id
+	AND (user_fk=? OR user_fk IS NULL)
+	ORDER BY test_name");
 $test_st->bind_param("i", $_SESSION['id']);
 $rettest = execute_stmt($test_st);
 $test_st->close();
@@ -53,34 +53,34 @@ while($rowt = $rettest->fetch_assoc())
 		$btn = "btn-primary";
 	}
 	echo "<div class='testcard'>
-			<h3 id='h".$rowt['id_test']."' class='card-header testrow'> 
+			<h3 id='h".$rowt['test_id']."' class='card-header testrow'> 
 				<div class='form-check'>
-					<input type='checkbox' id='fav".$rowt['id_test']."' 
-						class='form-check-input chkfav' name='fav[]' value='".$rowt['id_test']."'$chk>
+					<input type='checkbox' id='fav".$rowt['test_id']."' 
+						class='form-check-input chkfav' name='fav[]' value='".$rowt['test_id']."'$chk>
 
-					<label id='lbl".$rowt['id_test']."' class='form-check-label$class' for='fav".$rowt['id_test']."'>
-						".$rowt['nometest']."
+					<label id='lbl".$rowt['test_id']."' class='form-check-label$class' for='fav".$rowt['test_id']."'>
+						".$rowt['test_name']."
 					</label>
 				</div>
-				<button type='button' id='btn".$rowt['id_test']."' 
-					class='btn $btn' data-bs-toggle='collapse' data-bs-target='#coll".$rowt['id_test']."' 
-					aria-expanded='false' aria-controls='#coll".$rowt['id_test']."'>Mostra informazioni</button>
+				<button type='button' id='btn".$rowt['test_id']."' 
+					class='btn $btn' data-bs-toggle='collapse' data-bs-target='#coll".$rowt['test_id']."' 
+					aria-expanded='false' aria-controls='#coll".$rowt['test_id']."'>Mostra informazioni</button>
 			</h3>
 
-			<div id='coll".$rowt['id_test']."' class='collapse textcenter'>
+			<div id='coll".$rowt['test_id']."' class='collapse textcenter'>
 				<div class='card card-body'>
 					<h4><b>Posizione</b></h4>
-					<p>".($rowt['posiz'] == "" ? "-" : str_replace("\n", "<br>", $rowt['posiz']))."</p>
+					<p>".($rowt['position'] == "" ? "-" : str_replace("\n", "<br>", $rowt['position']))."</p>
 					<h4><b>Equipaggiamento</b></h4>
-					<p>".($rowt['equip'] == "" ? "-" : str_replace("\n", "<br>", $rowt['equip']))."</p>
+					<p>".($rowt['equipment'] == "" ? "-" : str_replace("\n", "<br>", $rowt['equipment']))."</p>
 					<h4><b>Esecuzione</b></h4>
-					<p>".($rowt['esec'] == "" ? "-" : str_replace("\n", "<br>", $rowt['esec']))."</p>
+					<p>".($rowt['execution'] == "" ? "-" : str_replace("\n", "<br>", $rowt['execution']))."</p>
 					<h4><b>Consigli</b></h4>
-					<p>".($rowt['cons'] == "" ? "-" : str_replace("\n", "<br>", $rowt['cons']))."</p>
+					<p>".($rowt['suggestions'] == "" ? "-" : str_replace("\n", "<br>", $rowt['suggestions']))."</p>
 					<h4><b>Limite</b></h4>
-					<p>".($rowt['limite'] == "" ? "-" : str_replace("\n", "<br>", $rowt['limite']))."</p>
+					<p>".($rowt['test_limit'] == "" ? "-" : str_replace("\n", "<br>", $rowt['test_limit']))."</p>
 					<h4><b>Valutazione</b></h4>
-					<p>".($rowt['valut'] == "" ? "-" : str_replace("\n", "<br>", $rowt['valut']))."</p>
+					<p>".($rowt['assessment'] == "" ? "-" : str_replace("\n", "<br>", $rowt['assessment']))."</p>
 				</div>
 			</div>
 

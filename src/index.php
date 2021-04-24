@@ -21,7 +21,7 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 connect();
 show_premain();
 
-$info_st = prepare_stmt("SELECT index_compiled FROM ADMINDATA");
+$info_st = prepare_stmt("SELECT index_compiled FROM admindata");
 $ret = execute_stmt($info_st);
 $info_st->close();
 $info = $ret->fetch_assoc();

@@ -24,19 +24,19 @@ show_premain("Modifica Studente");
 
 if(!chk_auth(ADMINISTRATOR))
 {
-	$stud_st = prepare_stmt("SELECT * FROM STUDENTI 
-		JOIN ISTANZE ON fk_stud=id_stud
-		JOIN CLASSI ON fk_cl=id_cl 
-		WHERE id_stud=?
-		AND fk_prof=?");
+	$stud_st = prepare_stmt("SELECT * FROM student 
+		JOIN instance ON student_fk=student_id
+		JOIN class ON class_fk=class_id 
+		WHERE student_id=?
+		AND user_fk=?");
 	$stud_st->bind_param("ii", $_GET['id'], $_SESSION['id']);
 }
 else
 {
-	$stud_st = prepare_stmt("SELECT * FROM STUDENTI 
-		JOIN ISTANZE ON fk_stud=id_stud
-		JOIN CLASSI ON fk_cl=id_cl 
-		WHERE id_stud=?");
+	$stud_st = prepare_stmt("SELECT * FROM student 
+		JOIN instance ON student_fk=student_id
+		JOIN class ON class_fk=class_id 
+		WHERE student_id=?");
 	$stud_st->bind_param("i", $_GET['id']);
 }
 
@@ -52,7 +52,7 @@ if(!$stud)
 	exit;
 }
 
-if($stud['sesso']=="m")
+if($stud['gender']=="m")
 {
 	$m = "checked";
 	$f = "";
@@ -70,21 +70,21 @@ else
 	<table class="table table-light table-striped studtable marginunder">
 		<tr>
 			<th>Cognome:</th>
-			<td><input type="text" name="cogs" value="<?=$stud['cogs']?>" required></td>
+			<td><input type="text" name="lastname" value="<?=$stud['lastname']?>" required></td>
 		</tr>
 		<tr>
 			<th>Nome:</th>
-			<td><input type="text" name="noms" value="<?=$stud['noms']?>" required></td>
+			<td><input type="text" name="firstname" value="<?=$stud['firstname']?>" required></td>
 		</tr> 
 		<tr>
 			<th>Sesso:</th>
 			<td class="containerflex">
 				<div class="form-check">
-					<input type="radio" id="radiom" class="form-check-input" name="sesso" value="m" <?=$m?> required>
+					<input type="radio" id="radiom" class="form-check-input" name="gender" value="m" <?=$m?> required>
 					<label class="form-check-label" for="radiom">M</label>
 				</div>
 				<div class="form-check">
-					<input type="radio" id="radiof" class="form-check-input" name="sesso" value="f" <?=$f?> required>
+					<input type="radio" id="radiof" class="form-check-input" name="gender" value="f" <?=$f?> required>
 					<label class="form-check-label" for="radiof">F</label>
 				</div>
 			</td>

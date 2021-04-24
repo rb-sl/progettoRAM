@@ -25,12 +25,15 @@ show_premain("Modifica descrizione");
 // Construction of the form based on the session
 if(!isset($_SESSION['project_text']))
 {
-	$text_st = prepare_stmt("SELECT project_text FROM ADMINDATA");
+	$text_st = prepare_stmt("SELECT project_text FROM admindata");
 	$ret = execute_stmt($text_st);
 	$text_st->close();
 
 	$row = $ret->fetch_assoc();
-	$text = $row['project_text'];
+	if(isset($row['project_text']) and $row['project_text'] != "")
+		$text = $row['project_text'];
+	else
+		$text = "";
 }
 else
 	$text = $_SESSION['project_text'];

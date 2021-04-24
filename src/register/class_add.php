@@ -44,18 +44,18 @@ if(date("m") < 8)
 if(chk_auth(ADMINISTRATOR))
 	$nad = "";
 else
-	$nad = "fk_prof=? AND";
+	$nad = "user_fk=? AND";
 
 // Gets all user's classes of the previous year that do not have a following class yet
 // An administrator can promote every class
 $lastyear = $year - 1; 
-$prom_st = prepare_stmt("SELECT C1.id_cl, C1.classe, C1.sez FROM 
-	(SELECT id_cl, classe, sez, anno FROM CLASSI WHERE $nad anno=? AND fk_scuola=? AND classe<>5) AS C1
+$prom_st = prepare_stmt("SELECT C1.class_id, C1.class, C1.section FROM 
+	(SELECT class_id, class, section, class_year FROM class WHERE $nad class_year=? AND school_fk=? AND class<>5) AS C1
 	LEFT JOIN
-	(SELECT id_cl, classe-1 AS classe, sez, anno-1 AS anno FROM CLASSI WHERE anno=? AND fk_scuola=?) AS C2
-	USING (classe, sez, anno) 
-	WHERE C2.id_cl IS NULL 
-	ORDER BY classe, sez");
+	(SELECT class_id, class-1 AS class, section, class_year-1 AS class_year FROM class WHERE class_year=? AND school_fk=?) AS C2
+	USING (class, section, class_year) 
+	WHERE C2.class_id IS NULL 
+	ORDER BY class, section");
 
 if(chk_auth(ADMINISTRATOR))
 	$prom_st->bind_param("iiii", $lastyear, $_SESSION['school'], $year, $_SESSION['school']);
@@ -66,7 +66,7 @@ $ret = execute_stmt($prom_st);
 $prom_st->close();
 
 while($row = $ret->fetch_assoc())
-	echo "<option value='".$row['id_cl']."'>".$row['classe'].$row['sez']."</option>";
+	echo "<option value='".$row['class_id']."'>".$row['class'].$row['section']."</option>";
 ?>
 			</select>
 		</div>
@@ -87,11 +87,11 @@ while($row = $ret->fetch_assoc())
 					<td><input type="text" id="nm0" class="n0" name="nst[0]" placeholder="Nome"></td>
 					<td class="containerflex">
 						<div class="form-check">
-							<input id="m0" class="n0 form-check-input" type="radio" name="sesso[0]" value="m">
+							<input id="m0" class="n0 form-check-input" type="radio" name="gender[0]" value="m">
 							<label class="form-check-label" for="m0">M</label>
 						</div>
 						<div class="form-check">
-							<input id="f0" class="n0 form-check-input" type="radio" name="sesso[0]" value="f">
+							<input id="f0" class="n0 form-check-input" type="radio" name="gender[0]" value="f">
 							<label class="form-check-label" for="f0">F</label>
 						</div>
 					</td>

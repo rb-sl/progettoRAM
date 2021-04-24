@@ -22,7 +22,7 @@ chk_access(PROFESSOR_GRANTS);
 connect();
 
 // If the test does not exist an error is shown to the user
-$test_st = prepare_stmt("SELECT * FROM TEST WHERE id_test=?");
+$test_st = prepare_stmt("SELECT * FROM test WHERE test_id=?");
 $test_st->bind_param("i", $_GET['id']);
 
 $rettest = execute_stmt($test_st);
@@ -39,25 +39,25 @@ $test = $rettest->fetch_assoc();
 show_premain("Modifica test");
 
 // Getting test associated info
-$type_st = prepare_stmt("SELECT * FROM TIPOTEST ORDER BY nomet");
+$type_st = prepare_stmt("SELECT * FROM datatype ORDER BY datatype_name");
 $ttest = execute_stmt($type_st);
 $type_st->close();
 
-$class_st = prepare_stmt("SELECT * FROM CLTEST ORDER BY nomec");
+$class_st = prepare_stmt("SELECT * FROM testtype ORDER BY testtype_name");
 $ctest = execute_stmt($class_st);
 $class_st->close();
 
-$unit_st = prepare_stmt("SELECT * FROM UNITA ORDER BY udm");
+$unit_st = prepare_stmt("SELECT * FROM unit ORDER BY unit_name");
 $retunit = execute_stmt($unit_st);
 $unit_st->close();
 ?>
 
 <form method="POST" action="./test_update.php?id=<?=$_GET['id']?>" class="marginunder">
 	<h2>
-		Modifica <input type="text" value="<?=quoteHTML($test['nometest'])?>" name="testname" required> 
+		Modifica <input type="text" value="<?=quoteHTML($test['test_name'])?>" name="testname" required> 
 		<a href="./test_show.php?id=<?=$_GET['id']?>" class="btn btn-warning">Annulla</a> 
 <?php
-echo "<a href='./test_delete.php?id=".$_GET['id']."' ".confirm("Il test ".$test['nometest']." sarà eliminato")
+echo "<a href='./test_delete.php?id=".$_GET['id']."' ".confirm("Il test ".$test['test_name']." sarà eliminato")
 	." class='btn btn-danger'>Elimina test</a>";
 ?>
 	</h2>
@@ -69,10 +69,10 @@ echo "<a href='./test_delete.php?id=".$_GET['id']."' ".confirm("Il test ".$test[
 <?php
 while($row = $ctest->fetch_assoc())
 {
-	echo "<option value='".$row['id_cltest']."'";
-	if($row['id_cltest'] == $test['fk_cltest'])
+	echo "<option value='".$row['testtype_id']."'";
+	if($row['testtype_id'] == $test['testtype_fk'])
 		echo " selected='selected'";
-	echo ">".$row['nomec']."</option>";
+	echo ">".$row['testtype_name']."</option>";
 }
 ?>
 				</select>
@@ -85,13 +85,13 @@ while($row = $ctest->fetch_assoc())
 <?php
 while($row = $retunit->fetch_assoc())
 {
-	echo "<option value='".$row['id_udm']."'";
-	if($row['id_udm'] == $test['fk_udm'])
+	echo "<option value='".$row['unit_id']."'";
+	if($row['unit_id'] == $test['unit_fk'])
 		echo " selected='selected'";
-	echo ">".$row['udm']."</option>";
+	echo ">".$row['unit_name']."</option>";
 }       
 
-if($test['pos'] == "Maggiori")
+if($test['positive_values'] == GREATER)
 {
 	$g = " selected='selected'";
 	$m = "";
@@ -109,8 +109,8 @@ else
 			<td>Valori migliori:</td>
 			<td>
 				<select name="positive" class="form-control" required>
-					<option value="Maggiori" <?=$g?>>Maggiori</option>
-					<option value="Minori" <?=$m?>>Minori</option>
+					<option value="<?=GREATER?>" <?=$g?>>Maggiori</option>
+					<option value="<?=LOWER?>" <?=$m?>>Minori</option>
 				</select>
 			</td>
 		</tr>
@@ -121,10 +121,10 @@ else
 <?php
 while($row=$ttest->fetch_assoc())
 {
-	echo "<option value='".$row['id_tipot']."'";
-	if($row['id_tipot'] == $test['fk_tipot'])
+	echo "<option value='".$row['datatype_id']."'";
+	if($row['datatype_id'] == $test['datatype_fk'])
 		echo " selected='selected'";
-	echo ">".$row['nomet']."</option>";
+	echo ">".$row['datatype_name']."</option>";
 }
 ?>
 				</select>
@@ -134,22 +134,22 @@ while($row=$ttest->fetch_assoc())
 	<div>
 		<h3>Informazioni aggiuntive</h3>
 		Posizione:<br>
-		<textarea class="txt" name="position"><?=$test['posiz']?></textarea>
+		<textarea class="txt" name="position"><?=$test['position']?></textarea>
 		<br>
 		Materiale aggiuntivo:<br>
-		<textarea class="txt" name="equipment"><?=$test['equip']?></textarea>
+		<textarea class="txt" name="equipment"><?=$test['equipment']?></textarea>
 		<br>
 		Esecuzione:<br>
-		<textarea class="txt" name="execution"><?=$test['esec']?></textarea>
+		<textarea class="txt" name="execution"><?=$test['execution']?></textarea>
 		<br>
 		Consigli:<br>
-		<textarea class="txt" name="suggestions"><?=$test['cons']?></textarea>
+		<textarea class="txt" name="suggestions"><?=$test['suggestions']?></textarea>
 		<br>
 		Limite:<br>
-		<textarea class="txt" name="limit"><?=$test['limite']?></textarea>
+		<textarea class="txt" name="limit"><?=$test['test_limit']?></textarea>
 		<br>
 		Valutazione:<br>
-		<textarea class="txt" name="grading" required><?=$test['valut']?></textarea>
+		<textarea class="txt" name="grading" required><?=$test['assessment']?></textarea>
 	</div>
 	<input type="submit" id="submit" class="btn btn-warning marginunder" value="Aggiorna valori test">
 </form>

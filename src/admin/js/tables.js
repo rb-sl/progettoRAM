@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
 
-// Functions for unit.php, test_type.php, test_class.php
+// Functions for unit.php, datatype.php, testtype.php
 
 // Function to show the form to create a new element
 $("#newrow").click(function() {
@@ -24,7 +24,7 @@ $("#newrow").click(function() {
 	var append = "<tr><td><input type='text' class='form-control textcenter' name='newrow1'></td>";
 
 	if(typeof col2type !== "undefined") {
-		append += "<td><input type='" + col2type + "' class='form-control textcenter' name='newrow2'></td>";
+		append += "<td><input type='" + col2type + "' class='form-control textcenter' step='any' name='newrow2'></td>";
 	}
 
 	$("#datatable").append(append + "<td></td></tr>");
@@ -40,7 +40,7 @@ $(".mod").click(function() {
 		+ $("#c1_" + id).text() + "\">");
 	
 	if(typeof col2type !== "undefined") {
-		$("#c2_" + id).html("<input type='" + col2type + "' class='form-control textcenter' name='col2[" + id + "]' value=" 
+		$("#c2_" + id).html("<input type='" + col2type + "' class='form-control textcenter' step='any' name='col2[" + id + "]' value=" 
 			+ $("#c2_" + id).text() + ">");
 	}
 

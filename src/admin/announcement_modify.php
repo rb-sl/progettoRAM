@@ -25,7 +25,7 @@ show_premain("Modifica annuncio");
 // Construction of the form based on the session
 if(!isset($_SESSION['index_text']))
 {
-	$text_st = prepare_stmt("SELECT index_text, index_compiled FROM ADMINDATA");
+	$text_st = prepare_stmt("SELECT index_text, index_compiled FROM admindata");
 	$ret = execute_stmt($text_st);
 	$text_st->close();
 

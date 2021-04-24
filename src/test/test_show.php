@@ -22,10 +22,10 @@ chk_access(RESEARCH);
 connect();
 
 // If the test does not exist an error is shown to the user
-$test_st = prepare_stmt("SELECT * FROM TEST JOIN UNITA ON fk_udm=id_udm
-	JOIN TIPOTEST ON fk_tipot=id_tipot
-	JOIN CLTEST ON fk_cltest=id_cltest
-	WHERE id_test=?");
+$test_st = prepare_stmt("SELECT * FROM test JOIN unit ON unit_fk=unit_id
+	JOIN datatype ON datatype_fk=datatype_id
+	JOIN testtype ON testtype_fk=testtype_id
+	WHERE test_id=?");
 $test_st->bind_param("i", $_GET['id']);
 
 $rettest = execute_stmt($test_st);
@@ -40,58 +40,58 @@ if($rettest->num_rows == 0)
 
 $test = $rettest->fetch_assoc();
 
-show_premain($test['nometest']);
+show_premain($test['test_name']);
 ?>
-<h2>Informazioni <?=$test['nometest']?></h2>
+<h2>Informazioni <?=$test['test_name']?></h2>
 
 <table class="table table-light table-striped marginunder">
 	<tr>
 		<td>Classe del test:</td>
-		<td class="halfwidth"><?=$test['nomec']?></td>
+		<td class="halfwidth"><?=$test['testtype_name']?></td>
 	</tr>
 	<tr>
 		<td>Unità di misura:</td>
-		<td><?=$test['udm']?></td>
+		<td><?=$test['unit_name']?></td>
 	</tr>
 	<tr>
 		<td>Valori migliori:</td>
-		<td><?=$test['pos']?>
+		<td><?=$test['positive_values']?>
 		</td>
 	</tr>
 	<tr>
 		<td>Tipo di valori:</td>
-		<td><?=$test['nomet']?></td>
+		<td><?=$test['datatype_name']?></td>
 	</tr>
 	<tr>
 		<td>Sensibilità del test:</td>
-		<td><?=$test['passo']." ".$test['simbolo']?></td>
+		<td><?=$test['step']." ".$test['symbol']?></td>
 	</tr>
 	<tr>
 		<th colspan="2" class="textcenter">Informazioni aggiuntive</th>
 	</tr>
 	<tr>
 		<td>Posizione:</td>
-		<td><?=($test['posiz'] ? $test['posiz'] : "-")?></td>
+		<td><?=($test['position'] ? $test['position'] : "-")?></td>
 	</tr>
 	<tr>
 		<td>Materiale aggiuntivo:</td>
-		<td><?=($test['equip'] ? $test['equip'] : "-")?></td>
+		<td><?=($test['equipment'] ? $test['equipment'] : "-")?></td>
 	</tr>
 	<tr>
 		<td>Esecuzione:</td>
-		<td><?=($test['esec'] ? $test['esec'] : "-")?></td>
+		<td><?=($test['execution'] ? $test['execution'] : "-")?></td>
 	</tr>
 	<tr>
 		<td>Consigli:</td>
-		<td><?=($test['cons'] ? $test['cons'] : "-")?></td>
+		<td><?=($test['suggestions'] ? $test['suggestions'] : "-")?></td>
 	</tr>
 	<tr>
 		<td>Limite:</td>
-		<td><?=($test['limite'] ? $test['limite'] : "-")?></td>
+		<td><?=($test['test_limit'] ? $test['test_limit'] : "-")?></td>
 	</tr>
 	<tr>
 		<td>Valutazione:</td>
-		<td><?=$test['valut']?></td>
+		<td><?=$test['assessment']?></td>
 	</tr>
 </table>
 

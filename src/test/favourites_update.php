@@ -22,15 +22,15 @@ chk_access(PROFESSOR);
 connect();
 
 // Statement to delete a favourite association
-$del_st = prepare_stmt("DELETE FROM PROF_TEST WHERE fk_prof=? AND fk_test=?");
+$del_st = prepare_stmt("DELETE FROM favourites WHERE user_fk=? AND test_fk=?");
 $del_st->bind_param("ii", $_SESSION['id'], $test);
 
 // Statement to insert a new association
-$in_st = prepare_stmt("INSERT INTO PROF_TEST(fk_prof, fk_test) VALUES(?, ?)");
+$in_st = prepare_stmt("INSERT INTO favourites(user_fk, test_fk) VALUES(?, ?)");
 $in_st->bind_param("ii", $_SESSION['id'], $test);
 
 // Statement to get all associations for the current user
-$chk_st = prepare_stmt("SELECT fk_test FROM PROF_TEST WHERE fk_prof=?");
+$chk_st = prepare_stmt("SELECT test_fk FROM favourites WHERE user_fk=?");
 $chk_st->bind_param("i", $_SESSION['id']);
 $ret = execute_stmt($chk_st);
 $chk_st->close();
@@ -39,7 +39,7 @@ $chk_st->close();
 $in_db = [];
 while($row = $ret->fetch_assoc())
 {
-	$test = $row['fk_test'];
+	$test = $row['test_fk'];
 	if(in_array($test, $_POST['fav']))
 		$in_db[] = $test;
 	else

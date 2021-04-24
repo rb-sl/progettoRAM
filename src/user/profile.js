@@ -18,8 +18,8 @@
 // Scripts used in profile.js
 
 // Checks for password equality and shows an error message if needed
-$(".psw").keyup(function() {
-	if($("#psw").val() == $("#cpsw").val()) {
+$(".password").keyup(function() {
+	if($("#password").val() == $("#cpsw").val()) {
 		$("#submit").removeAttr("disabled");
 		$("#err").text("");
 	}
@@ -34,8 +34,8 @@ $("#btnpass").click(function() {
 	if($("#pass").is(":visible")) {
 		  $("#pass").hide();
 
-		  $(".psw").removeAttr("required");
-		  $(".psw").val("");
+		  $(".password").removeAttr("required");
+		  $(".password").val("");
 
 		  $("#submit").removeAttr("disabled");
 		  $("#err").text("");
@@ -43,7 +43,7 @@ $("#btnpass").click(function() {
 	}
 	else {
 		  $("#pass").show();
-		  $(".psw").attr("required", true);
+		  $(".password").attr("required", true);
 		  $("#btnpass").html("Annulla modifica password");
 	}
 });

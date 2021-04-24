@@ -46,6 +46,10 @@ const UNAUTHORIZED = 2;
 const LOGIN_DISABLED = 3;
 const FIRST_ACCESS = 4;
 
+// Constants for positive or negative data, according to the database's enum
+const GREATER = "Maggiori";
+const LOWER = "Minori";
+
 // Debugging function, activated by the get
 function errors()
 {
@@ -56,24 +60,24 @@ function errors()
 if(isset($_GET['e']))
 	errors();
 
-// Logging function, adds user and IP address
+// Logging function, adds username and IP address
 function writelog($action)
 {
 	file_put_contents(LOG_PATH."log_".date("Y-m-d").'.txt', 
-		date("H:i:s", time())." [".$_SERVER['REMOTE_ADDR']."] - [".$_SESSION['user']."] $action\n\n", 
+		date("H:i:s", time())." [".$_SERVER['REMOTE_ADDR']."] - [".$_SESSION['username']."] $action\n\n", 
 		FILE_APPEND);
 }
 
 // Access and privilege control, if needed stops
 // the loading of the page
-function chk_access($priv = NONE, $kill = true)
+function chk_access($privileges = NONE, $kill = true)
 {
 	// If an error is already set it is not overwritten
 	if(!isset($_SESSION['err']) or $_SESSION['err'] == "")
 	{
-		if(!isset($_SESSION['user']))
+		if(!isset($_SESSION['username']))
 			set_error(NEED_LOGIN);
-		else if(!chk_auth($priv))
+		else if(!chk_auth($privileges))
 			set_error(UNAUTHORIZED);
 		else
 			return true;
@@ -91,9 +95,9 @@ function chk_access($priv = NONE, $kill = true)
 }
 
 // Function to check if a user has the given privilege level
-function chk_auth($priv)
+function chk_auth($privileges)
 {
-	return (isset($_SESSION['priv']) and $_SESSION['priv'] <= $priv);
+	return (isset($_SESSION['privileges']) and $_SESSION['privileges'] <= $privileges);
 }
 
 // Function to add an error to the session
@@ -103,9 +107,9 @@ function set_error($error)
 }
 
 // Checks if the user can access the class's register page 
-function chk_prof($fk_prof)
+function chk_prof($user_fk)
 {
-	if($fk_prof and $fk_prof != $_SESSION['id'] and $_SESSION['priv'] != ADMINISTRATOR)
+	if($user_fk and $user_fk != $_SESSION['id'] and $_SESSION['privileges'] != ADMINISTRATOR)
 	{
 		$_SESSION['alert'] = "Permessi insufficienti per visualizzare la classe";
 		header("Location: /register/register.php");
@@ -160,12 +164,26 @@ function maiuscolo($str)
 // Function to get the minimum and maximum years in the system
 function year_span()
 {
-	$stmt = prepare_stmt("SELECT MIN(anno) AS y1, MAX(anno) AS y2 
-		FROM PROVE JOIN ISTANZE ON id_ist=fk_ist 
-		JOIN CLASSI ON fk_cl=id_cl");
+	$stmt = prepare_stmt("SELECT MIN(class_year) AS y1, MAX(class_year) AS y2 
+		FROM results JOIN instance ON instance_id=instance_fk 
+		JOIN class ON class_fk=class_id");
 	$ret = execute_stmt($stmt);
 	$stmt->close();
-	return $ret->fetch_assoc();
+	$years = $ret->fetch_assoc();
+
+	// When no data is present in the database only the current
+	// scholastic year is shown
+	if(!$years['y1'])
+	{	
+		$curyear = date("Y");
+		if(date("m") < 8)
+			$curyear--;
+
+		$years['y1'] = $curyear;
+		$years['y2'] = $curyear;
+	}
+	return $years;
+	
 }
 
 // Statement preparation and error handling
@@ -261,21 +279,21 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 							<ul class="navbar-nav ms-auto" aria-labelledby="navbarDropdown">	
 								<li class="nav-item dropdown">
 									<a id="logindropdown" href="#" class="dropdown-toggle nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false"> 
-										<?=(isset($_SESSION["user"]) ? $_SESSION["user"] : "Login")?> <span class="caret"></span>
+										<?=(isset($_SESSION["username"]) ? $_SESSION["username"] : "Login")?> <span class="caret"></span>
 									</a>
 			
 									<ul id="login-dp" class="dropdown-menu dropdown-menu-end" aria-labelledby="logindropdown">
 <?php
-	if(!isset($_SESSION['user'])) 
+	if(!isset($_SESSION['username'])) 
 	{
 ?>										
 										<li>
 											<form class="form" role="form" method="POST" action="/user/login.php" accept-charset="UTF-8" id="login-nav">
 												<div class="form-group">
-													<input type="text" class="form-control" name="usr" placeholder="Username" required>
+													<input type="text" class="form-control" name="user" placeholder="Username" required>
 												</div>
 												<div class="form-group">
-													<input type="password" class="form-control" name="psw" placeholder="Password" required>
+													<input type="password" class="form-control" name="password" placeholder="Password" required>
 												</div>
 												<div class="form-group">
 													<button type="submit" class="btn btn-warning">Accedi</button>
@@ -290,7 +308,7 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
   										<li>
 	  										<a href="/user/profile.php" class="btn btn-warning">Profilo</a>
 <?php
-		if($_SESSION["priv"] == ADMINISTRATOR)
+		if($_SESSION["privileges"] == ADMINISTRATOR)
 		{
 ?> 
 											<div class="form-group">

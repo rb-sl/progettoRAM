@@ -22,26 +22,26 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
 chk_access(PROFESSOR);
 connect();
 
-$section = strtoupper($_POST['sez']);
+$section = strtoupper($_POST['section']);
 
 // Check of class uniqueness per year and school
-$chk_st = prepare_stmt("SELECT * FROM CLASSI JOIN SCUOLE ON fk_scuola=id_scuola 
-	WHERE classe=? AND sez=? AND anno=? AND fk_scuola=? AND id_cl<>?");
-$chk_st->bind_param("isiii", $_POST['cl'], $section, $_POST['anno'], $_SESSION['school'], $_GET['id']);
+$chk_st = prepare_stmt("SELECT * FROM class JOIN school ON school_fk=school_id 
+	WHERE class=? AND section=? AND class_year=? AND school_fk=? AND class_id<>?");
+$chk_st->bind_param("isiii", $_POST['cl'], $section, $_POST['class_year'], $_SESSION['school'], $_GET['id']);
 $chk = execute_stmt($chk_st);
 $chk_st->close();
 
 if($chk->num_rows > 0)
 {
 	$row = $chk->fetch_assoc();
-	$_SESSION['alert'] = "Errore: un'altra classe ".$_POST['cl'].$section." ".$_POST['anno']
-		." / ".($_POST['anno'] + 1)." è già registrata (".$row['nomescuola'].").";
+	$_SESSION['alert'] = "Errore: un'altra classe ".$_POST['cl'].$section." ".$_POST['class_year']
+		." / ".($_POST['class_year'] + 1)." è già registrata (".$row['school_name'].").";
 	header("Location: /register/class_modify.php?id=".$_GET['id']);
 	exit;
 }
 
-$up_st = prepare_stmt("UPDATE CLASSI SET classe=?, sez=?, anno=? WHERE id_cl=?");
-$up_st->bind_param("isii", $_POST['cl'], $section, $_POST['anno'], $_GET['id']);
+$up_st = prepare_stmt("UPDATE class SET class=?, section=?, class_year=? WHERE class_id=?");
+$up_st->bind_param("isii", $_POST['cl'], $section, $_POST['class_year'], $_GET['id']);
 $ret = execute_stmt($up_st);
 $up_st->close();
 
@@ -51,12 +51,12 @@ $idlist = class_students(true, $_GET['id'],
 	isset($_POST['pr']) ? $_POST['pr'] : null,
 	isset($_POST['cst']) ? $_POST['cst'] : null,
 	isset($_POST['nst']) ? $_POST['nst'] : null,
-	isset($_POST['sesso']) ? $_POST['sesso'] : null,
+	isset($_POST['gender']) ? $_POST['gender'] : null,
 	isset($_POST['ext']) ? $_POST['ext'] : null);
 
 // Deletion of instances not in the class anymore. The deletion of students without
 // instances is handled with a trigger
-$del_st = prepare_stmt("DELETE FROM ISTANZE WHERE fk_cl=? AND fk_stud NOT IN ($idlist)");
+$del_st = prepare_stmt("DELETE FROM instance WHERE class_fk=? AND student_fk NOT IN ($idlist)");
 $del_st->bind_param("i", $_GET['id']);
 execute_stmt($del_st);
 

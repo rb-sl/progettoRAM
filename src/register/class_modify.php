@@ -23,17 +23,17 @@ chk_access(PROFESSOR);
 connect();
 
 $cl = get_class_info($_GET['id']);
-chk_prof($cl['fk_prof']);
+chk_prof($cl['user_fk']);
 
-show_premain("Modifica ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno'] + 1));
+show_premain("Modifica ".$cl['class'].$cl['section']." ".$cl['class_year']."/".($cl['class_year'] + 1));
 ?>
 
 <h2>Modifica Classe <a href="class_show.php?id=<?=$_GET['id']?>" class="btn btn-warning">Annulla</a></h2>
 
 <form id="frm" method="POST" action="class_update.php?id=<?=$_GET['id']?>">
-<?php show_cl_form($cl['classe'], $cl['sez'], $cl['anno']); ?>
+<?php show_cl_form($cl['class'], $cl['section'], $cl['class_year']); ?>
 	<a href="class_delete.php?id=<?=$_GET['id']?>" class="btn btn-danger"
-		<?=confirm("La classe ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno'] + 1)
+		<?=confirm("La classe ".$cl['class'].$cl['section']." ".$cl['class_year']."/".($cl['class_year'] + 1)
 			." e le prove ad essa attinenti saranno eliminate")?>>Elimina classe</a>
 	<h3>Modifica studenti</h3>
 	<div id="divpro">
@@ -49,11 +49,11 @@ show_premain("Modifica ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno
 					<td><input type="text" id="nm0" class="n0" name="nst[0]" placeholder="Nome"></td>
 					<td class="containerflex">
 						<div class="form-check">
-							<input id="m0" class="n0 form-check-input" type="radio" name="sesso[0]" value="m">
+							<input id="m0" class="n0 form-check-input" type="radio" name="gender[0]" value="m">
 							<label class="form-check-label" for="m0">M</label>
 						</div>
 						<div class="form-check">
-							<input id="f0" class="n0 form-check-input" type="radio" name="sesso[0]" value="f">
+							<input id="f0" class="n0 form-check-input" type="radio" name="gender[0]" value="f">
 							<label class="form-check-label" for="f0">F</label>
 						</div>
 					</td>

@@ -24,14 +24,14 @@ chk_access(PROFESSOR);
 connect();
 
 // Gets the student's information
-$stud_st = prepare_stmt("SELECT * FROM STUDENTI WHERE id_stud=?");
+$stud_st = prepare_stmt("SELECT * FROM student WHERE student_id=?");
 $stud_st->bind_param("i", $_GET['id']);
 $ret = execute_stmt($stud_st);
 $stud_st->close();
 
 $stud = $ret->fetch_assoc();
 
-$rclass = col_class($stud['id_stud']);
+$rclass = col_class($stud['student_id']);
 
 // The loading is interrupted if the user does not own at least one class with the student
 if($rclass === null)
@@ -41,13 +41,13 @@ if($rclass === null)
 	exit;
 }
 
-show_premain("Dati di ".$stud['cogs']." ".$stud['noms']." (".$stud['sesso'].")", true);
+show_premain("Dati di ".$stud['lastname']." ".$stud['firstname']." (".$stud['gender'].")", true);
 
 // The page opens on the percentile option, so the relative colors are loaded
 $color = get_color_prc();
 ?>
 
-<h2>Elaborazione dati di <span id="student"><?=$stud['cogs']?> <?=$stud['noms']?> (<?=$stud['sesso']?>)</span></h2>
+<h2>Elaborazione dati di <span id="student"><?=$stud['lastname']?> <?=$stud['firstname']?> (<?=$stud['gender']?>)</span></h2>
 
 <div>
 	<a href="student_show.php?id=<?=$_GET['id']?>" class="btn btn-primary marginunder">Mostra valori</a> 
@@ -77,11 +77,11 @@ $test['row'] = "";
 $test['id'] = [];
 while($row = $ret->fetch_assoc())
 {
-	$test['id'][] = $row['id_test'];
-	$test['pos'][$row['id_test']] = $row['pos'];
-	$test['name'][$row['id_test']] = $row['nometest'];
+	$test['id'][] = $row['test_id'];
+	$test['positive_values'][$row['test_id']] = $row['positive_values'];
+	$test['name'][$row['test_id']] = $row['test_name'];
 
-	$test['row'] .= "<td id='test".$row['id_test']."' class='col topfix'>".$row['nometest']."</td>";
+	$test['row'] .= "<td id='test".$row['test_id']."' class='col topfix'>".$row['test_name']."</td>";
 }
 
 // Constuction of the table's body with percentile values
@@ -122,8 +122,8 @@ foreach($rclass as $idcl => $class)
 		echo "<td id='$idcl"."_$idt' class='jdat jcol r_$idcl c_$idt dat$idcl'";
 		if(isset($rstud['val'][$idcl][$idt]))
 		{
-			if(isset($rstud['data'][$idcl][$idt]) and $rstud['data'][$idcl][$idt] != "0000-00-00")
-				echo "title='".$rstud['data'][$idcl][$idt]."'";
+			if(isset($rstud['date'][$idcl][$idt]) and $rstud['date'][$idcl][$idt] != "0000-00-00")
+				echo "title='".$rstud['date'][$idcl][$idt]."'";
 
 			echo " vcolor='#".$rstud['color'][$idcl][$idt]."'>"
 				.$rstud['val'][$idcl][$idt]."</td>";

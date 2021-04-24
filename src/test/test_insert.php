@@ -22,7 +22,7 @@ chk_access(PROFESSOR_GRANTS);
 connect();
 
 // The system blocks the insert if a test with the given name is already present
-$name_st = prepare_stmt("SELECT * FROM TEST WHERE nometest=?");
+$name_st = prepare_stmt("SELECT * FROM test WHERE test_name=?");
 $name_st->bind_param("s", $_POST['testname']);
 
 $name = execute_stmt($name_st);
@@ -35,7 +35,9 @@ if($name->num_rows > 0)
 	exit;
 }
 
-$in_st = prepare_stmt("INSERT INTO TEST (nometest, fk_cltest, fk_udm, pos, fk_tipot, posiz, equip, esec, cons, limite, valut) 
+// Insert of the test
+$in_st = prepare_stmt("INSERT INTO test (test_name, testtype_fk, unit_fk, positive_values, 
+	datatype_fk, position, equipment, execution, suggestions, test_limit, assessment) 
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 $in_st->bind_param("siisissssss", $_POST['testname'], $_POST['class'], $_POST['unit'], $_POST['positive'], 
@@ -45,8 +47,17 @@ $in_st->bind_param("siisissssss", $_POST['testname'], $_POST['class'], $_POST['u
 execute_stmt($in_st);
 $in_st->close();
 
-writelog("[+test] ".$mysqli->insert_id." ".$_POST['testname']);
+$id = $mysqli->insert_id;
 
-header("Location: /test/test_show.php?id=".$mysqli->insert_id);
+// Insert among favourites of all users
+$fav_st = prepare_stmt("INSERT INTO favourites
+	SELECT user_id, ? FROM user");
+$fav_st->bind_param("i", $id);
+execute_stmt($fav_st);
+$fav_st->close();
+
+writelog("[+test] $id ".$_POST['testname']);
+
+header("Location: /test/test_show.php?id=$id");
 exit;
 ?>

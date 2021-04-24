@@ -14,19 +14,19 @@ Segue una lista delle funzioni
 ### `errors()`
 La funzione errors permette di visualizzare tutti gli errori generati da php per fini di debugging. Viene attivata se l'attributo `e` del GET è settato.
 
-### `chk_access($priv)`
+### `chk_access($privileges)`
 Funzione di controllo accessi. Se necessario, il caricamento viene bloccato se il livello non è corretto.
 
 ### `writelog($action)`
 Permette di scrivere `$action` nel log dell'applicazione, aggiungendo utente e indirizzo IP.
 
-### `chk_auth($priv)`
+### `chk_auth($privileges)`
 Restituisce una booleana per indicare se i privilegi sono sufficienti rispetto al parametro passato.
 
 ### `set_error($error)`
 Imposta l'errore da mostrare all'utente.
 
-### `chk_prof($fk_prof)`
+### `chk_prof($user_fk)`
 Funzione di controllo per il privilegio di accesso di un professore a una classe. Un amministratore può sempre visualizzare le informazioni.
 
 ### `get_server_conf()`
@@ -65,7 +65,7 @@ Mostra le parti statiche finali delle pagine front-end.
 ## [lib_admin.php](lib_admin.php)
 Questa libreria contiene funzioni utili nella sezione amministrativa. Le costanti a inizio file indicano alcuni elementi di markup per l'input di testi.
 
-### `get_privilege($priv)`
+### `get_privilege($privileges)`
 Funzione per ottenere il testo e il colore associati a un livello di permessi
 
 ### `can_downgrade($id)`
@@ -147,7 +147,7 @@ Viene usata la funzione avg +- 10std poiché, per la disuguaglianza di Chebychev
 per ogni k almeno la frazione (1-1/(k^2))-esima dei dati cade nell'intervallo avg +- k*std.
 Con k=10 il 99% dei dati viene accettato.
 
-### `show_cl_form($cl, $sez, $year)`
+### `show_cl_form($cl, $section, $year)`
 Funzione per mostrare il form di inserimento o modifica di una classe.
 
 ## [lib_stat.php](lib_stat.php)

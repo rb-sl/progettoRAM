@@ -23,14 +23,14 @@ connect();
 show_premain("Unità");
 
 // Gets the system's unit and the number of associated tests
-$unit_st = prepare_stmt("SELECT id_udm, udm, simbolo, (
-		SELECT COUNT(*) AS n FROM UNITA
-		JOIN TEST ON fk_udm=id_udm
-		WHERE id_udm=U.id_udm
-	) AS n FROM UNITA AS U
-	LEFT JOIN TEST ON fk_udm=id_udm
-	GROUP BY id_udm 
-	ORDER BY udm");
+$unit_st = prepare_stmt("SELECT unit_id, unit_name, symbol, (
+		SELECT COUNT(*) AS n FROM unit
+		JOIN test ON unit_fk=unit_id
+		WHERE unit_id=U.unit_id
+	) AS n FROM unit AS U
+	LEFT JOIN test ON unit_fk=unit_id
+	GROUP BY unit_id 
+	ORDER BY unit_name");
 $ret = execute_stmt($unit_st);
 $unit_st->close();
 ?>
@@ -51,13 +51,13 @@ $unit_st->close();
 while($row = $ret->fetch_assoc())
 {
 	echo "  <tr>
-				<td id='c1_".$row['id_udm']."'>".$row['udm']."</td>
-				<td id='c2_".$row['id_udm']."'>".$row['simbolo']."</td>
-				<td><div><button type='button' id='mod_".$row['id_udm']."' class='btn btn-warning btnmenu mod'>Modifica</button>"; 
+				<td id='c1_".$row['unit_id']."'>".$row['unit_name']."</td>
+				<td id='c2_".$row['unit_id']."'>".$row['symbol']."</td>
+				<td><div><button type='button' id='mod_".$row['unit_id']."' class='btn btn-warning btnmenu mod'>Modifica</button>"; 
 
 	if($row['n'] == 0)
-		echo "<a href='unit_delete.php?id=".$row['id_udm']."' class='btn btn-danger btnmenu'"
-			.confirm("L'unità di misura ".$row['udm']." sarà eliminata").">Elimina</a>";
+		echo "<a href='unit_delete.php?id=".$row['unit_id']."' class='btn btn-danger btnmenu'"
+			.confirm("L'unità di misura ".$row['unit_name']." sarà eliminata").">Elimina</a>";
 
 	echo  "</div></td>
 		</tr>";

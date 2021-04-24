@@ -24,15 +24,15 @@ chk_access(PROFESSOR);
 connect();
 
 $cl = get_class_info($_GET['id']);
-chk_prof($cl['fk_prof']);
+chk_prof($cl['user_fk']);
 
-show_premain("Registro ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno'] + 1), true);
+show_premain("Registro ".$cl['class'].$cl['section']." ".$cl['class_year']."/".($cl['class_year'] + 1), true);
 
 // The page opens on the percentile option, so the relative colors are loaded
 $color = get_color_prc();
 ?>
 
-<h2>Registro della classe <?=$cl['classe'].$cl['sez']?> - Anno <?=$cl['anno']."/".($cl['anno'] + 1)?></h2>
+<h2>Registro della classe <?=$cl['class'].$cl['section']?> - Anno <?=$cl['class_year']."/".($cl['class_year'] + 1)?></h2>
 
 <div>
 	<a href="class_show.php?id=<?=$_GET['id']?>" class="btn btn-primary marginunder">Registro della classe</a>
@@ -63,10 +63,10 @@ $test['row'] = "";
 $test['id'] = [];
 while($row = $ret->fetch_assoc())
 {
-	$test['id'][] = $row['id_test'];
-	$test['pos'][$row['id_test']] = $row['pos'];
+	$test['id'][] = $row['test_id'];
+	$test['positive_values'][$row['test_id']] = $row['positive_values'];
 
-	$test['row'] .= "<td id='c".$row['id_test']."' class='col topfix'>".$row['nometest']."</td>";
+	$test['row'] .= "<td id='c".$row['test_id']."' class='col topfix'>".$row['test_name']."</td>";
 }
 
 // Constuction of the table's body with percentile values
@@ -108,8 +108,8 @@ foreach($cstud as $idist => $stud)
 		echo "<td id='$idist"."_$idt' class='jdat jcol r_$idist c_$idt'";
 		if(isset($rstud['val'][$idist][$idt]))
 		{
-			if(isset($rstud['data'][$idist][$idt]) and $rstud['data'][$idist][$idt] != "0000-00-00")
-				echo "title='".$rstud['data'][$idist][$idt]."'";
+			if(isset($rstud['date'][$idist][$idt]) and $rstud['date'][$idist][$idt] != "0000-00-00")
+				echo "title='".$rstud['date'][$idist][$idt]."'";
 
 			echo " vcolor='#".$rstud['color'][$idist][$idt]."'>"
 				.$rstud['val'][$idist][$idt]."</td>";

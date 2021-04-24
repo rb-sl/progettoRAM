@@ -41,13 +41,13 @@ Script backend per la separazione di un profilo in due.
 Strumenti per modificare le informazioni relative ai test nel sistema. Le pagine funzionano in modo analogo per unità, tipo dei dati e classe dei test e si suddividono nei seguenti tipi.
 
 ## File di modifica
-Le pagine [unit.php](test/unit.php), [test_class.php](test/test_class.php) e [test_type.php](test/test_type.php) mostrano una tabella in cui è possibile aggiungere, eliminare o modificare un elemento del rispettivo tipo.
+Le pagine [unit.php](test/unit.php), [testtype.php](test/testtype.php) e [datatype.php](test/datatype.php) mostrano una tabella in cui è possibile aggiungere, eliminare o modificare un elemento del rispettivo tipo.
 
 ## File di aggiornamento
-Gli script backend [unit_update.php](test/unit_update.php), [test_class_update.php](test/test_class_update.php) e [test_type_update.php](test/test_type_update.php) permettono di salvare le modifiche apportate nelle rispettive pagine di modifica.
+Gli script backend [unit_update.php](test/unit_update.php), [testtype_update.php](test/testtype_update.php) e [datatype_update.php](test/datatype_update.php) permettono di salvare le modifiche apportate nelle rispettive pagine di modifica.
 
 ## File di eliminazione
-Gli script backend [unit_delete.php](test/unit_delete.php), [test_class_delete.php](test/test_class_delete.php) e [test_type_delete.php](test/test_type_delete.php) servono a rimuovere dal database un elemento delle rispettive tabelle.
+Gli script backend [unit_delete.php](test/unit_delete.php), [testtype_delete.php](test/testtype_delete.php) e [datatype_delete.php](test/datatype_delete.php) servono a rimuovere dal database un elemento delle rispettive tabelle.
 
 # File in /admin/user/
 Strumenti per la visualizzazione degli utenti e la gestione dei permessi.

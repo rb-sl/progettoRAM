@@ -22,49 +22,50 @@ connect();
 chk_access();
 show_premain("Profilo");
 
-$prof_st = prepare_stmt("SELECT * FROM PROFESSORI JOIN SCUOLE ON fk_scuola=id_scuola WHERE id_prof=?");
+$prof_st = prepare_stmt("SELECT * FROM user LEFT JOIN school ON school_fk=school_id WHERE user_id=?");
 $prof_st->bind_param("i", $_SESSION['id']);
 
-$school_st = prepare_stmt("SELECT * FROM SCUOLE");
+$school_st = prepare_stmt("SELECT * FROM school");
 
 $ret = execute_stmt($prof_st);
-$prof = $ret->fetch_assoc();
+$user = $ret->fetch_assoc();
 $prof_st->close();
 ?>
-<h2>Profilo di <?=$_SESSION['user']?></h2>
+<h2>Profilo di <?=$_SESSION['username']?></h2>
 
 <form method="POST" action="/user/profile_update.php">
 	<table class="marginunder">
 		<tr>
 			<td class="textright">Utente:&nbsp;</td>
-			<td><input class="form-control" type="text" name="usr" value="<?=$prof['user']?>"></td>
+			<td><input class="form-control" type="text" name="user" value="<?=$user['username']?>"></td>
 		</tr>
 		<tr>
 			<td class="textright">Nome:&nbsp;</td>
-			<td><input class="form-control" type="text" name="nomp" value="<?=$prof['nomp']?>"></td>
+			<td><input class="form-control" type="text" name="firstname" value="<?=$user['firstname']?>"></td>
 		</tr>
 		<tr>
 			<td class="textright">Cognome:&nbsp;</td>
-			<td><input class="form-control" type="text" name="cogp" value="<?=$prof['cogp']?>"></td>
+			<td><input class="form-control" type="text" name="lastname" value="<?=$user['lastname']?>"></td>
 		</tr>
 		<tr>
 			<td class="textright">E-mail:&nbsp;</td>
-			<td><input class="form-control" type="text" name="email" value="<?=$prof['email']?>"></td>
+			<td><input class="form-control" type="text" name="email" value="<?=$user['email']?>"></td>
 		</tr>
 		<tr>
 			<td class="textright">Scuola:&nbsp;</td>
 			<td>
 				<select class="form-control" name="school">
+					<option value=""></option>
 <?php
 // Shows the select with all available schools
 $ret = execute_stmt($school_st);
 $school_st->close();
 while($row = $ret->fetch_assoc())
 {
-	echo "<option value='".$row['id_scuola']."'";
-	if($row['id_scuola'] == $prof['fk_scuola'])
+	echo "<option value='".$row['school_id']."'";
+	if($row['school_id'] == $user['school_fk'])
 		echo " selected";
-	echo ">".$row['nomescuola']."</option>";
+	echo ">".$row['school_name']."</option>";
 }
 ?> 
 				</select>
@@ -74,14 +75,14 @@ while($row = $ret->fetch_assoc())
 <?php
 if(chk_auth(ADMINISTRATOR))
 {
-	if($prof['show_email'])
+	if($user['show_email'])
 		$chk = " checked";
 	else
 		$chk = "";
 ?>
 	<div>
 		Ulteriori informazioni di contatto:<br>
-		<textarea name="contact"><?=$prof['contact_info']?></textarea>
+		<textarea name="contact"><?=$user['contact_info']?></textarea>
 	</div>
 	
 	<div class="form-check flexrow">
@@ -96,11 +97,11 @@ if(chk_auth(ADMINISTRATOR))
 		<table class="marginunder">
 			<tr>
 				<td class="textright">Nuova password:&nbsp;</td>
-				<td><input class="form-control psw" type="password" id="psw" name="psw"></td>
+				<td><input class="form-control password" type="password" id="password" name="password"></td>
 			</tr>
 	  		<tr>
 				<td class="textright">Conferma password:&nbsp;</td>
-				<td><input class="form-control psw" type="password" id="cpsw"></td>
+				<td><input class="form-control password" type="password" id="cpsw"></td>
 			</tr>
 		</table>
 		<span id="err" class="dangercolor"></span>

@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
 
-// Script to validate values inserted in show_classe.php
+// Script to validate values inserted in show_class.php
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_reg.php";
 if(!chk_access(PROFESSOR, false))
@@ -31,13 +31,13 @@ $acceptable = true;
 
 // New test check
 if(isset($_POST['ntest']))
-	foreach($_POST['ntest'] as $fk_stud => $val)
+	foreach($_POST['ntest'] as $student_fk => $val)
 		if($val and !is_accettable($_POST['test'], $val))
 		{
 	  		$acceptable = false;
 
 			// Adds the current element to the array of non-valid elements
-			$err['ntest'][] = $fk_stud;
+			$err['ntest'][] = $student_fk;
 		}
 
 // Update check

@@ -24,13 +24,13 @@ chk_access(PROFESSOR);
 connect();
 
 $cl = get_class_info($_GET['id']);
-chk_prof($cl['fk_prof']);
+chk_prof($cl['user_fk']);
 
-show_premain("Registro ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno'] + 1));
+show_premain("Registro ".$cl['class'].$cl['section']." ".$cl['class_year']."/".($cl['class_year'] + 1));
 ?>
 
 <h2>
-	Registro della classe <?=$cl['classe'].$cl['sez']?> - Anno <?=$cl['anno']."/".($cl['anno'] + 1)?> 
+	Registro della classe <?=$cl['class'].$cl['section']?> - Anno <?=$cl['class_year']."/".($cl['class_year'] + 1)?> 
 	<a href="./class_modify.php?id=<?=$_GET['id']?>" class="btn btn-warning">Modifica</a>
 </h2>
 
@@ -54,19 +54,19 @@ show_premain("Registro ".$cl['classe'].$cl['sez']." ".$cl['anno']."/".($cl['anno
 $rstud = col_stud();
 
 // Construction of table body
-$result_st = prepare_stmt("SELECT * FROM PROVE JOIN ISTANZE ON fk_ist=id_ist
-	JOIN TEST ON fk_test=id_test
-	JOIN UNITA ON fk_udm=id_udm
-	WHERE fk_cl=?");
+$result_st = prepare_stmt("SELECT * FROM results JOIN instance ON instance_fk=instance_id
+	JOIN test ON test_fk=test_id
+	JOIN unit ON unit_fk=unit_id
+	WHERE class_fk=?");
 $result_st->bind_param("i", $_GET['id']);
 $retprove = execute_stmt($result_st);
 
 while($row = $retprove->fetch_assoc())
 {
-	$vals[$row['fk_test']][] = $row['valore'];
+	$vals[$row['test_fk']][] = $row['value'];
 	// The date is added if it is not a placeholder
-	$rstud[$row['id_ist']][$row['fk_test']] = ($row['data'] != "0000-00-00" ? "title='".$row['data']."'" : "").">"
-		.$row['valore']." ".$row['simbolo']."</td";
+	$rstud[$row['instance_id']][$row['test_fk']] = ($row['date'] != "0000-00-00" ? "title='".$row['date']."'" : "").">"
+		.$row['value']." ".$row['symbol']."</td";
 }
 $result_st->close();
 
@@ -78,12 +78,12 @@ $rmed = "";
 $idtest = [];
 while($row = $ret->fetch_assoc())
 {
-  	echo "<td id='c".$row['id_test']."' class='col topfix'>".$row['nometest']."</td>";
-	$idtest[] = $row['id_test'];
+  	echo "<td id='c".$row['test_id']."' class='col topfix'>".$row['test_name']."</td>";
+	$idtest[] = $row['test_id'];
 
-	$ravg .= "<td id='r".$row['id_test']."'>".$row['avg']." ".$row['simbolo']."</td>";	
-	$rmed .= "<td id='r".$row['id_test']."' class='borderunder'>"
-		.arr_med($vals[$row['id_test']], 2)." ".$row['simbolo']."</td>";
+	$ravg .= "<td id='r".$row['test_id']."'>".$row['avg']." ".$row['symbol']."</td>";	
+	$rmed .= "<td id='r".$row['test_id']."' class='borderunder'>"
+		.arr_med($vals[$row['test_id']], 2)." ".$row['symbol']."</td>";
 }
 echo "</tr>
 	<tr class='dat r_stat jQhidden'>

@@ -16,31 +16,31 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
 
-// Pagina chiamata da test.php per l'aggiornamento dei voti dell'utente prof
+// Pagina chiamata da test.php per l'aggiornamento dei voti dell'utente user
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
 chk_access(PROFESSOR);
 connect();
 
 // Selects which user's grades are updated
 if(chk_auth(ADMINISTRATOR) and isset($_POST['slp']))
-	$prof = $_POST['slp'];
+	$user = $_POST['slp'];
 else
-	$prof = $_SESSION['id'];
+	$user = $_SESSION['id'];
 
-$up_st = prepare_stmt("UPDATE VALUTAZIONI SET perc=? WHERE fk_voto=? AND fk_prof=?");
-$up_st->bind_param("iii", $newperc, $id, $prof);
+$up_st = prepare_stmt("UPDATE grading SET percentile=? WHERE grade_fk=? AND user_fk=?");
+$up_st->bind_param("iii", $newperc, $id, $user);
 
 $tot = 0;
-foreach($_POST['perc'] as $id => $perc)
+foreach($_POST['percentile'] as $id => $percentile)
 {
-	$newperc = $perc + $tot;
+	$newperc = $percentile + $tot;
 	execute_stmt($up_st);
-	$tot += $perc;
+	$tot += $percentile;
 }
 $up_st->close();
 
 $_SESSION['alert'] = "Voti aggiornati correttamente";
-writelog("Voti di $prof modificati");
+writelog("Voti di $user modificati");
 
 header("Location: /test/test.php#grades"); 
 exit; 

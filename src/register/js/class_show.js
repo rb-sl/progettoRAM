@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
 
-// Javascript / jQuery functions connected to show_classe.php 
+// Javascript / jQuery functions connected to show_class.php 
 
 // Ajax function to receive and output the list of tests not yet
 // done by the class
@@ -44,7 +44,7 @@ $("#btnadd").click(function() {
 				$(this).append("<td class='new'>"
 					+ "<input type='number' id='n" + id + "' class='in_add datmod testinput'"
 					+ " name='ntest[" + id + "]' pattern='^[+-]?\\d+(\\.\\d+)?$'> " 
-					+ "<span class='udm'></span></td>");
+					+ "<span class='unit_name'></span></td>");
 			});
 			
 			// Moves the table to show the new entries
@@ -114,8 +114,8 @@ function unitAjax(test) {
 $(document).on("change", "#test", function() {
 	var data = unitAjax($("#test").val());
 
-	$(".udm").html(data.simbolo);
-	$(".in_add").attr("step", data.passo);
+	$(".unit_name").html(data.symbol);
+	$(".in_add").attr("step", data.step);
 
 	resizeText();
 });
@@ -134,8 +134,8 @@ $(document).on("dblclick", ".jdat", function() {
 
 		// Ajax request to know the unit and update the step
 		var data = unitAjax(test);
-		inner[1] = data.simbolo;
-		step = data.passo;
+		inner[1] = data.symbol;
+		step = data.step;
 	
 		// Includes a pattern to accept only values like +- n.nn with the step defined in the database
 		$(this).html("<input type='number' size='5' class='datmod'"
