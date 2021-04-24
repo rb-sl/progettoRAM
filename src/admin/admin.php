@@ -27,6 +27,7 @@ show_premain();
 <p>
 	<a href="/admin/log.php" class="btn btn-secondary marginunder">Log di utilizzo</a><br>
 	<a href="/admin/user/users.php" class="btn btn-info marginunder">Gestione utenti</a><br>
+	<a href="/admin/school.php" class="btn btn-info marginunder">Gestione scuole</a><br>
 	<a href="/admin/test/unit.php" class="btn btn-primary marginunder">Gestione unità di misura</a><br>
 	<a href="/admin/test/datatype.php" class="btn btn-primary marginunder">Gestione tipi dei dati dei test</a><br>
 	<a href="/admin/test/testtype.php" class="btn btn-primary marginunder">Gestione classi dei test</a><br>

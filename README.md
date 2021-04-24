@@ -85,6 +85,7 @@ La sezione amministrativa fornisce funzioni utili alla gestione dei parametri de
 	* Inserimento di nuovi utenti
 	* Visualizzazione dettagli
 	* Modifica dei privilegi di accesso di un utente se nella propria gerarchia di permessi
+* Gestione delle scuole nel sistema
 * Gestione parametri dei test; inserimento, modifica ed eliminazione di
 	* Unità di misura
 	* Classi dei test

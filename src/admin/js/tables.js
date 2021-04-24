@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with progettoRAM.  If not, see <http://www.gnu.org/licenses/>.
 
-// Functions for unit.php, datatype.php, testtype.php
+// Functions for unit.php, datatype.php, testtype.php and school.php
 
 // Function to show the form to create a new element
 $("#newrow").click(function() {

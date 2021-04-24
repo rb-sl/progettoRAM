@@ -22,6 +22,15 @@ Pagina analoga a `announcement_modify.php` per la pagina `project.php`.
 ## [project_update.php](project_update.php)
 Aggiorna e salva nel DB il testo del progetto in HTML.
 
+## [school.php](school.php)
+Pagina di gestione delle scuole nel sistema
+
+## [school_update.php](school_update.php)
+Script di aggiornamento delle scuole
+
+## [school_delete.php](school_delete.php)
+Script di cancellazione di una scuola (viene bloccata se esistono alcune classi collegate).
+
 # File in /admin/student/
 Strumenti per correggere i profili degli studenti.
 
