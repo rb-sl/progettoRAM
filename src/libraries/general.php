@@ -23,13 +23,13 @@ session_start();
 const CONF_PATH = "C:\\xampp\\server_conf.json";
 const LOG_PATH = "C:\\xampp\\htdocs\\log\\";
 
-const JQUERY_PATH = "/libraries/ui/jquery-3.4.1.min.js";
+const JQUERY_PATH = "/vendor/components/jquery/jquery.min.js";
 
-const BOOTSTRAP_CSS_PATH = "/libraries/ui/bootstrap/css/bootstrap.min.css";
-const BOOTSTRAP_JS_PATH = "/libraries/ui/bootstrap/js/bootstrap.min.js";
+const BOOTSTRAP_CSS_PATH = "/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
+const BOOTSTRAP_JS_PATH = "/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 
-const FITTY_PATH = "/libraries/ui/fitty/fitty.min.js";
-const PLOTLY_PATH = "/libraries/plotly.min.js";
+const FITTY_PATH = "/vendor/rikschennink/fitty/dist/fitty.min.js";
+const PLOTLY_PATH = "/vendor/plotly/plotly.js/dist/plotly.min.js";
 
 // Constants for access control
 // They must reflect those in the database
