@@ -105,11 +105,11 @@ while($row = $ret->fetch_assoc())
 		$name = "";
 
 	if($_SESSION['id'] != $row['user_fk'])
-		$class = " nonpersonal";
+		$class = "btn-secondary nonpersonal";
 	else
-		$class= "";
+		$class= "btn-warning";
 
-	echo "<a href='/register/class_show.php?id=".$row['class_id']."' class='btn btn-warning btncl$class' 
+	echo "<a href='/register/class_show.php?id=".$row['class_id']."' class='btn btncl $class' 
 		title='".$row['school_name']."\n".$row['city'].$name."'>".$row['class'].$row['section']."</a> ";
 	
 	$class = $row['class'];

@@ -1,0 +1,22 @@
+{
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "rikschennink/fitty",
+                "version": "2.3.3",
+                "source": {
+                    "url": "https://github.com/rikschennink/fitty/",
+                    "type": "git",
+                    "reference": "origin/gh-pages"
+                }
+            }
+        }
+    ],
+    "require": {
+        "components/jquery": "3.4.1",
+        "twbs/bootstrap": "5.0.0-beta3",
+        "rikschennink/fitty": "2.3.3",
+        "plotly/plotly.js": "1.58.4"
+    }
+}

@@ -31,7 +31,8 @@ if($ret->num_rows != 0)
 	$_SESSION['username'] = $row['username'];
 	$_SESSION['id'] = $row['user_id'];
 	$_SESSION['privileges'] = $row['privileges'];
-	$_SESSION['school'] = $row['school_fk'];
+	if($row['school_fk'] !== null)
+		$_SESSION['school'] = $row['school_fk'];
 
 	// Updates the login time
 	$up_st = prepare_stmt("UPDATE user SET last_login=NOW() WHERE user_id=?");
