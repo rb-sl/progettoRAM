@@ -128,10 +128,10 @@ $none = get_privilege(NONE);
 	</p>	
 	<p>
 		È anche possibile cliccare su <span class="primarycolor">Gestione unità di misura</span>,
-		<span class="primarycolor">Gestione tipi dei dati dei test</span> (ovvero i tipi di dati proposti 
-		all'inserimento nel registro) o <span class="primarycolor">Gestione classi dei test</span> per 
-		modificare queste informazioni; è importante notare che <b>modificare queste informazioni non modifica le 
-		prove presenti nel sistema</b>. Le procedure sono analoghe a quelle descritte per le scuole.
+		<span class="primarycolor">Gestione tipi dei dati dei test</span> o <span class="primarycolor">Gestione 
+		classi dei test</span> per modificare queste informazioni; è importante notare che <b>modificare 
+		queste informazioni non modifica le prove presenti nel sistema</b>. Le procedure sono analoghe 
+		a quelle descritte per le scuole.
 	</p>
 
 	<h4 id="proj">Modificare il testo della pagina Il progetto</h4>

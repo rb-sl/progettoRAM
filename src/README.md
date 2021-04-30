@@ -33,7 +33,7 @@ Non sono mostrate le relazioni di inclusione per `general.php`, utilizzata in tu
 Affinché l'applicazione funzioni correttamente sono necessarie alcune impostazioni aggiuntive, dopo aver impostato il server web (es. Apache) con root folder la cartella `src`.
 
 ### server_conf.json
-In una cartella (possibilmente non accessibile al web server) deve essere presente il file `server_conf.json`, contenente informazioni sul sistema, nella forma
+In una cartella (non accessibile al web server) deve essere presente il file `server_conf.json`, contenente informazioni sul sistema, nella forma
 ```
 {
 	"dbuser": "$USERNAME",
@@ -47,6 +47,8 @@ Con indicate le corrette credenziali dell'account per l'accesso a MySQL.
 `general.php` è il file principale dell'applicazione e potrebbe necessitare di modifiche alle costanti:
 * `6 - CONF_PATH`: Percorso al file `server_conf.json`
 * `7 - LOG_PATH`: Percorso alla cartella dove salvare i log dell'applicazione
+
+Sono poi preimpostate ai percorsi definiti tramite Composer (e quindi non dovrebbero necessitare di modifica) le costanti:
 * `9 - JQUERY_PATH`: Percorso al sorgente di jQuery
 * `11 - BOOTSTRAP_CSS_PATH`: Percorso al file sorgente CSS di Bootstrap
 * `12 - BOOTSTRAP_JS_PATH`: Percorso al file sorgente JavaScript di Bootstrap

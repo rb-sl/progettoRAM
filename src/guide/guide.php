@@ -124,7 +124,7 @@ if(chk_auth(NONE))
 
 	<h3 id="access">Registrazione e accesso</h3>
 	<p>
-		La creazione di un profilo deve essere richiesto a un <a href="#contacts">amministratore</a>
+		La creazione di un profilo deve essere richiesta a un <a href="#contacts">amministratore</a>
 		per email o, se possibile, di persona. Saranno fornite delle credenziali temporanee e al primo
 		accesso verrà richiesta la modifica della password.
 	</p>
@@ -160,6 +160,15 @@ if(chk_auth(NONE))
 				<li>E-mail</li>
 				<li>Scuola</li>
 				<li>Password</li>
+<?php
+if(chk_auth(ADMINISTRATOR))
+{
+?>
+				<li>La visualizzazione della propria email in questa guida</li>
+				<li>Ulteriori informazioni di contatto</li>
+<?php
+}
+?>
 			</ul>
 		</p>
 	</div>
@@ -170,7 +179,7 @@ if(chk_auth(NONE))
 		<h3 id="info">Ulteriori informazioni e contatti</h3>
 		<p>
 			Il Progetto RAM (Ricerca Attività Motorie) è un'applicazione originariamente sviluppata come 
-			progetto di maturità a favore dei docenti di Educazione Fisica. È stata poi completamente 
+			progetto di maturità per i docenti di Educazione Fisica. È stata poi completamente 
 			rinnovata e integrata per migliorarne le funzionalità, l'usabilità e l'efficienza.
 		</p>
 		<p>

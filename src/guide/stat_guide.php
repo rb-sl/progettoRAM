@@ -27,8 +27,7 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 	<p>
 		La sezione statistica permette di visualizzare ed elaborare dati aggregati sulle
 		prove dei test ed è caratterizzata dalla presenza del <a href="#menustat">menu 
-		statistico</a> (per modificare la popolazione i cui dati vengono elaborati)
-		e da diversi tipi di <a href="#graph">grafici</a>.<br>
+		statistico</a> e da diversi tipi di <a href="#graph">grafici</a>.<br>
 		È possibile:
 		<ul class="nobul">
 			<li><a href="#genstat">Visualizzare statistiche generali</a></li>
@@ -81,7 +80,7 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 			</li>
 			<li>
 				<b>Box plot</b>: mostra alcune statistiche aggregate in un <a href="#boxplot">diagramma 
-				a scatole e baffi</a>.
+				a scatole e baffi</a>
 			</li>
 			<li>
 				<b>Box plot (Anni)</b>: un box plot con i dati suddivisi per anno
@@ -108,9 +107,9 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 	<p>
 		La prima parte della pagina mostra una tabella che riporta gli 
 		<a href="https://it.wikipedia.org/wiki/Indice_di_correlazione_di_Pearson" target="_blank">indici di 
-		correlazione di Pearson</a> per ogni coppia di test. Per evidenziare i rapporti di correlazione tra i test
-		premere il pulsante <span class="primarycolor">Colori</span>; a colore più scuro corrisponde una maggiore
-		correlazione (positiva o negativa a seconda del segno).
+		correlazione di Pearson&#128279;</a> per ogni coppia di test. Per evidenziare i rapporti di correlazione 
+		tra i test premere il pulsante <span class="primarycolor">Colori</span>; a colore più scuro corrisponde 
+		una maggiore correlazione (positiva o negativa a seconda del segno).
 	</p>
 	<p>
 		È poi possibile, per ogni coppia di test, visualizzare il <a href="#scatter">diagramma di dispersione</a>
@@ -143,7 +142,7 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 		</li>    
 	</ul>
 	Il pulsante <span class="primarycolor">Aggiorna</span> diventa arancione dopo che uno di questi elementi 
-	viene modificato per segnalare che i dati visualizzati non corrispondono alla selezione corrente. 
+	viene modificato in modo da segnalare che i dati visualizzati non corrispondono alla selezione corrente. 
 	Premendolo vengono richiesti i nuovi dati e ritornerà blu dopo l'aggiornamento.
 </div>
 
@@ -185,7 +184,7 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 				0 143-143 0z m-857-285l0-143 143 0 0 143-143 0z m857 0l0-143 143 0 0 143-143 0z m-857-286l0-143 
 				143 0 0 143-143 0z m286 0l0-143 143 0 0 143-143 0z m285 0l0-143 143 0 0 143-143 0z m286 0l0-143 
 				143 0 0 143-143 0z" transform="matrix(1 0 0 -1 0 850)"></path>
-			</svg> : Permette di selezionare i dati dati in un rettangolo
+			</svg> : Permette di selezionare i dati in un rettangolo
 		</li>
 		<li>
 			<svg viewBox="0 0 1031 1000" class="icon" height="1em" width="1em">

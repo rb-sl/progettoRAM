@@ -46,7 +46,7 @@ show_premain($test['test_name']);
 
 <table class="table table-light table-striped marginunder">
 	<tr>
-		<td>Classe del test:</td>
+		<td>Tipo di test:</td>
 		<td class="halfwidth"><?=$test['testtype_name']?></td>
 	</tr>
 	<tr>
@@ -59,7 +59,7 @@ show_premain($test['test_name']);
 		</td>
 	</tr>
 	<tr>
-		<td>Tipo di valori:</td>
+		<td>Tipo di dati:</td>
 		<td><?=$test['datatype_name']?></td>
 	</tr>
 	<tr>

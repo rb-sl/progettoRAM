@@ -163,7 +163,7 @@ function col_class($stud)
 		$i++;
 	}
 
-	if(!$auth)
+	if(!$auth and !chk_auth(ADMINISTRATOR))
 		return null;
 	return $rclass;
 }

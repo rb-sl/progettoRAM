@@ -898,7 +898,7 @@ function test_graph($testlist, $cond = null)
 			AND class IN (0 $classlist)
 			AND gender IN ('x' $genderlist)
 			$user
-			ORDER BY instance_fk, test_name");
+			ORDER BY test_name, instance_fk");
 
 		if($user != "")
 			$splom_st->bind_param("iii", $cond['year1'], $cond['year2'], $_SESSION['id']);
@@ -909,7 +909,7 @@ function test_graph($testlist, $cond = null)
 	{
 		$splom_st = prepare_stmt("SELECT test_name, instance_fk, value 
 			FROM results JOIN test ON test_fk=test_id
-			WHERE test_fk IN ($testlist) ORDER BY instance_fk, test_name");
+			WHERE test_fk IN ($testlist) ORDER BY test_name, instance_fk");
 	}
 	
 	$splomret = execute_stmt($splom_st);

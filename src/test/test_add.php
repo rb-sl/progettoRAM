@@ -75,7 +75,7 @@ while($row = $retunita->fetch_assoc())
 			</td>
 		</tr>
 		<tr>
-			<td>Tipo di valori:</td>
+			<td>Tipo di dati:</td>
 			<td>
 				<select name="type" class="form-control" required>
 					<option selected="selected" disabled>

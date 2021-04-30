@@ -94,8 +94,8 @@ function plotScatter(idrow, idcol) {
 	var namerow = $("#test" + idrow).text();
 	var namecol = $("#test" + idcol).text();
 	// Test data from the list computed in correlation.php
-	var testrow = testInfo.find(x => x.label === namerow);
-	var testcol = testInfo.find(x => x.label === namecol);
+	var testrow = testInfo.find(x => x.label.toString() === namerow);
+	var testcol = testInfo.find(x => x.label.toString() === namecol);
 
 	var trace = [{
 		x: testcol.values,
@@ -165,7 +165,7 @@ function getData() {
 			
 			// Test data and dimension for the splom are updated
 			testInfo = data.testInfo;
-			splomWH = Object.keys(data.testInfo).length * 130;
+			splomWH = Math.max(500, Object.keys(data.testInfo).length * 130);
 			plotSplom();
 			
 			// Restores the possibility to change data again
@@ -214,7 +214,7 @@ function plotSplom() {
 	// avoid overflows on the axis
 	var splomBreak = testInfo.map(obj => { 
 		return {
-			label:	obj.label.replaceAll(" ", "<br>"), 
+			label:	obj.label.toString().replaceAll(" ", "<br>"), 
 			values: obj.values 
 		}
 	});

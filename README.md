@@ -1,7 +1,7 @@
 [English version](README-en.md)
 
 # progettoRAM
-Il progetto RAM (Ricerca Attività Motorie) è un sistema di registro elettronico con funzionalità statistiche per i professori di educazione fisica.
+Il progetto RAM (Ricerca Attività Motorie) è un sistema di registro elettronico con funzionalità statistiche per i professori di educazione fisica; consiste in un'applicazione web fruibile da desktop o mobile.
 
 ## Funzionalità
 Le funzionalità del sistema si articolano su diverse sezioni, accessibili a diverse tipologie di utenti:
@@ -123,8 +123,19 @@ Le versioni delle dipendenze sono invece:
 | [Plotly.js](https://github.com/plotly/plotly.js) | 1.58.4   | MIT License |
 
 ## Deploy
+Al fine di effettuare il deploy dell'applicazione su un server sono necessari alcuni passaggi:
+* Download della repository
+* Esecuzione di [Composer](https://getcomposer.org/) in `/src`
+* Importazione del database MySQL; maggiori informazioni nel [README del database](database/README.md)
+* Impostazione di un server web con Document root `/src`
+* Creazione e modifica delle configurazioni dei file; maggiori informazioni nel [README del codice sorgente](src/README.md)
 
-Ulteriori informazioni sono inserite nei README per il [database](database/README.md) e per il [codice sorgente](src/README.md).
+Prestare sempre attenzione ai permessi delle varie cartelle.
+
+## Roadmap
+Alcune future aggiunte per l'applicazione:
+* Aggiunta di una pagina per l'analisi di varianza nella sezione statistica
+* Realizzazione di uno script bash per il deploy
 
 ## Autori
 [@rb-sl](https://github.com/rb-sl)
@@ -133,3 +144,14 @@ Ulteriori informazioni sono inserite nei README per il [database](database/READM
 Questa applicazione è rilasciata con la [GNU Affero General Public License v3.0](LICENSE).
 
 ## Immagini
+Sezione di registro
+![Registro di uno studente](images/demo/student_reg.png)
+![Registro mobile](images/demo/register_mobile.png)
+
+Sezione di gestione test e voti
+![Tabella di valutazione](images/demo/grading.png)
+
+Sezione statistica
+![Statistiche test](images/demo/test_stats.png)
+![Matrice di correlazione](images/demo/correlation_matrix.png)
+![Matrice di dispersione](images/demo/splom.png)

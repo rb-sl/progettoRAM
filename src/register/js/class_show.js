@@ -46,6 +46,9 @@ $("#btnadd").click(function() {
 					+ " name='ntest[" + id + "]' pattern='^[+-]?\\d+(\\.\\d+)?$'> " 
 					+ "<span class='unit_name'></span></td>");
 			});
+
+			// Adds td's to statistics rows
+			$(".r_stat").append("<td class='new'></td>");
 			
 			// Moves the table to show the new entries
 			$("#tos").scrollLeft(1000);

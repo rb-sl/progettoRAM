@@ -59,7 +59,7 @@ if(chk_auth(PROFESSOR))
 		visualizzati sono:<br>
 		<ul>
 			<li>
-				<b>Classe del test</b>: è la classificazione del test, che ricade in una 
+				<b>Tipo di test</b>: è la classificazione del test, che ricade in una 
 				delle seguenti:
 				<ul>
 <?php
@@ -82,7 +82,7 @@ while($row = $unit->fetch_assoc())
 				maggiori o minori
 			</li>
 			<li>
-				<b>Tipo di valori</b>: serve a determinare alcune statistiche e agevolare 
+				<b>Tipo di dati</b>: serve a classificare meglio i test e agevolare 
 				l'inserimento delle prove. I valori possibili sono:
 				<ul>
 <?php
@@ -129,14 +129,14 @@ if(chk_auth(PROFESSOR))
 	<h4 id="modtst">Aggiungere e modificare test</h4>
 	<p>
 		Per creare un nuovo test accedere alla sezione Test e Valutazioni e premere su 
-		<span class="primarycolor">Aggiungi nuovo</span>, inserendo le informazioni richieste;
+		<span class="primarycolor">Aggiungi nuovo</span>;
 		i campi testuali, a parte nome e valutazione, possono essere lasciati vuoti se non 
-		necessari. Al termine dell'inserimento premere <span class="warningcolor">Inserisci test</span>.
+		necessari. Al termine dell'inserimento premere su <span class="warningcolor">Inserisci test</span>.
 	</p>
 	<p>
 		La procedura di modifica è analoga, ed è accessibile dalla pagina di un test premendo su 
 		<span class="warningcolor">Modifica test</span>; le modifiche saranno effettive dopo aver 
-		confermato con <span class="warningcolor">Aggiorna valori test</span>.
+		confermato con <span class="warningcolor">Aggiorna test</span>.
 		<b>NB</b>: Modificare i parametri di un test non modifica i valori inseriti nel database.
 	</p>
 	<p>
@@ -161,11 +161,11 @@ if(chk_auth(PROFESSOR))
 	<h4 id="fav">Modificare la lista di test preferiti</h4>
 	<p>
 		Dalla pagina di Test e valutazioni è possibile premere su <span class="warningcolor">Modifica 
-		preferiti</span> per accedere a una lista di selezione dei test (in cui sono riportati alcuni 
+		preferiti</span> per accedere a una lista dei test (in cui sono riportati alcuni 
 		dettagli premendo su <span class="primarycolor">Mostra informazioni</span>); se non si è
-		interessati a condurne uno se ne può deselezionare la casella e premere su 
-		<span class="primarycolor">Aggiorna</span>. A questo punto il nome del test apparirà 
-		disabilitato e non sarà più proposto al momento dell'inserimento di nuove prove nel registro.
+		interessati a condurne uno se ne può deselezionare la casella. Dopo aver premuto su 
+		<span class="primarycolor">Aggiorna</span>, il nome del test apparirà disabilitato e non 
+		sarà più proposto al momento dell'inserimento di nuove prove nel registro.
 	</p>
 	<p>
 		Per riabilitare un test è sufficiente riattivare la sua casella e salvare.

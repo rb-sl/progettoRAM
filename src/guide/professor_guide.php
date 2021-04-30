@@ -43,13 +43,13 @@ chk_access(PROFESSOR);
 		Dalla pagina di registro, premendo il pulsante <span class="primarycolor">Aggiungi classe</span>, 
 		è possibile registrare nel database una nuova classe. Premendo <span class="primarycolor">Promuovi 
 		classe precedente</span> e selezionando la classe da promuovere vengono compilati automaticamente i 
-		dati della classe e viene importata la lista degli studenti (<em>Studenti promossi nella nuova classe</em>). 
+		nuovi dati e viene importata la lista degli studenti (<em>Studenti promossi nella nuova classe</em>). 
 		Per non importare uno studente deselezionarne la voce. 
 	</p>
 	<p>
 		Nella stessa pagina si possono aggiungere nuovi studenti, inserendo le informazioni richieste 
 		nella tabella Nuovi studenti. Se uno di questi presentasse dati congruenti con quelli già presenti 
-		nel sistema viene data la possibilità di selezionarne la provenienza (<em>Possibili studenti già 
+		nel sistema viene data la possibilità di importare i loro profili (<em>Possibili studenti già 
 		registrati</em>).
 	</p>
 	<p>
@@ -62,23 +62,23 @@ chk_access(PROFESSOR);
 		contiene l'elenco degli studenti della classe e le loro prove; passando il puntatore su una prova 
 		è possibile visualizzare in sovrimpressione la data in cui è stata effettuata.
 		Premere il pulsante <span class="primarycolor">Medie e mediane</span> per visualizzare o nascondere
-		alcune statistiche relative ai test.
+		queste statistiche per i test.
 	</p>
 	<p>
 		Sono possibili le seguenti operazioni sui dati:
 		<ul>
 			<li>
 				<b>Aggiungere prove</b>: premendo <span class="warningcolor">Aggiungi test</span> è possibile 
-				insrerire le prove di un test. Selezionare dal menu a tendina il test desiderato e inserire 
+				inserire le prove di un test. Selezionare dal menu a tendina il test desiderato e inserire 
 				i valori (Viene caricata anche l'unità di misura da utilizzare nell'inserimento). Facendo 
-				doppio click su una cella vuota è possibile aggiungere una singola prova a test già registrati. 
+				doppio click su una cella vuota è possibile aggiungere una singola prova a test già registrati
 			</li>
 			<li>
-				<b>Modificare prove</b>: facendo doppio click sul valore di una prova è possibile modificarlo. 
+				<b>Modificare prove</b>: facendo doppio click sul valore di una prova è possibile modificarlo
 			</li>
 			<li>
 				<b>Eliminare prove</b>: fare doppio click sul valore della prova da eliminare e cancellarne il 
-				contenuto.
+				contenuto
 			</li>
 		</ul>
 
@@ -109,7 +109,7 @@ chk_access(PROFESSOR);
 		della classe e gestirne gli studenti. Le modalità sono analoghe a quelle 
 		dell'<a href="#addcl">inserimento della classe</a>.
 		Premere <span class="warningcolor">Aggiorna classe</span> per salvare le modifiche, 
-		<span class="warningcolor">Annulla</span> per annullarle o <span class="dangercolor">Elimina classe</span> 
+		<span class="warningcolor">Annulla</span> per tornare indietro o <span class="dangercolor">Elimina classe</span> 
 		per rimuoverla dal database; per rimuovere specifici studenti dalla classe deselezionarne la voce 
 		e salvare le modifiche.
 	</p>

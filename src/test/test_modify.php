@@ -115,7 +115,7 @@ else
 			</td>
 		</tr>
 		<tr>
-			<td>Tipo di valori:</td>
+			<td>Tipo di dati:</td>
 			<td>
 				<select name="type" class="form-control" required>
 <?php
@@ -151,7 +151,7 @@ while($row=$ttest->fetch_assoc())
 		Valutazione:<br>
 		<textarea class="txt" name="grading" required><?=$test['assessment']?></textarea>
 	</div>
-	<input type="submit" id="submit" class="btn btn-warning marginunder" value="Aggiorna valori test">
+	<input type="submit" id="submit" class="btn btn-warning marginunder" value="Aggiorna test">
 </form>
 
 <?php show_postmain(); ?>

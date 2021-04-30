@@ -57,7 +57,7 @@ foreach($test as $idcol => $namecol)
 	foreach($test as $idrow => $namerow)
 		// Due to the matrix's simmetry, only the lower half is calculated,
 		// taking advantage of the lexicographical order in the query
-		if($namerow <= $namecol)
+		if(strnatcmp($namerow, $namecol) <= 0)
 		{
 			$r = calc_r($idcol, $stats[$idcol], $idrow, $stats[$idrow]);
 			
