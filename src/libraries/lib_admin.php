@@ -111,12 +111,14 @@ function compile_text($text)
 
 		// Removes any extra spaces at start and end
 		$line = trim($line, " ");
-
+		// Changes possible open tags to their html representation
+		$line = str_replace("<", "&#60;", $line);
+		
 		// If the line is a title the header is set
 		// An error is thrown if there is only the opening tag
-		if($line[0] == "<")
+		if(strpos($line, "&#60;") === 0)
 			if(strpos($line, ">") !== false)
-				$line = preg_replace("/<(.*?)>/", "<h3>$1</h3>", $line);
+				$line = preg_replace("/&#60;(.*?)>/", "<h3>$1</h3>", $line);
 			else
 				return array($num, "Errore di titolo");
 		// If the line is part of a list
@@ -194,5 +196,111 @@ function compile_text($text)
 	}
 
 	return $compiled;
+}
+
+// Function to show the guide in pages that use the simplified markup
+function print_markup_guide()
+{
+?>
+	<ul>
+		<li>
+			Racchiudendo una riga tra i simboli<samp> < > </samp>viene generato un titolo; es.
+			<div class="flexrow">
+				<div class="ulflexdiv">&#60;Titolo></div>
+				<div>&rarr;</div>
+				<div class="ulflexdiv"><h3 class="nomargin">Titolo</h3></div>
+			</div>
+		</li>
+		<li>
+			Il simbolo<samp> - </samp>permette di creare una lista non numerata; es.
+			<div class="flexrow">
+				<div class="ulflexdiv">
+					- Elemento 1<br>
+					- Elemento 2
+				</div>
+				<div>&rarr;</div>
+				<div class="ulflexdiv">
+					<ul class="nomargin">
+						<li>Elemento 1</li>
+						<li>Elemento 2</li>
+					</ul>
+				</div>
+			</div>
+		</li>
+		<li>
+			Il simbolo<samp> # </samp>permette di creare una lista numerata; es.
+			<div class="flexrow">
+				<div class="ulflexdiv">
+					# Elemento 1<br>
+					# Elemento 2
+				</div>
+				<div>&rarr;</div>
+				<div class="ulflexdiv">
+					<ol class="nomargin">
+						<li>Elemento 1</li>
+						<li>Elemento 2</li>
+					</ol>
+				</div>
+			</div>
+		</li>
+		<li>
+			I simboli<samp> - </samp>e<samp> # </samp>possono essere combinati per creare 
+			liste annidate; es.
+			<div class="flexrow">
+				<div class="ulflexdiv">
+					- Elemento 1<br>
+					-# Elemento 2<br>
+					- Elemento 3
+				</div>
+				<div>&rarr;</div>
+				<div class="ulflexdiv">
+					<ul class="nomargin">
+						<li>Elemento 1</li>
+						<ol class="nomargin">
+							<li>Elemento 2</li>
+						</ol>
+						<li>Elemento 3</li>
+					</ul>
+				</div>
+			</div>
+		</li>
+		<li>
+			Un simbolo<samp> \ </samp>a inizio riga permette di ignorare le regole 
+			precedenti e stampare il testo normalmente; es.
+			<div class="flexrow">
+				<div class="ulflexdiv">
+					\&#60;Titolo><br>
+					\- Elemento <br>
+					\Elemento
+				</div>
+				<div>&rarr;</div>
+				<div class="ulflexdiv">
+					&#60;Titolo><br>
+					- Elemento<br>
+					Elemento
+				</div>
+			</div>
+		</li>
+	</ul>
+<?php
+}
+
+// Function to print a hidden markup guide
+function print_markup_menu()
+{
+?>
+	<div class="testcard">
+		<h3 id="guide_header" class="card-header textcenter"> 
+			<button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#guide" 
+				aria-expanded="false" aria-controls="#guide">Mostra guida</button>
+		</h3>
+
+		<div id="guide" class="collapse textcenter">
+			<div class="card card-body">
+				<?php print_markup_guide(); ?>
+			</div>
+		</div>
+	</div>
+<?php
 }
 ?>

@@ -18,6 +18,7 @@
 
 // Front end page to modify the application's description
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_admin.php";
 chk_access(ADMINISTRATOR);
 connect();
 show_premain("Modifica descrizione");
@@ -45,6 +46,8 @@ else
 		<a href="/admin/admin.php" class="btn btn-warning marginunder">Indietro</a>
 		<input type="submit" class="btn btn-primary marginunder" value="Aggiorna">
 	</h2>
+
+	<?php print_markup_menu(); ?>
 
 <?php
 if(isset($_SESSION['syntax_error']))

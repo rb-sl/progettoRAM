@@ -18,6 +18,7 @@
 
 // Front end page to modify the index's text
 include $_SERVER['DOCUMENT_ROOT']."/libraries/general.php";
+include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_admin.php";
 chk_access(ADMINISTRATOR);
 connect();
 show_premain("Modifica annuncio");
@@ -50,6 +51,8 @@ else
 	Annuncio in home page
 	<a href="/admin/admin.php" class="btn btn-warning marginunder">Indietro</a>
 </h2>
+
+<?php print_markup_menu(); ?>
 
 <form action="announcement_update.php" method="POST">
 	<div class="containerflex">

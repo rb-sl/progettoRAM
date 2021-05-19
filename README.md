@@ -56,7 +56,7 @@ La sezione permette di gestire i test e i voti, sia in generale sia per l'utente
 ### Statistica
 La sezione statistica permette di elaborare i dati presenti nell'applicazione; offre funzionalità di:
 
-* Visualizzazione della suddivisione delle prove per
+* Visualizzazione del numero di prove suddivise per
 	* Test
 	* Sesso
 	* Classe
@@ -113,7 +113,7 @@ Il sistema è stato utilizzato in diversi ambienti secondo la tabella:
 | DBMS              | MySQL 5.5.62                  | MySQL 8.0.22              | MariaDB 10.1.48  |
 | PHP               | 7.3.8                         | 7.4.11                    | 7.0.33           |
 
-Le versioni delle dipendenze sono invece:
+Le versioni delle dipendenze sono (riportate anche in [composer.json](src/composer.json)):
 
 |                                                  | Versione | Licenza     |
 | ------------------------------------------------ | -------- | ----------- |
@@ -124,7 +124,7 @@ Le versioni delle dipendenze sono invece:
 
 ## Deploy
 Al fine di effettuare il deploy dell'applicazione su un server sono necessari alcuni passaggi:
-* Download della repository
+* Download della repository (dalla sezione [releases](https://github.com/rb-sl/progettoRAM/releases))
 * Esecuzione di [Composer](https://getcomposer.org/) in `/src`
 * Importazione del database MySQL; maggiori informazioni nel [README del database](database/README.md)
 * Impostazione di un server web con Document root `/src`
@@ -145,8 +145,8 @@ Questa applicazione è rilasciata con la [GNU Affero General Public License v3.0
 
 ## Immagini
 Sezione di registro
-![Registro di uno studente](images/demo/student_reg.png)
 ![Registro mobile](images/demo/register_mobile.png)
+![Registro di uno studente](images/demo/student_reg.png)
 
 Sezione di gestione test e voti
 ![Tabella di valutazione](images/demo/grading.png)
