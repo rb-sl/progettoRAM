@@ -11,7 +11,7 @@ La struttura del database è esportata nel file [progettoRAM.sql](progettoRAM.sq
 * `unit`: sono preimpostate le unità più comuni
 * `user`: È già inserito l'utente `admin`
 
-Modificare alla riga `508` il parametro `$PASSWORD` con un valore a scelta per permettere l'accesso  del primo utente con accesso amministrativo; le altre informazioni saranno modificabili dalla pagina di profilo.
+Modificare alla riga `508` il parametro `$PASSWORD` con un valore a scelta per permettere l'accesso del primo utente con accesso amministrativo; le altre informazioni saranno modificabili dalla pagina di profilo.
 
 Per creare il database è sufficiente importare il file `progettoRAM.sql` nel DBMS MySQL.
 
@@ -22,7 +22,7 @@ Per creare il database è sufficiente importare il file `progettoRAM.sql` nel DB
 La tabella `user` contiene le informazioni degli utenti dell'applicazione; i campi sono:
 * `user_id`: Identificativo dell'utente (PK)
 * `username`: Nome utente (UQ)
-* `password`: La password dell'utente
+* `password`: La password dell'utente (Sotto hash MD5)
 * `privileges`: Illustra il livello di accesso all'applicazione per l'utente
 * `granted_by`: Campo utile a conoscere la gerarchia di assegnazione dei privilegi
 * `firstname`: Nome dell'utente
@@ -36,13 +36,13 @@ La tabella `user` contiene le informazioni degli utenti dell'applicazione; i cam
 
 ### Grade
 La tabella `grade` contiene i voti assegnabili dal sistema:
-* `grade_id`: Identificativo del voto
+* `grade_id`: Identificativo del voto (PK)
 * `grade`: Voto (UQ)
 * `color`: Il colore con cui sono mostrati i voti e i valori percentili o standard ad esso associati
 
 ### Grading
 `grading` è la tabella ponte tra `user` e `grade`; associa a un utente la sua tabella di valutazione:
-* `grading_id`: Chiave primaria della tupla
+* `grading_id`: Identificativo della tupla (PK)
 * `user_fk`: Utente proprietario della tabella
 * `grade_fk`: Voto
 * `percentile`: Valore percentile massimo assegnato al voto
@@ -68,7 +68,7 @@ I campi `class`, `section`, `class_year` e `school_fk` costituiscono chiave unic
 
 ### Student
 La tabella `student` contiene l'anagrafica degli studenti:
-* `student_id`: Identificativo dell'utente
+* `student_id`: Identificativo dello studente (PK)
 * `lastname`: Cognome dello studente
 * `firstname`: Nome dello studente
 * `gender`: Sesso dello studente
@@ -102,8 +102,8 @@ La tabella `instance` rappresenta il ponte tra `student` e `class`, collegando o
 * `equipment`: Indicazioni sull'equipaggiamento da utilizzare per il test
 * `execution`: Indicazioni per l'esecuzione del test
 * `suggestions`: Suggerimenti per l'insegnante
-* `test_limit`: Limite massimo del test
-* `assessment`: Indicazioni su come debba essere valutato il test
+* `test_limit`: Descrizione del limite massimo del test
+* `assessment`: Indicazioni su come debba essere valutato il test (ovvero cosa inserire nel database)
 
 ### Data type
 La tabella `data_type` contiene i tipi di dati associati ai test:
@@ -118,7 +118,7 @@ La tabella `testtype` indica le classi di test presenti nel sistema:
 
 ### Unit
 Nella tabella `unit` sono salvate le unità di misura disponibili:
-* `unit_id`: Identificativo dell'unità
+* `unit_id`: Identificativo dell'unità (PK)
 * `unit_name`: Nome dell'unità
 * `symbol`: Simbolo dell'unità
 

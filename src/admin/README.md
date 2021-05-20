@@ -47,7 +47,7 @@ Script backend per l'unione di due profili.
 Script backend per la separazione di un profilo in due.
 
 # File in /admin/test/
-Strumenti per modificare le informazioni relative ai test nel sistema. Le pagine funzionano in modo analogo per unità, tipo dei dati e classe dei test e si suddividono nei seguenti tipi.
+Strumenti per modificare le informazioni relative ai test nel sistema. Le pagine funzionano in modo analogo per unità, tipo dei dati e tipi dei test e si suddividono nei seguenti tipi.
 
 ## File di modifica
 Le pagine [unit.php](test/unit.php), [testtype.php](test/testtype.php) e [datatype.php](test/datatype.php) mostrano una tabella in cui è possibile aggiungere, eliminare o modificare un elemento del rispettivo tipo.

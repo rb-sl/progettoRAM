@@ -17,8 +17,8 @@ Le descrizioni dei file e delle loro funzioni sono disponibili al termine di que
 ![Struttura](../images/progettoRAM.svg)
 
 L'immagine mostra la struttura dei file dell'applicazione, codificati secondo colore:
-* Blu: script con componenti front-end
-* Giallo: script back-end
+* Blu: script PHP con componenti front-end
+* Giallo: script PHP back-end
 * Arancione: file di sorgente JavaScript
 * Verde: file di sorgente CSS
 
@@ -27,7 +27,7 @@ Anche le relazioni tra i file sono codificate con frecce di colore:
 * Blu: inclusione
 * Rosso: chiamata asincrona
 
-Non sono mostrate le relazioni di inclusione per `general.php`, utilizzata in tutte le pagine.
+Non sono mostrate le relazioni di inclusione per `general.php`, utilizzata in tutte le pagine PHP.
 
 ## Deploy e file da aggiungere o modificare
 Affinché l'applicazione funzioni correttamente sono necessarie alcune impostazioni aggiuntive, dopo aver impostato il server web (es. Apache) con root folder la cartella `src`.

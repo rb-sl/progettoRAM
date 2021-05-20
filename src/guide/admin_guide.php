@@ -139,10 +139,8 @@ $none = get_privilege(NONE);
 		<?php print_markup_guide(); ?>
 	</p>
 	<p>
-		In caso di simboli non riconosciuti viene mostrato un messaggio
-		e viene chiesto di modificare il testo inserito. <b>NB:</b> è possibile
-		aggiungere tag HTML, ma questi non vengono controllati; si consiglia quindi di
-		prestarvi attenzione.
+		In caso di simboli che non rispettano le regole viene mostrato un messaggio
+		e viene chiesto di modificare il testo inserito.
 	</p>
 
 	<h4 id="motd">Modificare il testo mostrato in home page</h4>
