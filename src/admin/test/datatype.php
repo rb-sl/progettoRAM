@@ -51,8 +51,8 @@ $unit_st->close();
 while($row = $ret->fetch_assoc())
 {
 	echo "  <tr>
-				<td id='c1_".$row['datatype_id']."'>".$row['datatype_name']."</td>
-				<td id='c2_".$row['datatype_id']."'>".$row['step']."</td>
+				<td id='c1_".htmlentities($row['datatype_id'])."'>".htmlentities($row['datatype_name'])."</td>
+				<td id='c2_".htmlentities($row['datatype_id'])."'>".htmlentities($row['step'])."</td>
 				<td>
 					<div>
 						<button type='button' id='mod_".$row['datatype_id']."' class='btn btn-warning btnmenu mod'>
@@ -60,8 +60,9 @@ while($row = $ret->fetch_assoc())
 						</button>"; 
 
 	if($row['n'] == 0)
-		echo "<a href='datatype_delete.php?id=".$row['datatype_id']."' class='btn btn-danger btnmenu'"
-			.confirm("Il tipo di test ".$row['datatype_name']." passo ".$row['step']." sarà eliminato").">Elimina</a>";
+		echo "<a href='datatype_delete.php?id=".htmlentities($row['datatype_id'])."' class='btn btn-danger btnmenu'"
+			.confirm("Il tipo di test ".htmlentities($row['datatype_name'])." passo "
+			.htmlentities($row['step'])." sarà eliminato").">Elimina</a>";
 
 	echo  "         </div>
 				</td>

@@ -40,18 +40,18 @@ if($rettest->num_rows == 0)
 
 $test = $rettest->fetch_assoc();
 
-show_premain($test['test_name']);
+show_premain(htmlentities($test['test_name']));
 ?>
-<h2>Informazioni <?=$test['test_name']?></h2>
+<h2>Informazioni <?=htmlentities($test['test_name'])?></h2>
 
 <table class="table table-light table-striped marginunder">
 	<tr>
 		<td>Tipo di test:</td>
-		<td class="halfwidth"><?=$test['testtype_name']?></td>
+		<td class="halfwidth"><?=htmlentities($test['testtype_name'])?></td>
 	</tr>
 	<tr>
 		<td>Unità di misura:</td>
-		<td><?=$test['unit_name']?></td>
+		<td><?=htmlentities($test['unit_name'])?></td>
 	</tr>
 	<tr>
 		<td>Valori migliori:</td>
@@ -60,44 +60,45 @@ show_premain($test['test_name']);
 	</tr>
 	<tr>
 		<td>Tipo di dati:</td>
-		<td><?=$test['datatype_name']?></td>
+		<td><?=htmlentities($test['datatype_name'])?></td>
 	</tr>
 	<tr>
 		<td>Sensibilità del test:</td>
-		<td><?=$test['step']." ".$test['symbol']?></td>
+		<td><?=$test['step']." ".htmlentities($test['symbol'])?></td>
 	</tr>
 	<tr>
 		<th colspan="2" class="textcenter">Informazioni aggiuntive</th>
 	</tr>
 	<tr>
 		<td>Posizione:</td>
-		<td><?=($test['position'] ? $test['position'] : "-")?></td>
+		<td><?=($test['position'] ? htmlentities($test['position']) : "-")?></td>
 	</tr>
 	<tr>
 		<td>Materiale aggiuntivo:</td>
-		<td><?=($test['equipment'] ? $test['equipment'] : "-")?></td>
+		<td><?=($test['equipment'] ? htmlentities($test['equipment']) : "-")?></td>
 	</tr>
 	<tr>
 		<td>Esecuzione:</td>
-		<td><?=($test['execution'] ? $test['execution'] : "-")?></td>
+		<td><?=($test['execution'] ? htmlentities($test['execution']) : "-")?></td>
 	</tr>
 	<tr>
 		<td>Consigli:</td>
-		<td><?=($test['suggestions'] ? $test['suggestions'] : "-")?></td>
+		<td><?=($test['suggestions'] ? htmlentities($test['suggestions']) : "-")?></td>
 	</tr>
 	<tr>
 		<td>Limite:</td>
-		<td><?=($test['test_limit'] ? $test['test_limit'] : "-")?></td>
+		<td><?=($test['test_limit'] ? htmlentities($test['test_limit']) : "-")?></td>
 	</tr>
 	<tr>
 		<td>Valutazione:</td>
-		<td><?=$test['assessment']?></td>
+		<td><?=htmlentities($test['assessment'])?></td>
 	</tr>
 </table>
 
 <?php
 if(chk_auth(PROFESSOR_GRANTS))
-	echo "<div class='marginunder'><a href='./test_modify.php?id=".$_GET['id']."' class='btn btn-warning'>Modifica test</a></div>";
+	echo "<div class='marginunder'><a href='./test_modify.php?id=".$_GET['id']
+		."' class='btn btn-warning'>Modifica test</a></div>";
 	
 show_postmain();
 ?>

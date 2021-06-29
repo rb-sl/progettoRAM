@@ -50,16 +50,16 @@ $unit_st->close();
 while($row = $ret->fetch_assoc())
 {
 	echo "  <tr>
-				<td id='c1_".$row['testtype_id']."'>".$row['testtype_name']."</td>
+				<td id='c1_".htmlentities($row['testtype_id'])."'>".htmlentities($row['testtype_name'])."</td>
 				<td>
 					<div>
-						<button type='button' id='mod_".$row['testtype_id']."' class='btn btn-warning btnmenu mod'>
+						<button type='button' id='mod_".htmlentities($row['testtype_id'])."' class='btn btn-warning btnmenu mod'>
 							Modifica
 						</button>"; 
 
 	if($row['n'] == 0)
-		echo "<a href='testtype_delete.php?id=".$row['testtype_id']."' class='btn btn-danger btnmenu'"
-			.confirm("Il tipo di test ".$row['testtype_name']." sarà eliminato").">Elimina</a>";
+		echo "<a href='testtype_delete.php?id=".htmlentities($row['testtype_id'])."' class='btn btn-danger btnmenu'"
+			.confirm("Il tipo di test ".htmlentities($row['testtype_name'])." sarà eliminato").">Elimina</a>";
 
 	echo  "         </div>
 				</td>

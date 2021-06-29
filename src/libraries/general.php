@@ -144,13 +144,7 @@ function connect()
 // Function to request the confirmation of a client-side action
 function confirm($quest)
 {
-	return "onclick=\"return confirm('".addslashes(quoteHTML($quest)).". Procedere?');\"";
-}
-
-// Changes " in &quot; for visualization purposes
-function quoteHTML($str)
-{
-	return str_replace("\"", "&quot;", $str);
+	return "onclick=\"return confirm('".htmlentities($quest).". Procedere?');\"";
 }
 
 // strtoupper enriched with accents for italian letters
@@ -190,8 +184,10 @@ function year_span()
 function prepare_stmt($query)
 {
 	global $mysqli;
+
 	if(!($stmt = $mysqli->prepare($query)))                                                                                                                                                                                                    
 		query_error("prepare", $query);
+	
 	return $stmt;
 }
 
@@ -279,7 +275,7 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 							<ul class="navbar-nav ms-auto" aria-labelledby="navbarDropdown">	
 								<li class="nav-item dropdown">
 									<a id="logindropdown" href="#" class="dropdown-toggle nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false"> 
-										<?=(isset($_SESSION["username"]) ? $_SESSION["username"] : "Login")?> <span class="caret"></span>
+										<?=(isset($_SESSION["username"]) ? htmlentities($_SESSION["username"]) : "Login")?> <span class="caret"></span>
 									</a>
 			
 									<ul id="login-dp" class="dropdown-menu dropdown-menu-end" aria-labelledby="logindropdown">
@@ -447,7 +443,7 @@ function show_postmain()
 		<script>
 			$(function() {
 				$(document).ready(function() {
-					alert("<?=addslashes($_SESSION['alert'])?>");
+					alert("<?=htmlentities($_SESSION['alert'])?>");
   				});
   	  		});
 		</script>

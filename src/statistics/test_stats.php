@@ -37,26 +37,29 @@ if($ret->num_rows == 0)
 }
 
 $test = $ret->fetch_assoc();
-show_premain("Statistiche ".$test['test_name'], true);
+$testname = htmlentities($test['test_name']);
+$symbol = htmlentities($test['symbol']);
+
+show_premain("Statistiche $testname", true);
 
 $data = get_stats($_GET['id']);
 $records = get_records($_GET['id']);
 $graph = graph_vals($_GET['id']);
 ?>
 
-<h2>Statistiche <span id="datatype_name"><?=$test['test_name']?></span></h2>
+<h2>Statistiche <span id="datatype_name"><?=$testname?></span></h2>
 
 <table class="table table-light table-striped marginunder">
    	<tr><td>Numero totale di prove: <span id="n"><?=$data['n']?></span></td>
-   	<tr><td>Media: <span id="avg"><?=number_format($data['avg'], 2)?></span> <?=$test['symbol']?></td></tr>
-	<tr><td>Mediana: <span id="med"><?=number_format($data['med'], 2)?></span> <?=$test['symbol']?></td></tr>
-   	<tr><td>Deviazione Standard: <span id="std"><?=number_format($data['std'], 2)?></span> <?=$test['symbol']?></td></tr>	
+   	<tr><td>Media: <span id="avg"><?=number_format($data['avg'], 2)?></span> <?=$symbol?></td></tr>
+	<tr><td>Mediana: <span id="med"><?=number_format($data['med'], 2)?></span> <?=$symbol?></td></tr>
+   	<tr><td>Deviazione Standard: <span id="std"><?=number_format($data['std'], 2)?></span> <?=$symbol?></td></tr>	
 </table>
 
 <h3 class="nomargin">
 	Record positivo: 
 	<span id="best"><?=$records['best']?></span> 
-	<?=$test['symbol']?>
+	<?=$symbol?>
 </h3>
 
 <?=$records['list']?>
@@ -64,7 +67,7 @@ $graph = graph_vals($_GET['id']);
 <h3 class="section">
 	Record negativo: 
 	<span id="worst"><?=$records['worst']?></span>
-	<?=$test['symbol']?>
+	<?=$symbol?>
 </h3>
 
 <h3>

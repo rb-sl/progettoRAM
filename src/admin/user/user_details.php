@@ -33,32 +33,32 @@ $user = $ret->fetch_assoc();
 
 $dg = can_downgrade($user['user_id']);
 
-show_premain("Profilo di ".$user['username']);
+show_premain("Profilo di ".htmlentities($user['username']));
 ?>
 
 <h2>
-	Profilo di <?=$user['username']?>
+	Profilo di <?=htmlentities($user['username'])?>
 	<a href="/admin/user/users.php" class="btn btn-warning">Indietro</a>
 </h2>
 
-<form action="user_update.php?id=<?=$_GET['id']?>" method="POST" class="tdiv">
+<form action="user_update.php?id=<?=htmlentities($_GET['id'])?>" method="POST" class="tdiv">
 	<div class="inner">
 		<table class="table table-light table-striped marginunder">
 			<tr>
 				<td class="col">Cognome</td>
-				<td class="col"><?=$user['lastname']?></td>
+				<td class="col"><?=htmlentities($user['lastname'])?></td>
 			</tr>
 			<tr>
 				<td class="col">Nome</td>
-				<td class="col"><?=$user['firstname']?></td>
+				<td class="col"><?=htmlentities($user['firstname'])?></td>
 			</tr>
 			<tr>
 				<td class="col">E-mail</td>
-				<td class="col"><?=$user['email']?></td>
+				<td class="col"><?=htmlentities($user['email'])?></td>
 			</tr>
 			<tr>
 				<td class="col">Scuola</td>
-				<td class="col"><?=$user['school_name']?></td>
+				<td class="col"><?=htmlentities($user['school_name'])?></td>
 			</tr>
 			<tr>
 				<td class="col">Privilegi</td>

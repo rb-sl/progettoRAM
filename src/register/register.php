@@ -37,17 +37,17 @@ if(!isset($_SESSION['school']))
 }
 
 if(isset($user['lastname']))
-	$lastname = $user['lastname'];
+	$lastname = htmlentities($user['lastname']);
 else
 	$lastname = "";
 
 if(isset($user['firstname']))
-	$firstname = $user['firstname'];
+	$firstname = htmlentities($user['firstname']);
 else
 	$firstname = "";
 ?>
 
-<h2>Registro di <?=($lastname != "" or $firstname != "") ? $firstname." ".$lastname : $_SESSION['username'] ?></h2>
+<h2>Registro di <?=($lastname != "" or $firstname != "") ? $firstname." ".$lastname : htmlentities($_SESSION['username']) ?></h2>
 
 <div>
 	<a href="/register/class_add.php" class="btn btn-primary marginunder">Aggiungi classe</a>
@@ -100,7 +100,7 @@ while($row = $ret->fetch_assoc())
 		echo "</div><div>";
 
 	if(chk_auth(ADMINISTRATOR) and isset($row['lastname']))
-		$name = "\n".$row['lastname'];
+		$name = "\n".htmlentities($row['lastname']);
 	else 
 		$name = "";
 
@@ -110,7 +110,8 @@ while($row = $ret->fetch_assoc())
 		$class= "btn-warning";
 
 	echo "<a href='/register/class_show.php?id=".$row['class_id']."' class='btn btncl $class' 
-		title='".$row['school_name']."\n".$row['city'].$name."'>".$row['class'].$row['section']."</a> ";
+		title='".htmlentities($row['school_name'])."\n".htmlentities($row['city']).$name."'>"
+		.$row['class'].htmlentities($row['section'])."</a> ";
 	
 	$class = $row['class'];
 }

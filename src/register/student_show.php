@@ -41,9 +41,13 @@ if($rclass === null)
 	exit;
 }
 
-show_premain("Dati di ".$stud['lastname']." ".$stud['firstname']." (".$stud['gender'].")");
+$lastname = htmlentities($stud['lastname']);
+$firstname = htmlentities($stud['firstname']);
+$gender = $stud['gender'];
+
+show_premain("Dati di $lastname $firstname ($gender)");
 ?>
-<h2>Prove di <?=$stud['lastname']?> <?=$stud['firstname']?> (<?=$stud['gender']?>)</h2>
+<h2>Prove di <?=$lastname?> <?=$firstname?> (<?=$gender?>)</h2>
 
 <div>
 	<a href="/register/student_modify.php?id=<?=$stud['student_id']?>" class="btn btn-warning marginunder">Modifica</a>
@@ -71,7 +75,7 @@ while($row = $retprove->fetch_assoc())
 {
 	$vals[$row['test_fk']][] = $row['value'];
 	// The date is added if it is not a placeholder
-	$rclass[$row['class_fk']][$row['test_fk']] = ($row['date'] != "0000-00-00" ? "title='".$row['date']."'" : "").">"
+	$rclass[$row['class_fk']][$row['test_fk']] = ($row['date'] != "0000-00-00" ? " title='".$row['date']."'" : "").">"
 		.$row['value']." ".$row['symbol']."</td";
 }
 $result_st->close();
@@ -83,12 +87,12 @@ $rmed = "";
 $idtest = [];
 while($row = $ret->fetch_assoc())
 {
-  	echo "<td id='c".$row['test_id']."' class='col topfix'>".$row['test_name']."</td>";
+  	echo "<td id='c".$row['test_id']."' class='col topfix'>".htmlentities($row['test_name'])."</td>";
 	$idtest[] = $row['test_id'];
 
-	$ravg .= "<td id='r".$row['test_id']."'>".$row['avg']." ".$row['symbol']."</td>";	
+	$ravg .= "<td id='r".$row['test_id']."'>".$row['avg']." ".htmlentities($row['symbol'])."</td>";	
 	$rmed .= "<td id='r".$row['test_id']."' class='borderunder'>"
-		.arr_med($vals[$row['test_id']], 2)." ".$row['symbol']."</td>";
+		.arr_med($vals[$row['test_id']], 2)." ".htmlentities($row['symbol'])."</td>";
 }
 echo "</tr>
 	<tr class='dat r_stat jQhidden'>

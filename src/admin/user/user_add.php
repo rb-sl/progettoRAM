@@ -58,7 +58,7 @@ $school_st = prepare_stmt("SELECT * FROM school ORDER BY school_name");
 $ret = execute_stmt($school_st);
 $school_st->close();
 while($row = $ret->fetch_assoc())
-	echo "<option value='".$row['school_id']."'>".$row['school_name']."</option>";
+	echo "<option value='".htmlentities($row['school_id'])."'>".htmlentities($row['school_name'])."</option>";
 ?>
 	  			</select>
 	  		</td>

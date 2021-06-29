@@ -47,10 +47,15 @@ function build_chk_table($class, $prom = false)
 	// If this is the modification due to promotion, students already promoted to other classes
 	// will not be shown
 	if($prom)
+	{
+		$year = date("Y");
+		if(date("m") < 8)
+			$year--;
 		$chkp = " AND student_id NOT IN (
 			SELECT DISTINCT(student_fk) FROM instance 
 			JOIN class ON class_fk=class_id 
-			WHERE class_year=YEAR(CURDATE()))";
+			WHERE class_year=$year)";
+	}
 	else
 		$chkp = "";
 	
@@ -68,14 +73,15 @@ function build_chk_table($class, $prom = false)
 		$table .= "<tr>
 			<td class='containerflex'>
 				<div class='form-check'>
-					<input type='checkbox' id='c".$row['student_id']."' name='pr[]' value='".$row['student_id']."' 
-						class='form-check-input chkpro' checked='true'>
-					<label id='lbl".$row['student_id']."' class='form-check-label' for='c".$row['student_id']."'></label>
+					<input type='checkbox' id='c".$row['student_id']."' name='pr[]' value='"
+						.$row['student_id']."' class='form-check-input chkpro' checked='true'>
+					<label id='lbl".$row['student_id']."' class='form-check-label' for='c"
+						.$row['student_id']."'></label>
 				</div>
 			</td>
-			<td>".$row['lastname']."</td>
-			<td>".$row['firstname']."</td>
-			<td>".strtoupper($row['gender'])."</td>
+			<td>".htmlentities($row['lastname'])."</td>
+			<td>".htmlentities($row['firstname'])."</td>
+			<td>".htmlentities(strtoupper($row['gender']))."</td>
 		</tr>";
 	}
 	$table .= "</table>
@@ -109,9 +115,10 @@ function col_stud()
 		$rstud[$row['instance_id']]['strow'] = "<tr id='tr".$row['instance_id']."' class='dat tdr'>
 			<td id='st".$row['instance_id']."' class='leftfix $cl'>
 				<div><a href='student_show.php?id=".$row['student_id']
-					."' class='resizetext' title=\"".quoteHTML($row['lastname']." ".$row['firstname'])
-					." (".strtoupper($row['gender']).")\" tabindex='-1'>".$row['lastname']." "
-					.(isset($row['firstname'][0]) ? $row['firstname'][0]."." : "")."</a></div>
+					."' class='resizetext' title=\"".htmlentities($row['lastname']." ".$row['firstname'])
+					." (".htmlentities(strtoupper($row['gender'])).")\" tabindex='-1'>"
+					.htmlentities($row['lastname'])." ".(isset($row['firstname'][0]) ? $row['firstname'][0]."." : "")
+					."</a></div>
 			</td>";
 		$i++;
 	}
@@ -155,11 +162,13 @@ function col_class($stud)
 			$elnk = "";
 		}
 		
-		$rclass[$row['class_id']]['name'] = $row['class'].$row['section']." ".$row['class_year']."/".($row['class_year'] + 1);
+		$rclass[$row['class_id']]['name'] = $row['class'].htmlentities($row['section'])." ".$row['class_year']
+			."/".($row['class_year'] + 1);
 		
 		$rclass[$row['class_id']]['clrow']  = "<tr id='tr".$row['class_id']."' class='dat tdr'>
 			<td id='st".$row['class_id']."' class='leftfix $cl'>"
-			.$slnk.$row['class'].$row['section']." ".$row['class_year']."/".($row['class_year'] + 1).$elnk."</td>";
+			.$slnk.$row['class'].htmlentities($row['section'])." ".$row['class_year']."/"
+			.($row['class_year'] + 1).$elnk."</td>";
 		$i++;
 	}
 
@@ -1009,8 +1018,9 @@ function show_cl_form($cl = 0, $section = "", $year = null)
 			<option value='4'$c4>Quarta</option>
 			<option value='5'$c5>Quinta</option>
   		</select> 
-  	Sezione: <input type='text' id='section' class='smalltext' name='section' value='".quoteHTML($section)."' required>
-  	Anno: <input  type='text' id='year1' class='textright smalltext' name='class_year' value='$year' required>/<span id='year2'>".($year + 1)."</span>";
+  	Sezione: <input type='text' id='section' class='smalltext' name='section' value='".htmlentities($section)."' required>
+  	Anno: <input  type='text' id='year1' class='textright smalltext' name='class_year' value='$year' required>/<span id='year2'>"
+	  .($year + 1)."</span>";
 	
 	return;
 }

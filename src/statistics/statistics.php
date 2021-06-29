@@ -65,7 +65,7 @@ $test_r = execute_stmt($test_st);
 $test_st->close();
 
 while($row = $test_r->fetch_assoc())
-	echo "<tr><td><a href='test_stats.php?id=".$row['test_id']."'>".$row['test_name']."</a></td></tr>";
+	echo "<tr><td><a href='test_stats.php?id=".$row['test_id']."'>".htmlentities($row['test_name'])."</a></td></tr>";
 ?>
 </table>
 

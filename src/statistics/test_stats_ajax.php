@@ -51,5 +51,6 @@ switch($_GET['graph'])
 		break;
 }
 
+header("Content-Type: application/json");
 echo json_encode(array_merge($upvals, $rec, $graph));
 ?>

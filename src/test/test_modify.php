@@ -54,7 +54,7 @@ $unit_st->close();
 
 <form method="POST" action="./test_update.php?id=<?=$_GET['id']?>" class="marginunder">
 	<h2>
-		Modifica <input type="text" value="<?=quoteHTML($test['test_name'])?>" name="testname" required> 
+		Modifica <input type="text" value="<?=htmlentities($test['test_name'])?>" name="testname" required> 
 		<a href="./test_show.php?id=<?=$_GET['id']?>" class="btn btn-warning">Annulla</a> 
 <?php
 echo "<a href='./test_delete.php?id=".$_GET['id']."' ".confirm("Il test ".$test['test_name']." sarà eliminato")
@@ -72,7 +72,7 @@ while($row = $ctest->fetch_assoc())
 	echo "<option value='".$row['testtype_id']."'";
 	if($row['testtype_id'] == $test['testtype_fk'])
 		echo " selected='selected'";
-	echo ">".$row['testtype_name']."</option>";
+	echo ">".htmlentities($row['testtype_name'])."</option>";
 }
 ?>
 				</select>
@@ -88,7 +88,7 @@ while($row = $retunit->fetch_assoc())
 	echo "<option value='".$row['unit_id']."'";
 	if($row['unit_id'] == $test['unit_fk'])
 		echo " selected='selected'";
-	echo ">".$row['unit_name']."</option>";
+	echo ">".htmlentities($row['unit_name'])."</option>";
 }       
 
 if($test['positive_values'] == GREATER)
@@ -109,8 +109,8 @@ else
 			<td>Valori migliori:</td>
 			<td>
 				<select name="positive" class="form-control" required>
-					<option value="<?=GREATER?>" <?=$g?>>Maggiori</option>
-					<option value="<?=LOWER?>" <?=$m?>>Minori</option>
+					<option value="<?=GREATER?>"<?=$g?>>Maggiori</option>
+					<option value="<?=LOWER?>"<?=$m?>>Minori</option>
 				</select>
 			</td>
 		</tr>
@@ -124,7 +124,7 @@ while($row=$ttest->fetch_assoc())
 	echo "<option value='".$row['datatype_id']."'";
 	if($row['datatype_id'] == $test['datatype_fk'])
 		echo " selected='selected'";
-	echo ">".$row['datatype_name']."</option>";
+	echo ">".htmlentities($row['datatype_name'])."</option>";
 }
 ?>
 				</select>
@@ -151,7 +151,7 @@ while($row=$ttest->fetch_assoc())
 		Valutazione:<br>
 		<textarea class="txt" name="grading" required><?=$test['assessment']?></textarea>
 	</div>
-	<input type="submit" id="submit" class="btn btn-warning marginunder" value="Aggiorna test">
+	<input type="submit" id="submit" class="btn btn-primary marginunder" value="Aggiorna test">
 </form>
 
 <?php show_postmain(); ?>

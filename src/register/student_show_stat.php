@@ -41,13 +41,17 @@ if($rclass === null)
 	exit;
 }
 
-show_premain("Dati di ".$stud['lastname']." ".$stud['firstname']." (".$stud['gender'].")", true);
+$lastname = htmlentities($stud['lastname']);
+$firstname = htmlentities($stud['firstname']);
+$gender = $stud['gender'];
+
+show_premain("Dati di $lastname $firstname ($gender)", true);
 
 // The page opens on the percentile option, so the relative colors are loaded
 $color = get_color_prc();
 ?>
 
-<h2>Elaborazione dati di <span id="student"><?=$stud['lastname']?> <?=$stud['firstname']?> (<?=$stud['gender']?>)</span></h2>
+<h2>Elaborazione dati di <span id="student"><?=$lastname?> <?=$firstname?> (<?=$gender?>)</span></h2>
 
 <div>
 	<a href="student_show.php?id=<?=$_GET['id']?>" class="btn btn-primary marginunder">Mostra valori</a> 
@@ -81,7 +85,7 @@ while($row = $ret->fetch_assoc())
 	$test['positive_values'][$row['test_id']] = $row['positive_values'];
 	$test['name'][$row['test_id']] = $row['test_name'];
 
-	$test['row'] .= "<td id='test".$row['test_id']."' class='col topfix'>".$row['test_name']."</td>";
+	$test['row'] .= "<td id='test".$row['test_id']."' class='col topfix'>".htmlentities($row['test_name'])."</td>";
 }
 
 // Constuction of the table's body with percentile values
@@ -123,7 +127,7 @@ foreach($rclass as $idcl => $class)
 		if(isset($rstud['val'][$idcl][$idt]))
 		{
 			if(isset($rstud['date'][$idcl][$idt]) and $rstud['date'][$idcl][$idt] != "0000-00-00")
-				echo "title='".$rstud['date'][$idcl][$idt]."'";
+				echo " title='".$rstud['date'][$idcl][$idt]."'";
 
 			echo " vcolor='#".$rstud['color'][$idcl][$idt]."'>"
 				.$rstud['val'][$idcl][$idt]."</td>";

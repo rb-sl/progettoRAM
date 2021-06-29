@@ -25,7 +25,7 @@ connect();
 $cl = get_class_info($_GET['id']);
 chk_prof($cl['user_fk']);
 
-show_premain("Modifica ".$cl['class'].$cl['section']." ".$cl['class_year']."/".($cl['class_year'] + 1));
+show_premain("Modifica ".$cl['class'].htmlentities($cl['section'])." ".$cl['class_year']."/".($cl['class_year'] + 1));
 ?>
 
 <h2>Modifica Classe <a href="class_show.php?id=<?=$_GET['id']?>" class="btn btn-warning">Annulla</a></h2>

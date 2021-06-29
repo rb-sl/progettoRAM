@@ -64,7 +64,7 @@ if(chk_auth(PROFESSOR))
 				<ul>
 <?php
 while($row = $ctst->fetch_assoc())
-	echo "<li>".$row['testtype_name']."</li>\n";
+	echo "<li>".htmlentities($row['testtype_name'])."</li>\n";
 ?>
 				</ul>
 			</li>
@@ -73,7 +73,7 @@ while($row = $ctst->fetch_assoc())
 				<ul>
 <?php
 while($row = $unit->fetch_assoc())
-	echo "<li>".$row['unit_name']."</li>\n";
+	echo "<li>".htmlentities($row['unit_name'])."</li>\n";
 ?>              
 				</ul>
 			</li>

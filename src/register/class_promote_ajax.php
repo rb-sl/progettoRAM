@@ -37,5 +37,6 @@ $data['section'] = $newclass['section'];
 $data['class_year'] = $newclass['class_year'] + 1;
 $data['list'] = build_chk_table($_GET['toprom'], true);
 
+header('Content-Type: application/json');
 echo json_encode($data);
 ?>

@@ -31,5 +31,6 @@ $cond = cond_builder();
 $stats = get_general_stats($cond);
 $graph = misc_graph($cond);
 
+header("Content-Type: application/json");
 echo json_encode(array_merge($stats, $graph));
 ?>

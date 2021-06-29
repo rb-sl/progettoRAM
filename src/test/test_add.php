@@ -44,7 +44,7 @@ $ctest = execute_stmt($clt_st);
 $clt_st->close();
 
 while($row = $ctest->fetch_assoc())
-	echo "<option value='".$row['testtype_id']."'>".$row['testtype_name']."</option>";
+	echo "<option value='".$row['testtype_id']."'>".htmlentities($row['testtype_name'])."</option>";
 ?>
 				</select>
 			</td>
@@ -59,7 +59,7 @@ $retunita = execute_stmt($unit_st);
 $unit_st->close();
 
 while($row = $retunita->fetch_assoc())
-	echo "<option value='".$row['unit_id']."'>".$row['unit_name']."</option>";
+	echo "<option value='".$row['unit_id']."'>".htmlentities($row['unit_name'])."</option>";
 ?>
 				</select>
 			</td>
@@ -84,7 +84,7 @@ $ttest = execute_stmt($test_st);
 $test_st->close();
 
 while($row = $ttest->fetch_assoc())
-	echo "<option value='".$row['datatype_id']."'>".$row['datatype_name']."</option>";
+	echo "<option value='".$row['datatype_id']."'>".htmlentities($row['datatype_name'])."</option>";
 ?>
 				</select>
 			</td>

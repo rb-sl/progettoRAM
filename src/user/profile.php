@@ -31,25 +31,25 @@ $ret = execute_stmt($prof_st);
 $user = $ret->fetch_assoc();
 $prof_st->close();
 ?>
-<h2>Profilo di <?=$_SESSION['username']?></h2>
+<h2>Profilo di <?=htmlentities($_SESSION['username'])?></h2>
 
 <form method="POST" action="/user/profile_update.php">
 	<table class="marginunder">
 		<tr>
 			<td class="textright">Utente:&nbsp;</td>
-			<td><input class="form-control" type="text" name="user" value="<?=$user['username']?>"></td>
+			<td><input class="form-control" type="text" name="user" value="<?=htmlentities($user['username'])?>"></td>
 		</tr>
 		<tr>
 			<td class="textright">Nome:&nbsp;</td>
-			<td><input class="form-control" type="text" name="firstname" value="<?=$user['firstname']?>"></td>
+			<td><input class="form-control" type="text" name="firstname" value="<?=htmlentities($user['firstname'])?>"></td>
 		</tr>
 		<tr>
 			<td class="textright">Cognome:&nbsp;</td>
-			<td><input class="form-control" type="text" name="lastname" value="<?=$user['lastname']?>"></td>
+			<td><input class="form-control" type="text" name="lastname" value="<?=htmlentities($user['lastname'])?>"></td>
 		</tr>
 		<tr>
 			<td class="textright">E-mail:&nbsp;</td>
-			<td><input class="form-control" type="text" name="email" value="<?=$user['email']?>"></td>
+			<td><input class="form-control" type="text" name="email" value="<?=htmlentities($user['email'])?>"></td>
 		</tr>
 		<tr>
 			<td class="textright">Scuola:&nbsp;</td>
@@ -65,7 +65,7 @@ while($row = $ret->fetch_assoc())
 	echo "<option value='".$row['school_id']."'";
 	if($row['school_id'] == $user['school_fk'])
 		echo " selected";
-	echo ">".$row['school_name']."</option>";
+	echo ">".htmlentities($row['school_name'])."</option>";
 }
 ?> 
 				</select>

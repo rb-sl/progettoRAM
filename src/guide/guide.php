@@ -208,10 +208,10 @@ $admins->close();
 while($row = $ret->fetch_assoc())
 {	
 	echo "<p class='marginunder'>
-			<b>".$row['firstname']." ".$row['lastname']."</b><br>";
+			<b>".htmlentities($row['firstname'])." ".htmlentities($row['lastname'])."</b><br>";
 	if($row['show_email'])
-		echo "E-mail: <a href='mailto:".$row['email']."'>".$row['email']."</a><br>";
-	echo $row['contact_info']."</p>";
+		echo "E-mail: <a href='mailto:".htmlentities($row['email'])."'>".htmlentities($row['email'])."</a><br>";
+	echo htmlentities($row['contact_info'])."</p>";
 }
 ?>
 	</div>

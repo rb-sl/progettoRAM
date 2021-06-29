@@ -66,7 +66,7 @@ $ret = execute_stmt($prom_st);
 $prom_st->close();
 
 while($row = $ret->fetch_assoc())
-	echo "<option value='".$row['class_id']."'>".$row['class'].$row['section']."</option>";
+	echo "<option value='".$row['class_id']."'>".$row['class'].htmlentities($row['section'])."</option>";
 ?>
 			</select>
 		</div>

@@ -703,7 +703,6 @@ function graph_prc($id, $cond = null)
 	return $graph;
 }
 
-
 // Function to get labels and values for multiple box plots
 function graph_multibox($id, $group, $cond = null)
 {
@@ -861,7 +860,7 @@ function get_test_correlation($cond = null)
 	
 	while($row = $res->fetch_assoc())
 	{
-		$ret['names'][$row['test_id']] = $row['test_name'];
+		$ret['names'][$row['test_id']] = htmlentities($row['test_name']);
 		$ret['positive'][$row['test_id']] = $row['positive_values'];
 		$ret['statistics'][$row['test_id']] = get_stats($row['test_id'], $cond);
 		$ret['list'] .= ", ".$row['test_id'];

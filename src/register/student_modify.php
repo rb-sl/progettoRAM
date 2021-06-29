@@ -47,12 +47,12 @@ $stud = $ret->fetch_assoc();
 
 if(!$stud)
 {
-	$_SESSION['alert']="Permessi insufficienti per visualizzare le informazioni";
+	$_SESSION['alert'] = "Permessi insufficienti per visualizzare le informazioni";
 	header("Location: /register/register.php");
 	exit;
 }
 
-if($stud['gender']=="m")
+if($stud['gender'] == "m")
 {
 	$m = "checked";
 	$f = "";
@@ -70,11 +70,11 @@ else
 	<table class="table table-light table-striped studtable marginunder">
 		<tr>
 			<th>Cognome:</th>
-			<td><input type="text" name="lastname" value="<?=$stud['lastname']?>" required></td>
+			<td><input type="text" name="lastname" value="<?=htmlentities($stud['lastname'])?>" required></td>
 		</tr>
 		<tr>
 			<th>Nome:</th>
-			<td><input type="text" name="firstname" value="<?=$stud['firstname']?>" required></td>
+			<td><input type="text" name="firstname" value="<?=htmlentities($stud['firstname'])?>" required></td>
 		</tr> 
 		<tr>
 			<th>Sesso:</th>

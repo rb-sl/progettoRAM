@@ -30,6 +30,7 @@ $info = $ret->fetch_assoc();
 <h2>Progetto RAM</h2>
 
 <?php
+// No HTML escape as it's already compiled
 if(isset($info['index_compiled']))
 	echo $info['index_compiled'];
 ?>

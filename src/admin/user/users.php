@@ -54,10 +54,10 @@ while($row = $ret->fetch_assoc())
 	$privileges = get_privilege($row['privileges']);
 
 	echo "<tr>
-			<td class='col'>".$row['username']."</td>
-			<td class='col'>".$row['lastname']."</td>
-			<td class='col'>".$row['school_name']."</td>
-			<td class='col'>".$row['last_login']."</td>
+			<td class='col'>".htmlentities($row['username'])."</td>
+			<td class='col'>".htmlentities($row['lastname'])."</td>
+			<td class='col'>".htmlentities($row['school_name'])."</td>
+			<td class='col'>".htmlentities($row['last_login'])."</td>
 			<td class='col'>
 				<div class='boxdiv'><div class='colorbox ".$privileges['color']."'></div></div>
 				<div class='privdiv'>".$privileges['text']."</div>
@@ -65,7 +65,7 @@ while($row = $ret->fetch_assoc())
 			<td class='col'>";
 
 	if($row['user_id'] != $_SESSION['id'])
-		echo "<a href='user_details.php?id=".$row['user_id']."' class='btn btn-info'>Dettagli</a>";
+		echo "<a href='user_details.php?id=".htmlentities($row['user_id'])."' class='btn btn-info'>Dettagli</a>";
 			
 	echo "</td>
 		</tr>";

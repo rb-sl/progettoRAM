@@ -36,7 +36,13 @@ $unit_st->bind_param("i", $_GET['test']);
 $unit = execute_stmt($unit_st);
 $unit_st->close();
 if($unit->num_rows > 0)
-	$data = $unit->fetch_assoc();
+{
+	$row = $unit->fetch_assoc();
+	$data['symbol'] = htmlentities($row['symbol']);
+	$data['step'] = $row['step'];
+}
+	
 
+header("Content-Type: application/json");
 echo json_encode($data);
 ?>

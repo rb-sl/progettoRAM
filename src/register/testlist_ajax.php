@@ -41,8 +41,10 @@ $data = [];
 while($row = $ret->fetch_assoc())
 {
 	$buff['id'] = $row['test_id'];
-	$buff['name'] = $row['test_name'];
+	$buff['name'] = htmlentities($row['test_name']);
 	$data[] = $buff;
-}         
+}
+
+header("Content-Type: application/json");
 echo json_encode($data);
 ?>

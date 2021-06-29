@@ -51,16 +51,21 @@ $unit_st->close();
 while($row = $ret->fetch_assoc())
 {
 	echo "  <tr>
-				<td id='c1_".$row['unit_id']."'>".$row['unit_name']."</td>
-				<td id='c2_".$row['unit_id']."'>".$row['symbol']."</td>
-				<td><div><button type='button' id='mod_".$row['unit_id']."' class='btn btn-warning btnmenu mod'>Modifica</button>"; 
+				<td id='c1_".htmlentities($row['unit_id'])."'>".htmlentities($row['unit_name'])."</td>
+				<td id='c2_".htmlentities($row['unit_id'])."'>".htmlentities($row['symbol'])."</td>
+				<td>
+					<div>
+						<button type='button' id='mod_".htmlentities($row['unit_id'])."' class='btn btn-warning btnmenu mod'>
+							Modifica
+						</button>"; 
 
 	if($row['n'] == 0)
-		echo "<a href='unit_delete.php?id=".$row['unit_id']."' class='btn btn-danger btnmenu'"
+		echo "<a href='unit_delete.php?id=".htmlentities($row['unit_id'])."' class='btn btn-danger btnmenu'"
 			.confirm("L'unità di misura ".$row['unit_name']." sarà eliminata").">Elimina</a>";
 
-	echo  "</div></td>
-		</tr>";
+	echo "			</div>
+				</td>
+			</tr>";
 }
 ?>
 		</table>

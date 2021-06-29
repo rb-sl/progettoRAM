@@ -26,13 +26,13 @@ connect();
 $cl = get_class_info($_GET['id']);
 chk_prof($cl['user_fk']);
 
-show_premain("Registro ".$cl['class'].$cl['section']." ".$cl['class_year']."/".($cl['class_year'] + 1), true);
+show_premain("Registro ".$cl['class'].htmlentities($cl['section'])." ".$cl['class_year']."/".($cl['class_year'] + 1), true);
 
 // The page opens on the percentile option, so the relative colors are loaded
 $color = get_color_prc();
 ?>
 
-<h2>Registro della classe <?=$cl['class'].$cl['section']?> - Anno <?=$cl['class_year']."/".($cl['class_year'] + 1)?></h2>
+<h2>Registro della classe <?=$cl['class'].htmlentities($cl['section'])?> - Anno <?=$cl['class_year']."/".($cl['class_year'] + 1)?></h2>
 
 <div>
 	<a href="class_show.php?id=<?=$_GET['id']?>" class="btn btn-primary marginunder">Registro della classe</a>
@@ -66,7 +66,7 @@ while($row = $ret->fetch_assoc())
 	$test['id'][] = $row['test_id'];
 	$test['positive_values'][$row['test_id']] = $row['positive_values'];
 
-	$test['row'] .= "<td id='c".$row['test_id']."' class='col topfix'>".$row['test_name']."</td>";
+	$test['row'] .= "<td id='c".$row['test_id']."' class='col topfix'>".htmlentities($row['test_name'])."</td>";
 }
 
 // Constuction of the table's body with percentile values
@@ -86,7 +86,8 @@ foreach($am['med'] as $idt => $med)
 // Prints the table header and information on average and median values
 echo $test['row']."
 		<td class='col topfix r_stat evenrow jQhidden'>Media totale</td>
-		<td id='tavg' class='col topfix r_stat jcol evenrow jQhidden' vcolor='#".(isset($am['tavg']['color']) ? $am['tavg']['color'] : "")."'>"
+		<td id='tavg' class='col topfix r_stat jcol evenrow jQhidden' vcolor='#"
+			.(isset($am['tavg']['color']) ? $am['tavg']['color'] : "")."'>"
 			.(isset($am['tavg']['val']) ? number_format($am['tavg']['val'], 5) : "-")."</td>
 	</tr>
 	<tr class='dat r_stat jQhidden'>
@@ -109,7 +110,7 @@ foreach($cstud as $idist => $stud)
 		if(isset($rstud['val'][$idist][$idt]))
 		{
 			if(isset($rstud['date'][$idist][$idt]) and $rstud['date'][$idist][$idt] != "0000-00-00")
-				echo "title='".$rstud['date'][$idist][$idt]."'";
+				echo " title='".$rstud['date'][$idist][$idt]."'";
 
 			echo " vcolor='#".$rstud['color'][$idist][$idt]."'>"
 				.$rstud['val'][$idist][$idt]."</td>";

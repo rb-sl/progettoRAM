@@ -54,14 +54,15 @@ foreach($st as $k => $stud)
 	if($ret->num_rows != 0)
 	{
 		$data[$k]['idel'] = $k;
-		$data[$k]['lastname'] = $lastname;
-		$data[$k]['firstname'] = $firstname;
-		$data[$k]['gender'] = $gender;
+		$data[$k]['lastname'] = htmlentities($lastname);
+		$data[$k]['firstname'] = htmlentities($firstname);
+		$data[$k]['gender'] = htmlentities($gender);
 
 		while($row = $ret->fetch_assoc())
 			$data[$k]['list'][] = "<div class='form-check'>
-				<input type='radio' id='ext".$row['student_id']."' class='form-check-input' name='ext[".$stud->lastname."_"
-				.$stud->firstname."_".$stud->gender."]' value='".$row['student_id']."'>
+				<input type='radio' id='ext".$row['student_id']."' class='form-check-input' name='ext["
+				.htmlentities($stud->lastname)."_".htmlentities($stud->firstname)."_"
+				.htmlentities($stud->gender)."]' value='".$row['student_id']."'>
 				<label class='form-check-label' for='ext".$row['student_id']."'>"
 				.$row['class'].$row['section']." ".$row['class_year']."/".($row['class_year'] + 1)
 				."</label>
@@ -70,5 +71,6 @@ foreach($st as $k => $stud)
 }
 $dup_st->close();
 
+header("Content-Type: application/json");
 echo json_encode($data);
 ?>

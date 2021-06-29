@@ -59,7 +59,7 @@ while($rowt = $rettest->fetch_assoc())
 						class='form-check-input chkfav' name='fav[]' value='".$rowt['test_id']."'$chk>
 
 					<label id='lbl".$rowt['test_id']."' class='form-check-label$class' for='fav".$rowt['test_id']."'>
-						".$rowt['test_name']."
+						".htmlentities($rowt['test_name'])."
 					</label>
 				</div>
 				<button type='button' id='btn".$rowt['test_id']."' 
@@ -70,17 +70,17 @@ while($rowt = $rettest->fetch_assoc())
 			<div id='coll".$rowt['test_id']."' class='collapse textcenter'>
 				<div class='card card-body'>
 					<h4><b>Posizione</b></h4>
-					<p>".($rowt['position'] == "" ? "-" : str_replace("\n", "<br>", $rowt['position']))."</p>
+					<p>".($rowt['position'] == "" ? "-" : str_replace("\n", "<br>", htmlentities($rowt['position'])))."</p>
 					<h4><b>Equipaggiamento</b></h4>
-					<p>".($rowt['equipment'] == "" ? "-" : str_replace("\n", "<br>", $rowt['equipment']))."</p>
+					<p>".($rowt['equipment'] == "" ? "-" : str_replace("\n", "<br>", htmlentities($rowt['equipment'])))."</p>
 					<h4><b>Esecuzione</b></h4>
-					<p>".($rowt['execution'] == "" ? "-" : str_replace("\n", "<br>", $rowt['execution']))."</p>
+					<p>".($rowt['execution'] == "" ? "-" : str_replace("\n", "<br>", htmlentities($rowt['execution'])))."</p>
 					<h4><b>Consigli</b></h4>
-					<p>".($rowt['suggestions'] == "" ? "-" : str_replace("\n", "<br>", $rowt['suggestions']))."</p>
+					<p>".($rowt['suggestions'] == "" ? "-" : str_replace("\n", "<br>", htmlentities($rowt['suggestions'])))."</p>
 					<h4><b>Limite</b></h4>
-					<p>".($rowt['test_limit'] == "" ? "-" : str_replace("\n", "<br>", $rowt['test_limit']))."</p>
+					<p>".($rowt['test_limit'] == "" ? "-" : str_replace("\n", "<br>", htmlentities($rowt['test_limit'])))."</p>
 					<h4><b>Valutazione</b></h4>
-					<p>".($rowt['assessment'] == "" ? "-" : str_replace("\n", "<br>", $rowt['assessment']))."</p>
+					<p>".($rowt['assessment'] == "" ? "-" : str_replace("\n", "<br>", htmlentities($rowt['assessment'])))."</p>
 				</div>
 			</div>
 

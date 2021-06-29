@@ -1,5 +1,5 @@
 vendor
 *.bak
 *.asta
-database/import_ram.sql
+database/import_ram*.sql
 images/progettoRAM.mwb

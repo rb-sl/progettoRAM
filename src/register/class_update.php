@@ -34,8 +34,8 @@ $chk_st->close();
 if($chk->num_rows > 0)
 {
 	$row = $chk->fetch_assoc();
-	$_SESSION['alert'] = "Errore: un'altra classe ".$_POST['cl'].$section." ".$_POST['class_year']
-		." / ".($_POST['class_year'] + 1)." è già registrata (".$row['school_name'].").";
+	$_SESSION['alert'] = "Errore: un'altra classe ".$row['class'].$row['section']." ".$row['class_year']
+		." / ".($row['class_year'] + 1)." è già registrata (".$row['school_name'].").";
 	header("Location: /register/class_modify.php?id=".$_GET['id']);
 	exit;
 }

@@ -51,6 +51,8 @@ if(isset($_POST['pr']))
 				$err['pr'][$idist] = $idtest;
 			}
 
+header("Content-Type: application/json");
+
 // No data is sent if correct
 if($acceptable)
 	echo json_encode(true);

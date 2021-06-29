@@ -51,8 +51,8 @@ $unit_st->close();
 while($row = $ret->fetch_assoc())
 {
 	echo "  <tr>
-				<td id='c1_".$row['school_id']."'>".$row['school_name']."</td>
-                <td id='c2_".$row['school_id']."'>".$row['city']."</td>
+				<td id='c1_".$row['school_id']."'>".htmlentities($row['school_name'])."</td>
+                <td id='c2_".$row['school_id']."'>".htmlentities($row['city'])."</td>
 				<td>
 					<div>
 						<button type='button' id='mod_".$row['school_id']."' class='btn btn-warning btnmenu mod'>

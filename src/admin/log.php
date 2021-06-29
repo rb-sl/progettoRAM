@@ -39,7 +39,7 @@ foreach($cont as $g)
 	</div>
   
 	<div class="logcontainer">
-		<textarea id="txt" class="logtxt"></textarea>
+		<pre id="txt" class="logtxt"></pre>
 	</div>
 </div>
 

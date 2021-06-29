@@ -29,7 +29,7 @@ $test_st->close();
 
 if($ret->num_rows > 0)
 {
-	$_SESSION['alert'] = "Errore: Un test con nome '".$_POST['test_name']."' è già presente nel sistema. Modifiche non effettuate";
+	$_SESSION['alert'] = "Errore: Un test con nome '".$_POST['test_name']."' è già presente nel sistema. Modifiche non effettuate.";
 	header("Location: ".$_SERVER['HTTP_REFERER']);
 	exit;
 }

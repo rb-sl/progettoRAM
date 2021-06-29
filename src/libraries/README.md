@@ -38,9 +38,6 @@ Funzione di connessione al database MySQL e controllo errori.
 ### `confirm($quest)`
 Mostra una richiesta di procedere all'utente.
 
-### `quoteHTML($str)`
-Trasforma il carattere `"` nella stringa per una corretta visualizzazione nel browser.
-
 ### `maiuscolo($stringa)`
 Stampa la versione maiuscola di una parola, comprese le vocali accentate.
 

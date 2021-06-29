@@ -40,7 +40,7 @@ foreach($test as $idc => $colname)
 	foreach($test as $idr => $rowname)
 		if($rowname <= $colname)
 		{
-			// Simmetric construction
+			// Symmetric construction
 			$data['matrix'][$idc][$idr] = calc_r($idc, $stats[$idc], $idr, $stats[$idr], $cond);
 			$data['matrix'][$idr][$idc] = $data['matrix'][$idc][$idr];
 		}
@@ -48,5 +48,6 @@ foreach($test as $idc => $colname)
 $data['testInfo'] = test_graph($testlist, $cond);
 $rval_st->close();
 
+header("Content-Type: application/json");
 echo json_encode($data)
 ?>

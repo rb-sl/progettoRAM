@@ -62,14 +62,14 @@ while(isset($_GET[$set.$num]))
 		{
 			$stud = [];
 			$stud['id'] = $row['student_id'];
-			$stud['name'] = $row['firstname'];
-			$stud['surname'] = $row['lastname'];
-			$stud['gender'] = $row['gender'];
+			$stud['name'] = htmlentities($row['firstname']);
+			$stud['surname'] = htmlentities($row['lastname']);
+			$stud['gender'] = htmlentities($row['gender']);
 
 			while($row and $row['student_id'] == $stud['id'])
 			{
-				$stud['classlist'][$row['class_id']] = $row['class'].$row['section']." "
-					.$row['class_year']."/".($row['class_year'] + 1);
+				$stud['classlist'][$row['class_id']] = htmlentities($row['class'].$row['section']." "
+					.$row['class_year']."/".($row['class_year'] + 1));
 				$row = $ret->fetch_assoc();
 			}
 
@@ -83,5 +83,6 @@ while(isset($_GET[$set.$num]))
 
 $src_st->close();
 
+header("Content-Type: application/json");
 echo json_encode($info);
 ?>

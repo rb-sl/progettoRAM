@@ -26,11 +26,11 @@ connect();
 $cl = get_class_info($_GET['id']);
 chk_prof($cl['user_fk']);
 
-show_premain("Registro ".$cl['class'].$cl['section']." ".$cl['class_year']."/".($cl['class_year'] + 1));
+show_premain("Registro ".$cl['class'].htmlentities($cl['section'])." ".$cl['class_year']."/".($cl['class_year'] + 1));
 ?>
 
 <h2>
-	Registro della classe <?=$cl['class'].$cl['section']?> - Anno <?=$cl['class_year']."/".($cl['class_year'] + 1)?> 
+	Registro della classe <?=$cl['class'].htmlentities($cl['section'])?> - Anno <?=$cl['class_year']."/".($cl['class_year'] + 1)?> 
 	<a href="./class_modify.php?id=<?=$_GET['id']?>" class="btn btn-warning">Modifica</a>
 </h2>
 
@@ -65,8 +65,8 @@ while($row = $retprove->fetch_assoc())
 {
 	$vals[$row['test_fk']][] = $row['value'];
 	// The date is added if it is not a placeholder
-	$rstud[$row['instance_id']][$row['test_fk']] = ($row['date'] != "0000-00-00" ? "title='".$row['date']."'" : "").">"
-		.$row['value']." ".$row['symbol']."</td";
+	$rstud[$row['instance_id']][$row['test_fk']] = ($row['date'] != "0000-00-00" ? " title='".$row['date']."'" : "").">"
+		.$row['value']." ".htmlentities($row['symbol']);
 }
 $result_st->close();
 
@@ -78,12 +78,12 @@ $rmed = "";
 $idtest = [];
 while($row = $ret->fetch_assoc())
 {
-  	echo "<td id='c".$row['test_id']."' class='col topfix'>".$row['test_name']."</td>";
+  	echo "<td id='c".$row['test_id']."' class='col topfix'>".htmlentities($row['test_name'])."</td>";
 	$idtest[] = $row['test_id'];
 
-	$ravg .= "<td id='r".$row['test_id']."'>".$row['avg']." ".$row['symbol']."</td>";	
+	$ravg .= "<td id='r".$row['test_id']."'>".$row['avg']." ".htmlentities($row['symbol'])."</td>";	
 	$rmed .= "<td id='r".$row['test_id']."' class='borderunder'>"
-		.arr_med($vals[$row['test_id']], 2)." ".$row['symbol']."</td>";
+		.arr_med($vals[$row['test_id']], 2)." ".htmlentities($row['symbol'])."</td>";
 }
 echo "</tr>
 	<tr class='dat r_stat jQhidden'>
@@ -102,9 +102,13 @@ foreach($rstud as $idist => $tds)
 	foreach($idtest as $idt)
    	{
 		echo "<td id='$idist"."_$idt' class='jdat r_$idist c_$idt'";
-   		if(isset($tds[$idt]))
+   		
+		if(isset($tds[$idt]))
 	   		echo $tds[$idt];
-		echo "></td>";
+		else 
+			echo ">";
+		
+		echo "</td>";
    	}
 	echo "</tr>\n";
 }

@@ -54,7 +54,7 @@ while($rowt = $rettest->fetch_assoc())
 	else
 		$class = "";
 
-	echo "<tr><td><a href='test_show.php?id=".$rowt['test_id']."'$class>".$rowt['test_name']."</a></td></tr>";
+	echo "<tr><td><a href='test_show.php?id=".$rowt['test_id']."'$class>".htmlentities($rowt['test_name'])."</a></td></tr>";
 }
 ?>
 </table>
@@ -82,7 +82,7 @@ if(chk_auth(ADMINISTRATOR))
   	while($p = $r->fetch_assoc())
 		echo "<option value='".$p['user_id']."'"
 			.($p['user_id'] == $_SESSION['id'] ? " selected" : "")
-			.">".$p['username']."</option>";
+			.">".htmlentities($p['username'])."</option>";
 	echo "</select>";
 }
 ?></h2>
