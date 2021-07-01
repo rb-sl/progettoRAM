@@ -23,9 +23,6 @@ Permette di scrivere `$action` nel log dell'applicazione, aggiungendo utente e i
 ### `chk_auth($privileges)`
 Restituisce una booleana per indicare se i privilegi sono sufficienti rispetto al parametro passato.
 
-### `set_error($error)`
-Imposta l'errore da mostrare all'utente.
-
 ### `chk_prof($user_fk)`
 Funzione di controllo per il privilegio di accesso di un professore a una classe. Un amministratore può sempre visualizzare le informazioni.
 
@@ -38,11 +35,26 @@ Funzione di connessione al database MySQL e controllo errori.
 ### `confirm($quest)`
 Mostra una richiesta di procedere all'utente.
 
+### `set_alert($msg)`
+Aggiunge un messaggio da mostrare all'utente nella successiva pagina
+
+### `display_alerts()`
+Mostra i messaggi salvati con `set_alert`
+
+### `set_error($error)`
+Imposta l'errore da mostrare all'utente.
+
+### `display_errors()`
+Mostra gli errori definiti da `set_error`
+
 ### `maiuscolo($stringa)`
 Stampa la versione maiuscola di una parola, comprese le vocali accentate.
 
 ### `year_span()`
 Ottiene il range di anni delle classi presenti nel sistema.
+
+### `get_current_year()`
+Ritorna l'annp scolastico attuale (la suddivisione `e effettuata ad agosto)
 
 ### `prepare_stmt($query)`
 Data una query, crea il prepared statement.

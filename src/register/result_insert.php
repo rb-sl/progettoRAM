@@ -31,6 +31,8 @@ $in_st->bind_param("iidd", $test, $instance, $value, $value);
 $del_st = prepare_stmt("DELETE FROM results WHERE test_fk=? AND instance_fk=?");
 $del_st->bind_param("ii", $test, $instance);
 
+$log = "";
+
 $insert = 0;
 $modify = 0;
 $delete = 0;
@@ -45,11 +47,16 @@ if(isset($_POST['ntest']))
 			execute_stmt($in_st);
 			$insert++;
 		}
+	if($insert > 0)
+		$log .= "\n>>> Nuove prove (Test $test): $insert";
 }
 
 // Old results updates - if a value is empty it is deleted
 if(isset($_POST['pr']))
 	foreach($_POST['pr'] as $test => $s)
+	{
+		$modify = 0;
+		$delete = 0;
 		foreach($s as $instance => $value)
 			if(is_numeric($value))
 			{
@@ -61,11 +68,16 @@ if(isset($_POST['pr']))
 				execute_stmt($del_st);
 				$delete++;
 			}
+		if($modify > 0)
+			$log .= "\n>>> Prove modificate (Test $test): $modify";
+		if($delete > 0)
+			$log .= "\n>>> Prove eliminate (Test $test): $delete";
+	}
 
 $in_st->close();
 $del_st->close();
 
-writelog("[prove] [classe: ".$_GET['cl']."] Prove da nuovo test: $insert; Prove modificate: $modify; Prove cancellate: $delete");
+writelog("Modifica prove della classe ".$_GET['cl'].$log);
 
 header("Location: ".$_SERVER['HTTP_REFERER']);
 ?>

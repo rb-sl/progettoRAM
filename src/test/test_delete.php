@@ -30,7 +30,7 @@ $test_st->close();
 
 if($rettest->num_rows == 0)
 {
-	$_SESSION['alert'] = "Errore: Test inesistente";
+	set_alert("Errore: Test inesistente");
 	header("Location: /test/test.php");
 	exit;
 }
@@ -52,14 +52,14 @@ if($r['n'] === 0)
 
 	writelog("Test ".$_GET['id']." cancellato");
 
-	$_SESSION['alert'] = "Test eliminato correttamente";
+	set_alert("Test eliminato correttamente");
 	header("Location: /test/test.php");
 }
 else
 {
 	writelog("Tentativo cancellazione test ".$_GET['id']." bloccato; esistono ".$r['n']." prove");
 
-	$_SESSION['alert'] = "Impossibile eliminare il test: esistono ".$r['n']." prove associate";
+	set_alert("Impossibile eliminare il test: esistono ".$r['n']." prove associate");
 	header("Location: /test/test_modify.php?id=".$_GET['id']);
 }
 

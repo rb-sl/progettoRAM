@@ -33,7 +33,7 @@ $user = $ret->fetch_assoc();
 // the hierarchy wrt the current user
 if(!can_downgrade($_GET['id']) and $_POST['privileges'] < $user['privileges'])
 {
-	$_SESSION['alert'] = "Modifica dei privilegi dell'utente non autorizzata";
+	set_alert("Modifica dei privilegi dell'utente non autorizzata");
 	header("Location: /admin/user/users.php");
 }
 
@@ -47,6 +47,6 @@ if($_POST['privileges'] != $user['privileges'])
 	$up_st->close();
 }
 
-$_SESSION['alert'] = "Privilegi aggiornati correttamente";
+set_alert("Privilegi aggiornati correttamente");
 header("Location: /admin/user/users.php");
 ?>

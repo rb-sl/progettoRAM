@@ -42,7 +42,7 @@ if($compiled != "")
 	if(isset($_POST['important']))
 		$compiled = "<h2 class='dangercolor'>>> Attenzione <<\n$compiled\n</h2>";
 	else
-		$compiled = "<h3 class='primarycolor'>$compiled</h3>";
+		$compiled = "<div class='announcement primarycolor'>$compiled</div>";
 else
 	$compiled = null;
 
@@ -52,6 +52,6 @@ execute_stmt($up_st);
 $up_st->close();
 
 writelog("Modifica messaggio in home");
-$_SESSION['alert'] = "Annuncio modificato correttamente";
+set_alert("Annuncio modificato correttamente");
 header("Location: /admin/announcement_modify.php");
 ?>

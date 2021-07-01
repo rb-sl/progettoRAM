@@ -45,6 +45,6 @@ if(isset($_POST['col1']))
 	writelog("Aggiornamento tipi test");
 }
 
-$_SESSION['alert'] = "Aggiornamento completato";
+set_alert("Aggiornamento completato");
 header("Location: /admin/test/testtype.php");
 ?>

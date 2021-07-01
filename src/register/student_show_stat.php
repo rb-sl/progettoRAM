@@ -36,7 +36,7 @@ $rclass = col_class($stud['student_id']);
 // The loading is interrupted if the user does not own at least one class with the student
 if($rclass === null)
 {
-	$_SESSION['alert'] = "Permessi insufficienti per visualizzare le informazioni";
+	set_alert("Permessi insufficienti per visualizzare le informazioni");
 	header("Location: /register/register.php");
 	exit;
 }

@@ -38,13 +38,13 @@ if($r['n'] === 0)
 
 	writelog("Unità ".$_GET['id']." cancellata");
 
-	$_SESSION['alert'] = "Unità di misura eliminata correttamente";
+	set_alert("Unità di misura eliminata correttamente");
 }
 else
 {
 	writelog("Tentativo cancellazione unità ".$_GET['id']." bloccato; esistono ".$r['n']." test associati");
 
-	$_SESSION['alert'] = "Impossibile eliminare l'unità: esistono ".$r['n']." test associati";
+	set_alert("Impossibile eliminare l'unità: esistono ".$r['n']." test associati");
 }
 
 header("Location: /admin/test/unit.php");

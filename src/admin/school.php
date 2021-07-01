@@ -60,7 +60,7 @@ while($row = $ret->fetch_assoc())
 						</button>"; 
 
 	if($row['n'] == 0)
-		echo "<a href='school_delete.php?id=".$row['school_id']."' class='btn btn-danger btnmenu'"
+		echo "<a href='school_delete.php?id=".$row['school_id']."' class='btn btn-danger btnmenu' "
 			.confirm("La scuola ".$row['school_name']." sarà eliminata").">Elimina</a>";
 
 	echo  "         </div>

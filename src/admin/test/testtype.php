@@ -58,8 +58,8 @@ while($row = $ret->fetch_assoc())
 						</button>"; 
 
 	if($row['n'] == 0)
-		echo "<a href='testtype_delete.php?id=".htmlentities($row['testtype_id'])."' class='btn btn-danger btnmenu'"
-			.confirm("Il tipo di test ".htmlentities($row['testtype_name'])." sarà eliminato").">Elimina</a>";
+		echo "<a href='testtype_delete.php?id=".htmlentities($row['testtype_id'])."' class='btn btn-danger btnmenu' "
+			.confirm("Il tipo di test ".$row['testtype_name']." sarà eliminato").">Elimina</a>";
 
 	echo  "         </div>
 				</td>

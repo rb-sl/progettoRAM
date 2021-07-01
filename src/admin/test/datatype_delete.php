@@ -38,13 +38,13 @@ if($r['n'] === 0)
 
 	writelog("Tipo di dato ".$_GET['id']." cancellato");
 
-	$_SESSION['alert'] = "Tipo di dato eliminato correttamente";
+	set_alert("Tipo di dato eliminato correttamente");
 }
 else
 {
 	writelog("Tentativo cancellazione tipo di dato ".$_GET['id']." bloccato; esistono ".$r['n']." test associati");
 
-	$_SESSION['alert'] = "Impossibile eliminare il tipo di dato: esistono ".$r['n']." test associati";
+	set_alert("Impossibile eliminare il tipo di dato: esistono ".$r['n']." test associati");
 }
 
 header("Location: /admin/test/datatype.php");

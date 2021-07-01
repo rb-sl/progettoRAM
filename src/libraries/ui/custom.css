@@ -533,6 +533,9 @@ td, th {
 .nomargin {
 	margin: 0px !important;
 }
+.announcement > * {
+	margin: 0px;
+}
 
 /* -----------
  * Input rules

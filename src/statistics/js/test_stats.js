@@ -118,7 +118,7 @@ function draw_graph_val(vals) {
 		title: $("#datatype_name").html() + " - Valori"
 	};
 
-	Plotly.newPlot("cnv", plotData, layout, {responsive: true});
+	Plotly.react("cnv", plotData, layout, {responsive: true});
 }
 
 // Function to draw a single box plot
@@ -141,7 +141,7 @@ function draw_graph_box(vals) {
 		}
 	};
 
-	Plotly.newPlot("cnv", data, layout, {responsive: true});	
+	Plotly.react("cnv", data, layout, {responsive: true});	
 }
 
 // Function to draw multiple box plots
@@ -168,7 +168,7 @@ function draw_graph_multibox(graph, plotType) {
 		title: $("#datatype_name").html() + " - " + $("#graph option:selected").html()
 	};
 
-	Plotly.newPlot("cnv", data, layout, {responsive: true});
+	Plotly.react("cnv", data, layout, {responsive: true});
 }
 
 // Function to deaw the percentiles plot
@@ -187,5 +187,5 @@ function draw_graph_prc(lbls, vals) {
 		title: $("#datatype_name").html() + " - Valori percentili"
 	};
 
-	Plotly.newPlot("cnv", plotData, layout, {responsive: true});
+	Plotly.react("cnv", plotData, layout, {responsive: true});
 }

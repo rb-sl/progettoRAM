@@ -39,7 +39,7 @@ foreach($_POST['percentile'] as $id => $percentile)
 }
 $up_st->close();
 
-$_SESSION['alert'] = "Voti aggiornati correttamente";
+set_alert("Voti aggiornati correttamente");
 writelog("Voti di $user modificati");
 
 header("Location: /test/test.php#grades"); 

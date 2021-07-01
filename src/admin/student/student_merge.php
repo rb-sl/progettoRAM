@@ -41,11 +41,11 @@ execute_stmt($up_st);
 // If different classes for the same year are specified an error
 // is returned by a trigger
 if($up_st->error)
-	$_SESSION['alert'] = $up_st->error;
+	set_alert($up_st->error);
 else
 {
 	writelog("Studenti $keepid e $delid uniti in $keepid");
-	$_SESSION['alert'] = "Studenti $keepid e $delid uniti in $keepid";
+	set_alert("Studenti $keepid e $delid uniti in $keepid");
 }
 
 $up_st->close();

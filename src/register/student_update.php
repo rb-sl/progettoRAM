@@ -36,7 +36,7 @@ if(!chk_auth(ADMINISTRATOR))
 	$chk_st->close();
 	if($ret->num_rows == 0)
 	{
-		$_SESSION['alert'] = "Permessi insufficienti per modificare le informazioni";
+		set_alert("Permessi insufficienti per modificare le informazioni");
 		header("Location: /register/register.php");
 		exit;
 	}
@@ -50,8 +50,8 @@ $up_st->bind_param("sssi", $lastname, $firstname, $_POST['gender'], $_GET['id'])
 execute_stmt($up_st);
 $up_st->close();
 
-writelog("[Aggiornamento informazioni studente] ".$_GET['id']);
-$_SESSION['alert'] = "Aggiornamento effettuato con successo";
+writelog("Aggiornamento informazioni studente ".$_GET['id']);
+set_alert("Aggiornamento effettuato con successo");
 
 header("Location: /register/student_show.php?id=".$_GET['id']);
 ?>

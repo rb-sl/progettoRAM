@@ -37,7 +37,7 @@ $stud_st = prepare_stmt("DELETE FROM student
 execute_stmt($stud_st);
 $stud_st->close();
 
-writelog("[Classe eliminata] ".$_GET['id']);
-$_SESSION['alert'] = "Classe eliminata correttamente";
+writelog("Classe ".$_GET['id']." eliminata");
+set_alert("Classe eliminata correttamente");
 header("Location: /register/register.php");
 ?>

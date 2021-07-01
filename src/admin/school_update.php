@@ -49,6 +49,6 @@ if(isset($_POST['col1']))
 	writelog("Aggiornamento scuole");
 }
 
-$_SESSION['alert'] = "Aggiornamento completato";
+set_alert("Aggiornamento completato");
 header("Location: /admin/school.php");
 ?>

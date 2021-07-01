@@ -30,7 +30,7 @@ $name_st->close();
 
 if($name->num_rows > 0)
 {
-	$_SESSION['alert'] = "Errore: Un altro test nominato \"".$_POST['testname']."\" è già presente nel sistema";
+	set_alert("Errore: Un altro test nominato \"".$_POST['testname']."\" è già presente nel sistema");
 	header("Location: ".$_SERVER['HTTP_REFERER']);
 	exit;
 }
@@ -56,7 +56,7 @@ $fav_st->bind_param("i", $id);
 execute_stmt($fav_st);
 $fav_st->close();
 
-writelog("[+test] $id ".$_POST['testname']);
+writelog("Inserimento test $id: ".$_POST['testname']);
 
 header("Location: /test/test_show.php?id=$id");
 exit;

@@ -42,6 +42,6 @@ execute_stmt($up_st);
 $up_st->close();
 
 writelog("Modifica descrizione del progetto");
-$_SESSION['alert'] = "Descrizione modificata correttamente";
+set_alert("Descrizione modificata correttamente");
 header("Location: /admin/project_modify.php");
 ?>

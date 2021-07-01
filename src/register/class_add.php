@@ -23,11 +23,7 @@ chk_access(PROFESSOR);
 connect();
 show_premain("Aggiunta classe");
 
-// Calculation of the previous school year; for the first quadrimester it is the year - 1,
-// for the second year - 2. The division is done for august
-$year = date("Y");
-if(date("m") < 8)
-	$year--;
+$year = get_current_year();
 ?>
 
 <h2>Aggiungi Classe</h2>

@@ -30,7 +30,7 @@ $test_st->close();
 
 if($rettest->num_rows == 0)
 {
-	$_SESSION['alert'] = "Errore: Test inesistente";
+	set_alert("Errore: Test inesistente");
 	header("Location: /test/test.php");
 	exit;
 }

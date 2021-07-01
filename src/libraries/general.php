@@ -100,18 +100,12 @@ function chk_auth($privileges)
 	return (isset($_SESSION['privileges']) and $_SESSION['privileges'] <= $privileges);
 }
 
-// Function to add an error to the session
-function set_error($error)
-{
-	$_SESSION['err'] = $error;
-}
-
 // Checks if the user can access the class's register page 
 function chk_prof($user_fk)
 {
 	if($user_fk and $user_fk != $_SESSION['id'] and $_SESSION['privileges'] != ADMINISTRATOR)
 	{
-		$_SESSION['alert'] = "Permessi insufficienti per visualizzare la classe";
+		set_alert("Permessi insufficienti per visualizzare la classe");
 		header("Location: /register/register.php");
 		exit;
 	}
@@ -144,7 +138,83 @@ function connect()
 // Function to request the confirmation of a client-side action
 function confirm($quest)
 {
-	return "onclick=\"return confirm('".htmlentities($quest).". Procedere?');\"";
+	return " onclick=\"return confirm('".addslashes(htmlentities($quest)).". Procedere?');\"";
+}
+
+// Function to store a message to be shown to the user
+// on the next page
+function set_alert($msg)
+{
+	$_SESSION['alert'][] = $msg;
+}
+
+// Function to display alerts from set_alert; the messages
+// are consumed
+function display_alerts()
+{
+	if(isset($_SESSION['alert']) and count($_SESSION['alert']) > 0)
+	{
+		$alerts = "";
+		foreach($_SESSION['alert'] as $k => $msg)
+		{
+			if($alerts != "")
+				$alerts .= "\\n\\n";
+
+			$alerts .= addslashes(htmlentities($msg));
+
+			unset($_SESSION['alert'][$k]);
+		}
+
+		echo "<script>
+			alert(\"$alerts\");
+		</script>";
+	}
+}
+
+// Function to add an error to the session
+function set_error($error)
+{
+	$_SESSION['err'] = $error;
+}
+
+// Prints errors and returns a value to decide if
+// the loading must be stopped
+function display_errors()
+{
+	if(isset($_SESSION['err']) and 
+		($_SESSION['err'] != FIRST_ACCESS or basename($_SERVER['PHP_SELF']) != "profile.php"))
+	{
+		echo "<h3 class='dangercolor'>Accesso negato</h3><h4>";
+		switch($_SESSION['err'])
+		{
+			case NEED_LOGIN:
+				echo "Effettuare il login";
+				unset($_SESSION['err']);
+				break;
+			case WRONG_LOGIN:
+				echo "Login errato";
+				unset($_SESSION['err']);
+				break;
+			case UNAUTHORIZED:
+				echo "Utente non autorizzato";
+				unset($_SESSION['err']);
+				break;
+			case LOGIN_DISABLED:
+				echo "Login disabilitato";
+				unset($_SESSION['err']);
+				break;
+			case FIRST_ACCESS:
+				echo "Primo accesso: <a href='/user/profile.php'>modificare la password</a>";
+				break;
+			default:
+				break;
+		}
+		echo "</h4>";
+
+		return true;
+	}
+
+	return false;
 }
 
 // strtoupper enriched with accents for italian letters
@@ -169,15 +239,23 @@ function year_span()
 	// scholastic year is shown
 	if(!$years['y1'])
 	{	
-		$curyear = date("Y");
-		if(date("m") < 8)
-			$curyear--;
+		$curyear = get_current_year();
 
 		$years['y1'] = $curyear;
 		$years['y2'] = $curyear;
 	}
+
 	return $years;
-	
+}
+
+// Function to get the current school year; for the first quadrimester it is the current one,
+// while for the second it is -1. The change of year is done in august
+function get_current_year()
+{
+	$year = date("Y");
+	if(date("m") < 8)
+		$year--;
+	return $year;
 }
 
 // Statement preparation and error handling
@@ -196,12 +274,18 @@ function execute_stmt($stmt)
 {
 	$stmt->execute();
 	if($stmt->errno !== 0)
-		echo "Execute failed: (".$stmt->errno.") ".$stmt->error."<br>";
+	{
+		echo "Execute failed (".$stmt->errno."): ".$stmt->error."<br>";
+		return;
+	}
 
 	$res = $stmt->get_result();
 	if($stmt->errno !== 0)
-		echo "Getting result set failed: (".$stmt->errno.") ".$stmt->error."<br>";
-		
+	{
+		echo "Getting result set failed (".$stmt->errno."): ".$stmt->error."<br>";
+		return;
+	}
+
 	return $res;
 }
 
@@ -386,42 +470,11 @@ function show_premain($title = "", $stat = false, $fullwidth = false)
 			</div>
 			<main class="<?=$margin." ".$widthcl?>">
 <?php
-	// Prints errors and stops the loading of the page
-	if(isset($_SESSION['err']) and $_SESSION['err'] !== ""
-		and ($_SESSION['err'] != FIRST_ACCESS or basename($_SERVER['PHP_SELF']) != "profile.php"))
-		{
-			echo "<h3 class='dangercolor'>Accesso negato</h3>";
-			switch($_SESSION['err'])
-			{
-				case NEED_LOGIN:
-					echo "<h4>Effettuare il login</h4>";
-					$_SESSION['err'] = "";
-					break;
-				case WRONG_LOGIN:
-					echo "<h4>Login errato</h4>";
-					$_SESSION['err'] = "";
-					break;
-				case UNAUTHORIZED:
-					echo "<h4>Utente non autorizzato</h4>";
-					$_SESSION['err'] = "";
-					break;
-				case LOGIN_DISABLED:
-					echo "<h4>Login disabilitato</h4>";
-					$_SESSION['err'] = "";
-					break;
-				case FIRST_ACCESS:
-					echo "<h4>Primo accesso: <a href='/user/profile.php'>modificare la password</a></h4>";
-					break;
-				default:
-					break;
-			}
-			show_postmain();
-			exit;
-		}
-
-	if(isset($_SESSION['scad']) and $_SESSION['scad'])
-  		echo "<h3 class='dangercolor'>Password in scadenza!</h3>
-  		<h4>Accedere alla <a href='/user/profile.php'>pagina di profilo</a> per modificarla</h4>";
+	if(display_errors())
+	{
+		show_postmain();
+		exit;
+	}
 }
 
 // Shows the final static elements 
@@ -437,19 +490,7 @@ function show_postmain()
 			Applicazione rilasciata con licenza AGPLv3</a>
 		</footer>
 <?php
-	if(isset($_SESSION['alert']) and $_SESSION['alert'] != "")
-	{
-?>
-		<script>
-			$(function() {
-				$(document).ready(function() {
-					alert("<?=htmlentities($_SESSION['alert'])?>");
-  				});
-  	  		});
-		</script>
-<?php
-		$_SESSION['alert'] = "";
-	}
+	display_alerts();
 ?>
 	</body> 
 </html>

@@ -31,7 +31,7 @@ $test_st->close();
 // an error is shown
 if($ret->num_rows == 0)
 {
-	$_SESSION['alert'] = "Id test non valido";
+	set_alert("Id test non valido");
 	header("Location: /statistics/statistics.php");
 	exit;
 }

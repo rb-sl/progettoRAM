@@ -156,6 +156,8 @@ $(document).on("dblclick", ".jdat", function() {
 // Input check before submitting (through a synchronous ajax function
 // to block the page while waiting the response)
 $("#frm").on("submit", function(e) {
+	$(".datmod").removeClass("wrongvalue");
+
 	$.ajax({
 		type: "POST",
 		async: false,
@@ -171,8 +173,7 @@ $("#frm").on("submit", function(e) {
 			if(jQuery.type(data) == "object") {     
 				e.preventDefault();      
 
-				// Highlights the wrong values by reusing button properties, 
-				// both for updated and new values
+				// Highlights the wrong values both for updated and new values
 				$.each(data.pr, function(ist, test) {
 					$("#i" + ist + "_" + test).addClass("wrongvalue");
 				});

@@ -52,6 +52,6 @@ $fav_st->bind_param("i", $id);
 execute_stmt($fav_st);
 $fav_st->close();
 
-$_SESSION['alert'] = "Utente inserito correttamente";
+set_alert("Utente inserito correttamente");
 header("Location: /admin/user/users.php");
 ?>

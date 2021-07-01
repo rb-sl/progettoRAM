@@ -38,13 +38,13 @@ if($r['n'] === 0)
 
 	writelog("Scuola ".$_GET['id']." cancellata");
 
-	$_SESSION['alert'] = "Scuola eliminata correttamente";
+	set_alert("Scuola eliminata correttamente");
 }
 else
 {
 	writelog("Tentativo cancellazione scuola ".$_GET['id']." bloccato; esistono ".$r['n']." classi associate");
 
-	$_SESSION['alert'] = "Impossibile eliminare la scuola: esistono ".$r['n']." classi associate";
+	set_alert("Impossibile eliminare la scuola: esistono ".$r['n']." classi associate");
 }
 
 header("Location: /admin/school.php");

@@ -32,7 +32,7 @@ show_premain("Modifica ".$cl['class'].htmlentities($cl['section'])." ".$cl['clas
 
 <form id="frm" method="POST" action="class_update.php?id=<?=$_GET['id']?>">
 <?php show_cl_form($cl['class'], $cl['section'], $cl['class_year']); ?>
-	<a href="class_delete.php?id=<?=$_GET['id']?>" class="btn btn-danger"
+	<a href="class_delete.php?id=<?=$_GET['id']?>" class="btn btn-danger" 
 		<?=confirm("La classe ".$cl['class'].$cl['section']." ".$cl['class_year']."/".($cl['class_year'] + 1)
 			." e le prove ad essa attinenti saranno eliminate")?>>Elimina classe</a>
 	<h3>Modifica studenti</h3>

@@ -29,7 +29,7 @@ $test_st->close();
 
 if($ret->num_rows > 0)
 {
-	$_SESSION['alert'] = "Errore: Un test con nome '".$_POST['test_name']."' è già presente nel sistema. Modifiche non effettuate.";
+	set_alert("Errore: Un test con nome '".$_POST['test_name']."' è già presente nel sistema. Modifiche non effettuate.");
 	header("Location: ".$_SERVER['HTTP_REFERER']);
 	exit;
 }
@@ -42,7 +42,8 @@ $up_st->bind_param("siisissssssi", $_POST['testname'], $_POST['class'], $_POST['
 
 execute_stmt($up_st);
 
-writelog("[->test] ".$_GET['id']."->".$_POST['test_name']);
+writelog("Modifica test ".$_GET['id'].": ".$_POST['testname']);
+set_alert("Test aggiornato correttamente");
 
 header("Location: /test/test_show.php?id=".$_GET['id']);
 exit;

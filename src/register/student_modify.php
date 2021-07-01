@@ -47,7 +47,7 @@ $stud = $ret->fetch_assoc();
 
 if(!$stud)
 {
-	$_SESSION['alert'] = "Permessi insufficienti per visualizzare le informazioni";
+	set_alert("Permessi insufficienti per visualizzare le informazioni");
 	header("Location: /register/register.php");
 	exit;
 }

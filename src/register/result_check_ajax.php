@@ -59,7 +59,7 @@ if($acceptable)
 else
 {
 	$json = json_encode($err);
-	writelog("Errore di inserimento:\n>>$json");
+	writelog("Errore di inserimento:\n>>> $json");
 	echo $json;
 }
 ?>

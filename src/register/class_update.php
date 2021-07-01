@@ -34,8 +34,8 @@ $chk_st->close();
 if($chk->num_rows > 0)
 {
 	$row = $chk->fetch_assoc();
-	$_SESSION['alert'] = "Errore: un'altra classe ".$row['class'].$row['section']." ".$row['class_year']
-		." / ".($row['class_year'] + 1)." è già registrata (".$row['school_name'].").";
+	set_alert("Errore: un'altra classe ".$row['class'].$row['section']." ".$row['class_year']
+		." / ".($row['class_year'] + 1)." è già registrata (".$row['school_name'].")");
 	header("Location: /register/class_modify.php?id=".$_GET['id']);
 	exit;
 }
@@ -45,7 +45,7 @@ $up_st->bind_param("isii", $_POST['cl'], $section, $_POST['class_year'], $_GET['
 $ret = execute_stmt($up_st);
 $up_st->close();
 
-writelog("[Modifica classe] ".$_GET['id']);
+writelog("Classe ".$_GET['id']." modificata");
 
 $idlist = class_students(true, $_GET['id'], 
 	isset($_POST['pr']) ? $_POST['pr'] : null,
@@ -60,7 +60,7 @@ $del_st = prepare_stmt("DELETE FROM instance WHERE class_fk=? AND student_fk NOT
 $del_st->bind_param("i", $_GET['id']);
 execute_stmt($del_st);
 
-$_SESSION['alert'] = "Aggiornamento effettuato con successo";
+set_alert("Aggiornamento effettuato con successo");
 
 header("Location: /register/class_show.php?id=".$_GET['id']);
 ?>

@@ -60,7 +60,7 @@ while($row = $ret->fetch_assoc())
 						</button>"; 
 
 	if($row['n'] == 0)
-		echo "<a href='unit_delete.php?id=".htmlentities($row['unit_id'])."' class='btn btn-danger btnmenu'"
+		echo "<a href='unit_delete.php?id=".htmlentities($row['unit_id'])."' class='btn btn-danger btnmenu' "
 			.confirm("L'unità di misura ".$row['unit_name']." sarà eliminata").">Elimina</a>";
 
 	echo "			</div>

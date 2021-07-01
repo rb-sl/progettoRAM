@@ -54,6 +54,7 @@ foreach($diff as $toinsert)
 	execute_stmt($in_st);
 }
 
-$_SESSION['alert'] = "Preferiti aggiornati correttamente";
+set_alert("Preferiti aggiornati correttamente");
+writelog("Aggiornamento test preferiti");
 header("Location: /test/test.php");
 ?>

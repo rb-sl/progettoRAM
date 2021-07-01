@@ -31,7 +31,7 @@ chk_access(PROFESSOR);
 		<ul class="nobul">
 			<li><a href="#addcl">Aggiungere una classe</a></li>
 			<li><a href="#vcl">Visualizzare e modificare le prove di una classe</a></li>
-			<li><a href="#stcl">Elaborare i dati della classe</a></li>
+			<li><a href="#stcl">Elaborare i dati di una classe</a></li>
 			<li><a href="#modcl">Modificare le informazioni di una classe</a></li>
 			<li><a href="#visst">Visualizzare le prove di uno studente</a></li>
 			<li><a href="#modst">Modificare le informazioni di uno studente</a></li>

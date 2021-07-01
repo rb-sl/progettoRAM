@@ -28,7 +28,7 @@ function get_class_info($id)
 
 	if($ret->num_rows == 0)
 	{
-		$_SESSION['alert'] = "Errore: Classe inesistente";
+		set_alert("Errore: Classe inesistente");
 		header("Location: /register/register.php");
 		exit;
 	}
@@ -44,27 +44,31 @@ function build_chk_table($class, $prom = false)
 			<div class='innerx'>
 				<table id='tabchk' class='table table-light table-striped studtable'>";
 	
-	// If this is the modification due to promotion, students already promoted to other classes
-	// will not be shown
+	// If this is the modification due to promotion, students already promoted to 
+	// other classes will not be shown
 	if($prom)
 	{
-		$year = date("Y");
-		if(date("m") < 8)
-			$year--;
-		$chkp = " AND student_id NOT IN (
-			SELECT DISTINCT(student_fk) FROM instance 
-			JOIN class ON class_fk=class_id 
-			WHERE class_year=$year)";
+		$year = get_current_year();
+
+		$stud_st = prepare_stmt("SELECT student_id, firstname, lastname, gender 
+			FROM student JOIN instance ON student_id=student_fk
+			WHERE class_fk=? 
+			AND student_id NOT IN (
+				SELECT DISTINCT(student_fk) FROM instance 
+				JOIN class ON class_fk=class_id 
+				WHERE class_year=?
+			) ORDER BY lastname, firstname");
+		$stud_st->bind_param("ii", $class, $year);
 	}
 	else
-		$chkp = "";
-	
-	$stud_st = prepare_stmt("SELECT student_id, firstname, lastname, gender 
-		FROM student JOIN instance ON student_id=student_fk
-		WHERE class_fk=? 
-		$chkp 
-		ORDER BY lastname, firstname");
-	$stud_st->bind_param("i", $class);
+	{
+		$stud_st = prepare_stmt("SELECT student_id, firstname, lastname, gender 
+			FROM student JOIN instance ON student_id=student_fk
+			WHERE class_fk=?
+			ORDER BY lastname, firstname");
+		$stud_st->bind_param("i", $class);
+	}
+		
 	$ret = execute_stmt($stud_st);
 	$stud_st->close();
 
@@ -79,9 +83,9 @@ function build_chk_table($class, $prom = false)
 						.$row['student_id']."'></label>
 				</div>
 			</td>
-			<td>".htmlentities($row['lastname'])."</td>
-			<td>".htmlentities($row['firstname'])."</td>
-			<td>".htmlentities(strtoupper($row['gender']))."</td>
+			<td><label for='c".$row['student_id']."'>".htmlentities($row['lastname'])."</label></td>
+			<td><label for='c".$row['student_id']."'>".htmlentities($row['firstname'])."</label></td>
+			<td><label for='c".$row['student_id']."'>".htmlentities(strtoupper($row['gender']))."</label></td>
 		</tr>";
 	}
 	$table .= "</table>
@@ -150,7 +154,7 @@ function col_class($stud)
   		else
 			$cl = "oddrow";
 
-		if($row['user_fk'] == $_SESSION['id'] or $_SESSION['id'] == 0)
+		if($row['user_fk'] == $_SESSION['id'] or chk_auth(ADMINISTRATOR))
 		{
 			$slnk = "<a href='./class_show.php?id=".$row['class_id']."'>";
 			$elnk = "</a>";
@@ -218,6 +222,8 @@ function class_students($isupdate, $class, $precedent, $newln, $newfn, $gnd, $ex
 	$newstud_st = prepare_stmt("INSERT INTO student(lastname, firstname, gender) VALUES(?, ?, ?)");
 	$newstud_st->bind_param("sss", $lastname, $firstname, $gender);
 
+	$log = "";
+
 	// Inserts the promoted students (on insert)
 	// or builds the list of students still in the class (on update)
 	$idlist = "-1";
@@ -229,7 +235,7 @@ function class_students($isupdate, $class, $precedent, $newln, $newfn, $gnd, $ex
 			foreach($precedent as $ids)
 			{
 				execute_stmt($inst_st);
-				writelog("Promosso: $ids");
+				$log .= "\n>>> Promosso: $ids";
 			}
 	
 	// Inserts new students
@@ -245,7 +251,7 @@ function class_students($isupdate, $class, $precedent, $newln, $newfn, $gnd, $ex
 			$idlist .= ",".$ids;
 
 			execute_stmt($inst_st);
-			writelog("Nuovo: $ids");
+			$log .= "\n>>> Nuovo: $ids";
 		}
 
 	// Creation or update of students possibly already registered
@@ -263,12 +269,12 @@ function class_students($isupdate, $class, $precedent, $newln, $newfn, $gnd, $ex
 				$ids = $mysqli->insert_id;
 				
 				execute_stmt($inst_st);
-				writelog("Nuovo: $ids");
+				$log .= "\n>>> Nuovo: $ids";
 			}
 			else
 			{
 				execute_stmt($inst_st);
-				writelog("Promosso: $ids");
+				$log .= "\n>>> Promosso: $ids";
 			}
 
 			$idlist .= ",".$ids;
@@ -276,6 +282,9 @@ function class_students($isupdate, $class, $precedent, $newln, $newfn, $gnd, $ex
 
 	$inst_st->close();
 	$newstud_st->close();
+
+	if($log != "")
+		writelog("Studenti nella classe $class:".$log);
 
 	return $idlist;
 }
@@ -1003,11 +1012,7 @@ function show_cl_form($cl = 0, $section = "", $year = null)
 
 	// Construction of the year if not given
 	if($year === null)
-	{
-		$year = date('Y');
-		if(date("m") < 8)
-			$year--;
-	}
+		$year = get_current_year();
 
 	echo "Classe: 
 		<select id='cl' class='form-control' name='cl' required>

@@ -85,7 +85,7 @@ $(".clcbl").click(function() {
 		enableUpdate();
 	}
 
-	showGraph();		
+	showGraph();
 });
 
 // Function to create the scatter plot of a test
@@ -116,7 +116,7 @@ function plotScatter(idrow, idcol) {
 		hovermode: "closest"
 	};
 
-	Plotly.newPlot("cnv", trace, layout, {responsive: true}); 	
+	Plotly.react("cnv", trace, layout, {responsive: true}); 	
 }
 
 // Function to make visible the plot for two tests

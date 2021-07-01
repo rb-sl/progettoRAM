@@ -30,12 +30,12 @@ $chk_st->close();
 
 if($chk->num_rows > 0)
 {
-	$_SESSION['alert'] = "Username già in uso! Modifiche non effettuate";
+	set_alert("Username già in uso! Modifiche non effettuate");
 	header("Location: /user/profile.php");
 	exit;
 }
 
-$_SESSION['alert'] = "Aggiornamento avvenuto con successo";
+set_alert("Aggiornamento avvenuto con successo");
 $location = "/user/profile.php";
 
 if(isset($_POST['school']) and $_POST['school'] !== "")
@@ -56,7 +56,7 @@ if(!empty($_POST['password']))
 	if($_SESSION['err'] == FIRST_ACCESS)
 	{
 		$_SESSION['err'] = "";
-		$_SESSION['alert'] = "Primo accesso completato: ora l'applicazione è attivata";
+		set_alert("Primo accesso completato: ora l'applicazione è attivata");
 		$location = "/guide/guide.php";
 	}
 	$_SESSION['scad'] = false;
@@ -83,6 +83,6 @@ $up_st->close();
 $_SESSION['username'] = $_POST['user'];  
 $_SESSION['school'] = $_POST['school'];
 
-writelog("[Modifica profilo] ".$_SESSION['id']);
+writelog("Modifica profilo utente ".$_SESSION['id']);
 header("Location: $location");
 ?>
