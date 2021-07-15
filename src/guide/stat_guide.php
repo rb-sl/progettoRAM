@@ -76,23 +76,25 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 		È poi possibile visualizzare alcuni grafici secondo le opzioni:
 		<ul>
 			<li>
-				<b>Valori</b>: genera un <a href="#histogram">istogramma</a> in base ai dati
+				<b>Valori</b>: genera un <a href="#graph_type">istogramma</a> in base ai dati
 			</li>
 			<li>
-				<b>Box plot</b>: mostra alcune statistiche aggregate in un <a href="#boxplot">diagramma 
+				<b>Andamento statistiche</b>: diagramma che mostra le tendenze delle prove negli anni.
+				Gli elementi mostrati sono analoghi a quelli dei <a href="#graph_type">box plot</a>; per
+				mostrare una sola linea fare doppio click sulla voce in legenda
+			</li>
+			<li>
+				<b>Valori percentili</b>: diagramma che mostra l'andamento dei percentili dei dati
+			</li>
+			<li>
+				<b>Box plot</b>: mostra alcune statistiche aggregate in un <a href="#graph_type">diagramma 
 				a scatole e baffi</a>
-			</li>
-			<li>
-				<b>Box plot (Anni)</b>: un box plot con i dati suddivisi per anno
 			</li>
 			<li>
 				<b>Box plot (Classi)</b>: un box plot con i dati suddivisi per classe
 			</li>
 			<li>
 				<b>Box plot (Sesso)</b>: un box plot con i dati suddivisi per sesso
-			</li>
-			<li>
-				<b>Valori percentili</b>: diagramma che mostra l'andamento dei percentili dei dati
 			</li>
 		</ul>
 	</p>
@@ -112,7 +114,7 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 		una maggiore correlazione (positiva o negativa a seconda del segno).
 	</p>
 	<p>
-		È poi possibile, per ogni coppia di test, visualizzare il <a href="#scatter">diagramma di dispersione</a>
+		È poi possibile, per ogni coppia di test, visualizzare il <a href="#graph_type">diagramma di dispersione</a>
 		delle prove, premendo su una cella contenente un dato. I diagrammi sono riportati anche nella matrice 
 		di dispersione nella seconda parte della pagina (in caso sia troppo grande per la visualizzazione si
 		consiglia di scaricare l'immagine).
@@ -241,7 +243,7 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 		</li>
 	</ul>
 
-	<h4>Tipi di grafici</h4>
+	<h4 id="graph_type">Tipi di grafici</h4>
 	I possibili grafici disegnati dall'applicazione sono:
 	<ul>
 		<li>
@@ -250,12 +252,12 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 			visualizzato nella sezione statistica per mostrare la suddivisione della popolazione
 		</li>
 		<li>
-			<a id="histogram" href="https://it.wikipedia.org/wiki/Istogramma" 
+			<a href="https://it.wikipedia.org/wiki/Istogramma" 
 				target="_blank">Istogramma&#128279;</a>: utilizzato nelle statistiche dei test
 			per mostrare la distribuzione dei dati
 		</li>
 		<li>
-			<a id="boxplot" href="https://it.wikipedia.org/wiki/Diagramma_a_scatola_e_baffi"
+			<a href="https://it.wikipedia.org/wiki/Diagramma_a_scatola_e_baffi"
 				target="_blank">Box plot o Diagramma a scatola e baffi&#128279;</a>: utilizzato per 
 			dare una visualizzazione aggregata dei dati nelle statistiche dei test. Le voci mostrate
 			sono:
@@ -269,19 +271,17 @@ include $_SERVER['DOCUMENT_ROOT']."/libraries/lib_stat.php";
 			</ul>
 		</li>
 		<li>
-			<span id="line">Grafico a linea</span>: mostra l'andamento dei dati in 
+			<span>Grafico a linea</span>: mostra l'andamento dei dati in 
 			funzione di una variabile; è utilizzato nella sezione di statistica dei test per 
 			mostrare i percentili
 		</li>
 		<li>
-			<a id="radar" href="https://it.wikipedia.org/wiki/Diagramma_di_Kiviat" 
-			target="_blank">Grafico radar&#128279;</a>: mostra i risultati degli studenti 
-			nelle loro pagine di registro
+			<a href="https://it.wikipedia.org/wiki/Diagramma_di_Kiviat" target="_blank">Grafico radar
+			&#128279;</a>: mostra i risultati degli studenti nelle loro pagine di registro
 		</li>
 		<li>
-			<a id="scatter" href="https://it.wikipedia.org/wiki/Grafico_di_dispersione" 
-				target="_blank">Diagramma di dispersione&#128279;</a>: utilizzato per mostrare la correlazione
-			tra i test
+			<a href="https://it.wikipedia.org/wiki/Grafico_di_dispersione" target="_blank">Diagramma 
+			di dispersione&#128279;</a>: utilizzato per mostrare la correlazione tra i test
 		</li>
 	</ul>
 </div>

@@ -22,10 +22,9 @@
 const CORRELATION_THRESH = 30;
 
 // Constants for graphs
-const GRAPH_YEAR = 0;
-const GRAPH_CLASS = 1;
-const GRAPH_GENDER = 2;
-const GRAPH_TEST = 3;
+const GRAPH_CLASS = 0;
+const GRAPH_GENDER = 1;
+const GRAPH_TEST = 2;
 
 // Function to compute the average of an array
 function arr_avg($vals, $dec = 0)
@@ -48,12 +47,18 @@ function arr_med($vals, $dec = 0)
 
 	sort($vals);
 
+	return arr_quartile($vals, $size, 2, $dec);	
+}
+
+// Function to compute a quartile of an ordered array
+function arr_quartile($vals, $size, $quartile, $dec)
+{
 	// To align with array indices, in the even case 1 is subtracted from the found
 	// place, while in the odd case floor is used in place of ceil
-	if($size % 2 == 0)
-		return number_format(($vals[$size / 2 - 1] + $vals[$size / 2]) / 2, $dec);
+	if($size % 4 == 0 or ($quartile % 2 == 0 and $size % 2 == 0))
+		return number_format(($vals[$size * $quartile / 4 - 1] + $vals[$size * $quartile / 4]) / 2, $dec);
 	else
-		return number_format($vals[floor($size / 2)], $dec);	
+		return number_format($vals[floor($size * $quartile / 4)], $dec);
 }
 
 // Construction of additional restrictions based on GET data
@@ -706,19 +711,11 @@ function graph_prc($id, $cond = null)
 // Function to get labels and values for multiple box plots
 function graph_multibox($id, $group, $cond = null)
 {
-	switch($group)
-	{
-		case GRAPH_CLASS:
-			$field = "class";
-			break;
-		case GRAPH_GENDER:
-			$field = "gender";
-			break;
-		case GRAPH_YEAR:
-			$field = "class_year";
-			break;
-	}
-
+	if($group == GRAPH_CLASS)
+		$field = "class";
+	elseif($group == GRAPH_GENDER)
+		$field = "gender";
+	
 	if($cond)
 	{
 		$classlist = $cond['class'];
@@ -757,6 +754,94 @@ function graph_multibox($id, $group, $cond = null)
 
 	while($row = $ret->fetch_assoc())
 		$graph[$row[$field]][] = $row['value'];
+	
+	return $graph;
+}
+
+// Function to get labels and values for the trend graph
+function graph_trend($id, $cond = null)
+{
+	if($cond)
+	{
+		$classlist = $cond['class'];
+		$genderlist = $cond['gender'];
+		$user = $cond['user'];
+
+		$val_st = prepare_stmt("SELECT class_year, value FROM results
+			JOIN instance ON instance_fk=instance_id
+			JOIN student ON student_fk=student_id 
+			JOIN class ON class_fk=class_id  
+			WHERE test_fk=? 
+			AND class_year BETWEEN ? AND ?
+			AND class IN (0 $classlist)
+			AND gender IN ('x' $genderlist)
+			$user
+			ORDER BY class_year ASC, value ASC");
+
+		if($user != "")
+			$val_st->bind_param("iiii", $id, $cond['year1'], $cond['year2'], $_SESSION['id']);
+		else
+			$val_st->bind_param("iii", $id, $cond['year1'], $cond['year2']);
+	}
+	else
+	{
+		$val_st = prepare_stmt("SELECT class_year, value FROM results 
+			JOIN instance ON instance_fk=instance_id
+			JOIN class ON class_fk=class_id
+			WHERE test_fk=?
+			ORDER BY class_year ASC, value ASC");
+		$val_st->bind_param("i", $id);
+	}
+	$ret = execute_stmt($val_st);
+	$val_st->close();
+
+	// Statistics initialization
+	$year = -1;
+	$graph['year_list'] = [];
+	$count_year = 0;
+
+	while($row = $ret->fetch_assoc())
+	{
+		if($year != $row['class_year'])
+		{
+			if($count_year > 0)
+			{
+				// Average computation
+				$graph['mean'][] = number_format($sum_year / $count_year, 2);
+				// Median computation
+				$graph['med'][] = arr_quartile($vals, $count_year, 2, 2);
+				$graph['min'][] = number_format($vals[0], 2);
+				$graph['max'][] = number_format($vals[$count_year - 1], 2);
+				$graph['q1'][] = arr_quartile($vals, $count_year, 1, 2);
+				$graph['q3'][] = arr_quartile($vals, $count_year, 3, 2);
+			}
+
+			$sum_year = 0;
+			$count_year = 0;
+			$vals = [];
+			$year = $row['class_year'];
+			$graph['year_list'][] = $year."/".($year + 1);
+		}
+
+		$vals[] = $row['value'];
+
+		// Average components
+		$sum_year += $row['value'];
+		$count_year++;
+	}
+
+	// Results of final cycle
+	if($count_year > 0)
+	{
+		// Average computation
+		$graph['mean'][] = number_format($sum_year / $count_year, 2);
+		// Median computation
+		$graph['med'][] = arr_quartile($vals, $count_year, 2, 2);
+		$graph['min'][] = number_format($vals[0], 2);
+		$graph['max'][] = number_format($vals[$count_year - 1], 2);
+		$graph['q1'][] = arr_quartile($vals, $count_year, 1, 2);
+		$graph['q3'][] = arr_quartile($vals, $count_year, 3, 2);
+	}
 	
 	return $graph;
 }
@@ -908,7 +993,8 @@ function test_graph($testlist, $cond = null)
 	{
 		$splom_st = prepare_stmt("SELECT test_name, instance_fk, value 
 			FROM results JOIN test ON test_fk=test_id
-			WHERE test_fk IN ($testlist) ORDER BY test_name, instance_fk");
+			WHERE test_fk IN ($testlist)
+			ORDER BY test_name, instance_fk");
 	}
 	
 	$splomret = execute_stmt($splom_st);

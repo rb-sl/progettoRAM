@@ -172,6 +172,9 @@ Funzione per il calcolo della media dei valori contenuti in un array; ritorna un
 ### `arr_med($vals, $dec)`
 Funzione per il calcolo della mediana dei valori contenuti in un array; ritorna un risultato con `$dec` cifre decimali.
 
+### `arr_quartile($vals, $size, $quartile, $dec)`
+Funzione per il calcolo di un quartile di un array ordinato di dimensione `$size`.
+
 ### `cond_builder()`
 Costruisce le condizioni per la restrizione dei risultati
 
@@ -187,7 +190,7 @@ Funzione per ottenere i record di un test.
 ### `get_stats($idtest, $cond, $get_median)`
 Ottiene le statistiche da mostrare per un test. Se non necessaria, la mediana non viene calcolata.
 
-### graph_vals($id, $cond)
+### `graph_vals($id, $cond)`
 Ottiene i valori per disegnare un istogramma.
 
 ### `graph_prc($id, $cond)`
@@ -195,6 +198,9 @@ Ottiene i valori per disegnare il grafico dei percentili.
 
 ### `graph_multibox($id, $group, $cond)`
 Funzione per ottenere i dati necessari a disegnare un box plot suddiviso per `$group`.
+
+### `graph_trend($id, $cond)`
+Funzione per generare i dati per il grafico di andamento statistiche.
 
 ### `open_rvals_stmt($cond)`
 Crea la query per ottenere i valori di due test.

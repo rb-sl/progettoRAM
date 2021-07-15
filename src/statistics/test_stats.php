@@ -47,7 +47,7 @@ $records = get_records($_GET['id']);
 $graph = graph_vals($_GET['id']);
 ?>
 
-<h2>Statistiche <span id="datatype_name"><?=$testname?></span></h2>
+<h2>Statistiche <span id="test_name"><?=$testname?></span></h2>
 
 <table class="table table-light table-striped marginunder">
    	<tr><td>Numero totale di prove: <span id="n"><?=$data['n']?></span></td>
@@ -74,11 +74,11 @@ $graph = graph_vals($_GET['id']);
 	Grafico: 
 	<select id="graph" class="form-control trigger">
 		<option value="val">Valori</option>
+		<option value="trend">Andamento statistiche</option>
+		<option value="prc">Valori percentili</option>
 		<option value="box">Box plot</option>
-		<option value="hbox">Box plot (Anni)</option>
 		<option value="cbox">Box plot (Classi)</option>
 		<option value="sbox">Box plot (Sesso)</option>
-		<option value="prc">Valori percentili</option>
 	</select>
 </h3>
 

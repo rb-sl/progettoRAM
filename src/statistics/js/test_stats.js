@@ -73,7 +73,7 @@ function getData() {
 				$("#tbest").html("");
 			}
 
-			// Update of plot typw
+			// Update of plot type
 			switch($("#graph").val()) {
 				case "val":
 					draw_graph_val(data.plot.vals);
@@ -84,10 +84,12 @@ function getData() {
 				case "prc":
 					draw_graph_prc(data.plot.lbls, data.plot.vals);
 					break;
-				case "hbox":
 				case "cbox":
 				case "sbox":
-					draw_graph_multibox(data.plot, $("#graph").val());
+					draw_graph_multibox(data.plot);
+					break;
+				case "trend":
+					draw_graph_trend(data.plot);
 					break;
 			}
 
@@ -115,7 +117,7 @@ function draw_graph_val(vals) {
 
 	var layout = {
 		height: "600",
-		title: $("#datatype_name").html() + " - Valori"
+		title: $("#test_name").html() + " - Valori"
 	};
 
 	Plotly.react("cnv", plotData, layout, {responsive: true});
@@ -135,7 +137,7 @@ function draw_graph_box(vals) {
 
 	var layout = {
 		height: "600",
-		title: $("#datatype_name").html() + " - Box plot",
+		title: $("#test_name").html() + " - Box plot",
 		yaxis: {
 			visible: false
 		}
@@ -145,14 +147,10 @@ function draw_graph_box(vals) {
 }
 
 // Function to draw multiple box plots
-function draw_graph_multibox(graph, plotType) {
+function draw_graph_multibox(graph) {
 	var data = [];
 
 	$.each(graph, function(label, val) {
-		if(plotType == "hbox") {
-			label = label + "/" + (parseInt(label) + 1);
-		}
-		
 		data.push({
 			y: val,
 			type: "box",
@@ -165,7 +163,7 @@ function draw_graph_multibox(graph, plotType) {
 
 	var layout = {
 		height: "600",
-		title: $("#datatype_name").html() + " - " + $("#graph option:selected").html()
+		title: $("#test_name").html() + " - " + $("#graph option:selected").html()
 	};
 
 	Plotly.react("cnv", data, layout, {responsive: true});
@@ -184,7 +182,70 @@ function draw_graph_prc(lbls, vals) {
 
 	var layout = {
 		height: "600",
-		title: $("#datatype_name").html() + " - Valori percentili"
+		title: $("#test_name").html() + " - Valori percentili"
+	};
+
+	Plotly.react("cnv", plotData, layout, {responsive: true});
+}
+
+function draw_graph_trend(plot) {
+	var years = plot.year_list.map(y => y.toString());
+	var mean = {
+		x: years,
+		y: plot.mean,
+		line: {shape: "spline"},
+		type: "scatter",
+		name: "media"
+	}
+	var median = {
+		x: years,
+		y: plot.med,
+		line: {shape: "spline"},
+		type: "scatter",
+		name: "mediana"
+	}
+	var min = {
+		x: years,
+		y: plot.min,
+		line: {shape: "spline"},
+		type: "scatter",
+		name: "min"
+	}
+	var max = {
+		x: years,
+		y: plot.max,
+		line: {shape: "spline"},
+		type: "scatter",
+		name: "max"
+	}
+	var q1 = {
+		x: years,
+		y: plot.q1,
+		line: {shape: "spline"},
+		type: "scatter",
+		name: "q1"
+	}
+	var q3 = {
+		x: years,
+		y: plot.q3,
+		line: {shape: "spline"},
+		type: "scatter",
+		name: "q3"
+	}
+
+	var plotData = [
+		max,
+		q3,
+		mean,
+		median,
+		q1,
+		min		
+	];
+
+	var layout = {
+		height: "600",
+		hovermode: "x",
+		title: $("#test_name").html() + " - Andamento statistiche"
 	};
 
 	Plotly.react("cnv", plotData, layout, {responsive: true});

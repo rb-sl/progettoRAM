@@ -40,14 +40,14 @@ switch($_GET['graph'])
 	case "prc":
 		$graph['plot'] = graph_prc($_GET['id'], $cond);
 		break;
-	case "hbox":
-		$graph['plot'] = graph_multibox($_GET['id'], GRAPH_YEAR, $cond);
-		break;
 	case "cbox":
 		$graph['plot'] = graph_multibox($_GET['id'], GRAPH_CLASS, $cond);
 		break;
 	case "sbox":
 		$graph['plot'] = graph_multibox($_GET['id'], GRAPH_GENDER, $cond);
+		break;
+	case "trend":
+		$graph['plot'] = graph_trend($_GET['id'], $cond);
 		break;
 }
 
