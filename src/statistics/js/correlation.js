@@ -73,16 +73,14 @@ window.onbeforeunload =  function() {
 // Function to show the scatter plot of a test when requested
 $(".clcbl").click(function() {
 	// The graph is updated only if its data is not already computed
-	if(prevPlotted !== $(this)) {
-		disableUpdate();
-		prevPlotted = $(this);
+	if(prevPlotted !== $(this).attr("id")) {
+		prevPlotted = $(this).attr("id");
 
 		// Test ids for the request
 		var idr = parseInt($(this).attr("id").substring(1 , $(this).attr("id").lastIndexOf("_")));
 		var idc = parseInt($(this).attr("id").substring($(this).attr("id").lastIndexOf("_") + 1));
 
 		plotScatter(idr, idc);
-		enableUpdate();
 	}
 
 	showGraph();
@@ -117,6 +115,15 @@ function plotScatter(idrow, idcol) {
 	};
 
 	Plotly.react("cnv", trace, layout, {responsive: true}); 	
+}
+
+// Function to update the active plot
+function rePlot() {
+	// Test ids for the request
+	var idr = parseInt(prevPlotted.substring(1 , prevPlotted.lastIndexOf("_")));
+	var idc = parseInt(prevPlotted.substring(prevPlotted.lastIndexOf("_") + 1));
+
+	plotScatter(idr, idc);
 }
 
 // Function to make visible the plot for two tests
@@ -160,13 +167,15 @@ function getData() {
 			// Updates the table
 			handleData(data.matrix);
 			
-			// The previously plotted graph is invalidated
-			prevplotted = null;
-			
 			// Test data and dimension for the splom are updated
 			testInfo = data.testInfo;
 			splomWH = Math.max(500, Object.keys(data.testInfo).length * 130);
 			plotSplom();
+
+			// Changes the active graph
+			if(prevPlotted !== undefined) {
+				rePlot()
+			}			
 			
 			// Restores the possibility to change data again
 			enableUpdate();

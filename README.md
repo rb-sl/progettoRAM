@@ -65,13 +65,13 @@ La sezione statistica permette di elaborare i dati presenti nell'applicazione; o
 	* Calcolo di media, mediana e deviazione standard
 	* Visualizzazione record positivi e negativi
 	* Grafici:
-		* Valori
+		* Valori		
+		* Andamento statistiche
+		* Valori percentili
 		* Box plot
 			* Generale
-			* Per anno
 			* Per classe
 			* Per sesso
-		* Valori percentili
 * Calcolo delle statistiche di correlazione tra i test
 	* Visualizzazione e codifica per colore dei coefficienti di correlazione 
 	* Calcolo e visualizzazione della matrice di dispersione dei test

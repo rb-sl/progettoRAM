@@ -62,12 +62,12 @@ The statistics section allows the processing of the system's data; it offers:
 	* Display of positive and negative records
 	* Display of:
 		* Value plot
+		* Statistics trend plot
+		* Percentiles plot		
 		* Box plot
 			* General
-			* By year
 			* By class
 			* By gender
-		* Percentiles plot
 * Elaboration of correlation statistics for tests
 	* Display and color-coding of correlation coefficients
 	* Display of the tests' scatter plot matrix
