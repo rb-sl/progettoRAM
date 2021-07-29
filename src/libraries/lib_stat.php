@@ -369,7 +369,7 @@ function get_records($id, $cond = null)
 			JOIN school ON school_fk=school_id
 			JOIN student ON student_fk=student_id
 			WHERE test_fk=? 
-			AND value=?
+			AND ABS(value-?)<=1e-5
 			AND class_year BETWEEN ? AND ?
 			AND class IN (0 $classlist)
 			AND gender IN ('x' $genderlist)
@@ -400,7 +400,7 @@ function get_records($id, $cond = null)
 			JOIN class ON class_fk=class_id
 			JOIN school ON school_fk=school_id
 			WHERE test_fk=? 
-			AND value=? 
+			AND ABS(value-?)<=1e-5
 			ORDER BY class_year ASC");
 		$class_st->bind_param("id", $id, $best);
 	}
