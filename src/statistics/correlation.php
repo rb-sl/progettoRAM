@@ -96,15 +96,10 @@ foreach($tab as $id => $row)
 	<div id="splom" class="inner"></div>
 </div>
 
-<script>
-var splomWH = <?=(max(500, $i * 130))?>;
-
-var testInfo =
-<?php
-$tests = test_graph($testlist);
-echo json_encode($tests);
-?>;
-</script>
 <script src="/statistics/js/correlation.js"></script>
+<script>
+	var splomWH = <?=max(500, $i * 130)?>;
+	getData();
+</script>
 
 <?php show_postmain(); ?>

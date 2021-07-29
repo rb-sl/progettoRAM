@@ -251,9 +251,3 @@ function plotSplom() {
 	
 	Plotly.react("splom", data, layout);
 }
-
-// The plot matrix is computed only after the page is
-// displayed to reduce load time
-$(document).ready(function() {
-	plotSplom();
-});
